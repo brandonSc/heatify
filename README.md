@@ -21,7 +21,7 @@ $ mkdir $GOPATH/src/hub.jazz.net/git/schurman93
 ```
 Clone the Git-Monitor project into `schurman93` (or just move it there if you have already cloned it)
 ```
-$ git clone https://hub.jazz.net/git/schurman93/Git-Monitor $GOPATH/src/hub.jazz.net/project/schurman93/
+$ git clone https://hub.jazz.net/git/schurman93/Git-Monitor $GOPATH/src/hub.jazz.net/project/schurman93/Git-Monitor
 ```
 Now change to the project directory
 ```
@@ -37,4 +37,5 @@ Then run with
 $ ./Git-Monitor
 ```
 (or if you have the $GOPATH/bin configured globally, you can run anywhere with `$ Git-Monitor`).
+
 Navigate to http://localhost:8080 in your browser
