@@ -1,0 +1,9 @@
+applications:
+- disk_quota: 1024M
+  buildpack: go_buildpack
+  host: git-monitor
+  name: Git-Monitor
+  path: .
+  domain: mybluemix.net
+  instances: 1
+  memory: 128M
