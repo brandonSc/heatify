@@ -2,7 +2,7 @@ package route
 
 import (
 	"github.com/gorilla/mux"
-	"hub.jazz.net/project/schurman93/Git-Monitor/logutil"
+	"hub.jazz.net/git/schurman93/Git-Monitor/logutil"
 	"net/http"
 )
 

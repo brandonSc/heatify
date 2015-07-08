@@ -6,8 +6,7 @@ import (
 	"os"
 	//for extracting service credentials from VCAP_SERVICES
 	//"github.com/cloudfoundry-community/go-cfenv"
-	"hub.jazz.net/project/schurman93/Git-Monitor/route"
-	//"./routing"
+	"hub.jazz.net/git/schurman93/Git-Monitor/route"
 )
 
 const (
