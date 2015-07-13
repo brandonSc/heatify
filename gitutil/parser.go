@@ -7,9 +7,9 @@ import (
 	"strings"
 )
 
-/**
- * Public - parse the results of git clone and git logs into structs
- */
+//
+// Public - parse the results of git clone and git logs into structs
+//
 func ParseCommits(repoUrl string) []model.Commit {
 	fmt.Println("parsing commit history")
 
@@ -20,10 +20,18 @@ func ParseCommits(repoUrl string) []model.Commit {
 	return nil
 }
 
+//
+// run the 'git logs' command and parse the output into JSON
+//
 func crunch_stats(repoUrl string) []model.Commit {
 	var dir = ".clones/" + strings.Replace(repoUrl, "/", ".", -1)
+	var script = `git log \
+	--pretty=format:'{%n  "commit": "%H",%n  "author": "%an <%ae>",%n  "date": "%ad",%n  "message": "%f"%n},' \
+	$@ | \
+	perl -pe 'BEGIN{print "["}; END{print "]\n"}' | \
+	perl -pe 's/},]/}]/'`
 
-	cmd := exec.Command("/bin/sh", "-c", "cd .clones/"+dir+" && git log")
+	cmd := exec.Command("/bin/bash", "-c", "cd "+dir+" && "+script)
 	fmt.Print("crunching the numbers...")
 	out, err := cmd.Output()
 	fmt.Println("done")
@@ -38,9 +46,9 @@ func crunch_stats(repoUrl string) []model.Commit {
 	return nil
 }
 
-/**
- * Clone the git repository into the temporary .clones/ directory
- */
+//
+// Clone the git repository into the temporary .clones/ directory
+//
 func clone_repo(repoUrl string) {
 	var arg0 = "git"
 	var arg1 = "clone"
@@ -69,9 +77,9 @@ func clone_repo(repoUrl string) {
 	fmt.Println("git clone completed successfully")
 }
 
-/**
- * Delete the git repo from .clones/
- */
+//
+// Delete the git repo from .clones/
+//
 func delete_repo(repoUrl string) {
 	var arg0 = "rm"
 	var arg1 = "-rf"
