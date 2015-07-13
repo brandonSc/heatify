@@ -14,11 +14,6 @@ const (
 	DEFAULT_HOST = ""
 )
 
-/*
-func helloworld(w http.ResponseWriter, req *http.Request) {
-	index.Execute(w, nil)
-}
-*/
 func main() {
 	var port string
 	if port = os.Getenv("VCAP_APP_PORT"); len(port) == 0 {

@@ -19,15 +19,23 @@ var routes = Routes{
 		Index,
 	},
 	Route{
-		"TodoIndex",
+		"HeatMap",
 		"GET",
-		"/todos",
-		TodoIndex,
+		"/heatmap",
+		HeatMap,
 	},
-	Route{
-		"TodoShow",
-		"GET",
-		"/todos/{todoId}",
-		TodoShow,
-	},
+	/*
+		Route{
+			"TodoIndex",
+			"GET",
+			"/todos",
+			TodoIndex,
+		},
+		Route{
+			"TodoShow",
+			"GET",
+			"/todos/{todoId}",
+			TodoShow,
+		},
+	*/
 }
