@@ -3,27 +3,16 @@ Git-Monitoring
 
 Running Locally 
 ---------------
-First install golang. 
-On ubuntu, run: 
-```
-sudo apt-get install golang
-```
-or find the download for your OS [here](https://golang.org/doc/install#tarball).
+First download and install the latest Golang distribution [here](https://golang.org/doc/install#tarball).
+Note: if you are using ubuntu, do not install Go through apt-get. The version in the apt repository is out of date and will not work JazzHub URLs.
 If you are new to go, you will have to setup your workspace first. See [How to Write Go Code](https://golang.org/doc/code.html) for official documentation.
-Your `$GOPATH` environment variable should be set to your desired workspace.
-If you have not already setup up a directory in your go workspace for jazz-hub, you can do so by running the following (unix only):
+Ensure your `$GOPATH` environment variable should be set to your desired workspace.
+Now, install the Git-Monitor project by running the following:
 ```
-$ mkdir -p $GOPATH/src/hub.jazz.net/git
+go get hub.jazz.net/git/schurman93/Git-Monitor
 ```
-Then, create a directory for my user
-```
-$ mkdir $GOPATH/src/hub.jazz.net/git/schurman93
-```
-Clone the Git-Monitor project into `schurman93` (or just move it there if you have already cloned it)
-```
-$ git clone https://hub.jazz.net/git/schurman93/Git-Monitor $GOPATH/src/hub.jazz.net/git/schurman93/Git-Monitor
-```
-Now change to the project directory
+If the command fails, ensure you are using a version of Go that supports JazzHub URLs. At this time, the latest version 1.4.2 worked with Jazz.
+Navigate to the Git-Monitor source code
 ```
 $ cd $GOPATH/src/hub.jazz.net/git/schurman93/Git-Monitor
 ```
@@ -38,4 +27,4 @@ $ ./Git-Monitor
 ```
 (or if you have the $GOPATH/bin configured globally, you can run anywhere with `$ Git-Monitor`).
 
-Navigate to http://localhost:8080 in your browser
+Navigate to http://localhost:8080 in your browser. Hit http://localhost:8080/heatmap to access the BETA HeatMap on the [Metrics Microservice](hub.jazz.net/git/schurman93/metrics-service) repository.
