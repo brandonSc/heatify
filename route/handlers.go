@@ -2,7 +2,7 @@ package route
 
 import (
 	//"encoding/json"
-	//"fmt"
+	"fmt"
 	//"github.com/gorilla/mux"
 	"html/template"
 	"hub.jazz.net/git/schurman93/Git-Monitor/gitutil"
@@ -20,9 +20,17 @@ func Index(w http.ResponseWriter, r *http.Request) {
 }
 
 func HeatMap(w http.ResponseWriter, r *http.Request) {
-	gitutil.ParseCommits("hub.jazz.net/git/schurman93/metrics-service")
-	//t, _ := template.ParseFiles(viewDir + "heatmap.html")
-	//:t.Execute(w, p)
+	var res = gitutil.ParseCommits("hub.jazz.net/git/schurman93/metrics-service")
+	p, err := LoadPage("heatmap")
+	if err != nil {
+		fmt.Println("Error: %s", err)
+		fmt.Fprintf(w, "Error")
+		return
+	}
+	p.Data = res
+	fmt.Println(res)
+	t, _ := template.ParseFiles("views/heatmap.html")
+	t.Execute(w, p)
 }
 
 /*

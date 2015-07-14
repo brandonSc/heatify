@@ -2,7 +2,7 @@ package gitutil
 
 import (
 	"fmt"
-	"hub.jazz.net/git/schurman93/Git-Monitor/model"
+	//"hub.jazz.net/git/schurman93/Git-Monitor/model"
 	"os/exec"
 	"strings"
 )
@@ -10,20 +10,20 @@ import (
 //
 // Public - parse the results of git clone and git logs into structs
 //
-func ParseCommits(repoUrl string) []model.Commit {
+func ParseCommits(repoUrl string) string {
 	fmt.Println("parsing commit history")
 
 	clone_repo(repoUrl)
-	crunch_stats(repoUrl)
+	var res = crunch_stats(repoUrl)
 	delete_repo(repoUrl)
 
-	return nil
+	return res
 }
 
 //
 // run the 'git logs' command and parse the output into JSON
 //
-func crunch_stats(repoUrl string) []model.Commit {
+func crunch_stats(repoUrl string) string {
 	var dir = ".clones/" + strings.Replace(repoUrl, "/", ".", -1)
 	var script = `git log \
 	--pretty=format:'{%n  "commit": "%H",%n  "author": "%an <%ae>",%n  "date": "%ad",%n  "message": "%f"%n},' \
@@ -39,11 +39,10 @@ func crunch_stats(repoUrl string) []model.Commit {
 	if err != nil {
 		fmt.Print("an error occured running 'git log' on repo/dir '" + dir + "'. ")
 		fmt.Printf("error is: %s\n", err)
-		return nil
+		return "error"
 	}
 
-	fmt.Printf("result from log is:\n%s\n", out)
-	return nil
+	return string(out[:])
 }
 
 //
