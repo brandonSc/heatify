@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script type="text/javascript" src="//d3js.org/d3.v3.min.js"></script>
+        <script type="text/javascript" src="//cdn.jsdelivr.net/cal-heatmap/3.3.10/cal-heatmap.min.js"></script>
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/cal-heatmap/3.3.10/cal-heatmap.css" />
+        <link rel="stylesheet" href="/static/stylesheets/style.css" />
+        <title>{{.Title}}</title>
+    </head>
+    <body>
+        <div class="center">
+            <h1 class="title">{{.Title}}</h1>
+            <div id="cal-heatmap"></div>
+            <script type="text/javascript">
+                
+                var data = {{.Data}}
+                data = JSON.parse(data)
+                var d = new Date(data[data.length-1].date);
+                var parse = function(data) { 
+                    var parsed = {};
+                    for ( var i=0; i<data.length; i++ ) { 
+                        var d = new Date(data[i].date);
+                        d = ""+(new Date(d.getMonth()+" "+d.getDay()+", "+d.getFullYear()).getTime()/1000);
+                        
+                        var v = 0;
+                        if ( parsed[d] )
+                            parsed[d]++
+                        else
+                            parsed[d] = 1;
+                    }
+                    return parsed;
+                };
+                var p = parse(data);
+                console.log(p);
+
+                var cal = new CalHeatMap();
+                cal.init({
+                    itemName: "commit",
+                    considerMissingDataAsZero: true,
+                    cellSize: 15,
+                    legendCellSize: 15,
+                    legendColors: {
+                        min: "#FFF0E0", 
+                        max: "#B80000",
+                        empty: "white",
+                    },
+                    legend: [1, 5, 10, 20], 
+                    
+                    range: 12,
+                    domain: "month",
+                    subDomain: "day",
+                    tooltip: true,
+                    start:  new Date(d.getFullYear(), d.getMonth(), d.getDay()),
+                    data: p
+                });
+            </script>
+        </div>
+    </body>
+</html>
