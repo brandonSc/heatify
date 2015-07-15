@@ -16,8 +16,8 @@ const viewDir = "../views/"
 //
 func Index(w http.ResponseWriter, r *http.Request) {
 	var index = template.Must(template.ParseFiles(
-		"templates/_base.html",
-		"templates/index.html",
+		"views/_base.html",
+		"views/index.html",
 	))
 	index.Execute(w, nil)
 }
