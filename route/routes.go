@@ -24,18 +24,4 @@ var routes = Routes{
 		"/heatmap",
 		HeatMap,
 	},
-	/*
-		Route{
-			"TodoIndex",
-			"GET",
-			"/todos",
-			TodoIndex,
-		},
-		Route{
-			"TodoShow",
-			"GET",
-			"/todos/{todoId}",
-			TodoShow,
-		},
-	*/
 }

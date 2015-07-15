@@ -13,9 +13,9 @@ import (
 func ParseCommits(repoUrl string) string {
 	fmt.Println("parsing commit history")
 
-	clone_repo(repoUrl)
+	//clone_repo(repoUrl)
 	var res = crunch_stats(repoUrl)
-	delete_repo(repoUrl)
+	//delete_repo(repoUrl)
 
 	return res
 }

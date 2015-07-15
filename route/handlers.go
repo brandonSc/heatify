@@ -11,6 +11,9 @@ import (
 
 const viewDir = "../views/"
 
+//
+// serve the default landling page for the route `/`
+//
 func Index(w http.ResponseWriter, r *http.Request) {
 	var index = template.Must(template.ParseFiles(
 		"templates/_base.html",
@@ -19,35 +22,29 @@ func Index(w http.ResponseWriter, r *http.Request) {
 	index.Execute(w, nil)
 }
 
+//
+// non-blocking `/heatmap` handler
+// ** cloning more than one repo at once will cause errors **
+// ** avoid using this for now **
+//
+func HeatMapAsync(w http.ResponseWriter, r *http.Request) {
+	go HeatMap(w, r)
+}
+
+//
+// handle the request for `/heatmap`
+//
 func HeatMap(w http.ResponseWriter, r *http.Request) {
-	var res = gitutil.ParseCommits("hub.jazz.net/git/schurman93/metrics-service")
+	res := gitutil.ParseCommits("hub.jazz.net/git/schurman93/metrics-service")
 	p, err := LoadPage("heatmap")
 	if err != nil {
 		fmt.Println("Error: %s", err)
 		fmt.Fprintf(w, "Error")
 		return
 	}
+	p.Title = "HeatMap of 'metrics-service'"
 	p.Data = res
 	fmt.Println(res)
 	t, _ := template.ParseFiles("views/heatmap.html")
 	t.Execute(w, p)
 }
-
-/*
-func TodoIndex(w http.ResponseWriter, r *http.Request) {
-	todos := Todos{
-		Todo{Name: "Write presentation"},
-		Todo{Name: "Host meetup"},
-	}
-
-	if err := json.NewEncoder(w).Encode(todos); err != nil {
-		panic(err)
-	}
-}
-
-func TodoShow(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	todoId := vars["todoId"]
-	fmt.Fprintln(w, "Todo show:", todoId)
-}
-*/
