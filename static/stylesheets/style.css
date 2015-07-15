@@ -32,10 +32,43 @@ h1 {
     margin: auto;
     font-weight: bold;
     font-size: 2.2em;
-    text-align: center;
 }
 
+.q1
+{
+    background-color: black;
+    fill: #FFFFFF;
+}
 
+.q2
+{
+    background-color: black;
+    fill: #FFFF99;
+}
+
+.q3
+{
+    background-color: black;
+    fill: #FFB870;
+}
+
+.q4
+{
+    background-color: black;
+    fill: #FF6600;
+}
+
+.q5
+{
+    background-color: black;
+    fill: #FF0000;
+}
+
+.q6
+{
+    background-color: black;
+    fill: #801A00;
+}
 
 .center {
     margin: auto;
@@ -48,6 +81,7 @@ h1 {
     width: 60;
     padding-top: 30px;
     padding-bottom: 50px;
+    text-align:center;
 }
 
 .leftHalf {
