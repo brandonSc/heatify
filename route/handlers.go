@@ -35,16 +35,41 @@ func HeatMapAsync(w http.ResponseWriter, r *http.Request) {
 // handle the request for `/heatmap`
 //
 func HeatMap(w http.ResponseWriter, r *http.Request) {
-	res := gitutil.ParseCommits("hub.jazz.net/git/schurman93/metrics-service")
+	repo := r.URL.Query().Get("repo")
+
+	res, err := gitutil.ParseCommits(repo)
+	if err != nil {
+		fmt.Println("Error: %s", err)
+		fmt.Fprintf(w, "Error %s", err)
+		return
+	}
+
 	p, err := LoadPage("heatmap")
 	if err != nil {
 		fmt.Println("Error: %s", err)
 		fmt.Fprintf(w, "Error")
 		return
 	}
-	p.Title = "HeatMap of 'metrics-service'"
+	p.Title = "HeatMap of '" + repo + "'"
 	p.Data = res
+
 	fmt.Println(res)
+
 	t, _ := template.ParseFiles("views/heatmap.html")
 	t.Execute(w, p)
+}
+
+//
+// Generate a heatmap for a specific repo `/heatmap/{repo}`
+//
+/*
+func GenHeatMap(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	repo := vars["repo"]
+	fmt.Fprintln(w, "Todo show:", todoId)
+}
+*/
+
+func parse_repo_name(url string) string {
+
 }

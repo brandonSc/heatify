@@ -24,4 +24,12 @@ var routes = Routes{
 		"/heatmap",
 		HeatMap,
 	},
+	/*
+		Route{
+			"GenHeatMap",
+			"GET",
+			"/heatmap/{repo}",
+			GenHeatMap,
+		},
+	*/
 }
