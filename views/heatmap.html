@@ -13,16 +13,17 @@
             <div id="cal-heatmap"></div>
             <script type="text/javascript">
                 
-                var data = {{.Data}}
-                data = JSON.parse(data)
+                var data = {{.Data}};
+                data = JSON.parse(data);
+                
+                // the starting date (assuming data comes in sorted order) 
                 var d = new Date(data[data.length-1].date);
+                
                 var parse = function(data) { 
                     var parsed = {};
                     for ( var i=0; i<data.length; i++ ) { 
                         var d = new Date(data[i].date);
-                        d = ""+(new Date(d.getMonth()+" "+d.getDay()+", "+d.getFullYear()).getTime()/1000);
-                        
-                        var v = 0;
+                        d = ""+(d.getTime()/1000);
                         if ( parsed[d] )
                             parsed[d]++
                         else
@@ -40,7 +41,7 @@
                     cellSize: 15,
                     legendCellSize: 15,
                     legend: [1, 5, 10, 20, 30], 
-                    
+                    animationDuration: 1500,
                     range: 12,
                     domain: "month",
                     subDomain: "day",
