@@ -3,8 +3,10 @@ package gitutil
 import (
 	"fmt"
 	//"hub.jazz.net/git/schurman93/Git-Monitor/model"
+	"io"
 	"os/exec"
 	"strings"
+	"time"
 )
 
 //
@@ -64,6 +66,7 @@ func clone_repo(repoUrl string) error {
 
 	cmd := exec.Command(arg0, arg1, arg2, arg3)
 	err := cmd.Start()
+	//stdin, _ := cmd.StdinPipe()
 
 	if err != nil {
 		fmt.Print("an error occured attempting to execute 'git clone' ")
@@ -73,6 +76,7 @@ func clone_repo(repoUrl string) error {
 	}
 
 	fmt.Printf("waiting for clone to finish...")
+	//go enter_credentials(stdin)
 	err = cmd.Wait()
 	fmt.Printf("done\n")
 
@@ -83,6 +87,18 @@ func clone_repo(repoUrl string) error {
 
 	fmt.Println("git clone completed successfully")
 	return nil
+}
+
+//
+// input the credentials to the command line git
+// this method must be called on a new thread to avoid blocking
+//
+func enter_credentials(in io.WriteCloser) {
+	time.Sleep(3000 * time.Millisecond)
+	bytes := []byte("schurman@ca.ibm.com\n")
+	in.Write(bytes)
+	time.Sleep(3000 * time.Millisecond)
+	fmt.Println("schurman0x5D")
 }
 
 //
