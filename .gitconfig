@@ -1,0 +1,7 @@
+[user]
+	email = git-monitor@bg.vnet.ibm.com
+    name = Git Bot
+[credential]
+    helper = store
+[push]
+    default = simple

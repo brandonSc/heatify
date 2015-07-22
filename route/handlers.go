@@ -41,7 +41,7 @@ func HeatMap(w http.ResponseWriter, r *http.Request) {
 
 	res, err := gitutil.ParseCommits(repo)
 	if err != nil {
-		fmt.Println("Error: %s", err)
+		fmt.Println("Error cloning or parsing repository: %s", err)
 		fmt.Fprintf(w, "Error %s", err)
 		return
 	}
@@ -55,7 +55,7 @@ func HeatMap(w http.ResponseWriter, r *http.Request) {
 	p.Title = "HeatMap of '" + name + "'"
 	p.Data = res
 
-	fmt.Println(res)
+	//fmt.Println(res)
 
 	t, _ := template.ParseFiles("views/heatmap.html")
 	t.Execute(w, p)
