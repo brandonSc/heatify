@@ -1,6 +1,6 @@
 [user]
-	email = git-monitor@bg.vnet.ibm.com
-    name = Git Bot
+	email = schurman@ca.ibm.com
+    name = Brandon Schurman
 [credential]
     helper = store
 [push]
