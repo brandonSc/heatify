@@ -84,6 +84,12 @@ h1 {
     text-align:center;
 }
 
+.heatmeter { 
+    padding-top: 15px;
+    color: grey;
+    font-size: 75%;
+}
+
 .urlinput { 
     width: 60;
 }

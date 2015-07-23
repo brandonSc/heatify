@@ -26,7 +26,7 @@ func UpdateRefs(path string) {
 	cmd := exec.Command("/bin/bash", "-c", "cd "+path+" && git fetch --prune")
 	err := cmd.Run()
 	if err != nil {
-		fmt.Printf("error fetching refs for %s. error is %s", path, err)
+		fmt.Printf("error fetching refs for %s. error is %s\n", path, err)
 	}
 	//fmt.Println("done updating refs for " + path)
 }
