@@ -38,6 +38,8 @@ func HeatMapAsync(w http.ResponseWriter, r *http.Request) {
 //
 func HeatMap(w http.ResponseWriter, r *http.Request) {
 	repo, err := url.QueryUnescape(r.URL.Query().Get("repo"))
+	repo = strings.TrimPrefix(repo, "http://")
+	repo = strings.TrimPrefix(repo, "https://")
 	if err != nil {
 		fmt.Println("Error decoding repository from URL: %s", err)
 		fmt.Fprintf(w, "Error %s", err)
@@ -81,5 +83,7 @@ func GenHeatMap(w http.ResponseWriter, r *http.Request) {
 
 func parse_repo_name(url string) string {
 	parts := strings.SplitAfter(url, "/")
-	return parts[len(parts)-1]
+	str := parts[len(parts)-1]
+	str = strings.TrimRight(str, ".git")
+	return str
 }

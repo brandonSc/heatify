@@ -9,16 +9,21 @@
             <h1 id="message">Git-Monitor [<i>BETA</i>]</h1>
 			<p>
                 If you want to view a HeatMap for a public repository,
-                just enter the URL below (without the http:// or https:// prefix).
+                simply enter the git URL into the field below.
             </p>
             <p>
                 If you would like to view a HeatMap for a private repository, 
-                you will have to first add the Git Bot user to your repo. 
-                The bot's email is git-monitor@bg.vnet.ibm.com. NOTE: this bot isn't ready yet
+                you will have to first add the <b>Git Bot</b> user to your repo.
             </p>
-            <form id="urlinput" action="/heatmap">
-                Repository URL: <input type="text/plain" size="40" name="repo" value="hub.jazz.net/git/schurman93/Git-Monitor"><br>
-                <input type="submit" value="Measure the Heat">
+            <p>
+                The bot's email is:<br>
+                <code><a hfre="mailto:git-monitor@bg.vnet.ibm.com">git-monitor@bg.vnet.ibm.com</a></code>
+            </p>
+            <form class="urlinput" action="/heatmap">
+                Repository URL: <input type="text/plain" size="50" name="repo" value="hub.jazz.net/git/schurman93/Git-Monitor"><br>
+                <div class="heatbutton">
+                    <input type="submit" value="Measure the Heat" class="btn">
+                </div>
             </form>
 		</td>
 	</tr>
