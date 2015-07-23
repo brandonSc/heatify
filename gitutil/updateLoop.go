@@ -7,6 +7,10 @@ import (
 	"time"
 )
 
+//
+// runs continually forever (should run this in a new goroutine)
+// asynchronously dispatches update requests to each tracked repository
+//
 func RunUpdateLoop() {
 	for {
 		dirs, err := ioutil.ReadDir(".clones")
@@ -21,6 +25,9 @@ func RunUpdateLoop() {
 	}
 }
 
+//
+// run `git fetch` on a given repository specified by the path parameter
+//
 func UpdateRefs(path string) {
 	//fmt.Println("updating refs for " + path + "...")
 	cmd := exec.Command("/bin/bash", "-c", "cd "+path+" && git fetch --prune")
