@@ -3,31 +3,47 @@ package gitutil
 import (
 	"fmt"
 	//"hub.jazz.net/git/schurman93/Git-Monitor/model"
-	"io"
+	"io/ioutil"
 	"os/exec"
 	"strings"
-	"time"
 )
 
 //
 // Public - parse the results of git clone and git logs into structs
 //
 func ParseCommits(repoUrl string) (string, error) {
-	fmt.Println("parsing commit history")
-	var res string
-	err := clone_repo(repoUrl)
+	//fmt.Println("parsing commit history")
+
+	isCloned := check_exists(repoUrl)
+
+	if isCloned == false {
+		err := clone_repo(repoUrl)
+		if err != nil {
+			return "error", err
+		}
+	}
+
+	res, err := crunch_stats(repoUrl)
 	if err != nil {
 		return "error", err
 	}
-	res, err = crunch_stats(repoUrl)
-	if err != nil {
-		return "error", err
-	}
-	err = delete_repo(repoUrl)
-	if err != nil {
-		return "error", err
-	}
+	/*
+		err = delete_repo(repoUrl)
+		if err != nil {
+			return "error", err
+		}
+	*/
 	return res, nil
+}
+
+func check_exists(repoUrl string) bool {
+	var dir = ".clones/" + strings.Replace(repoUrl, "/", ".", -1)
+	_, err := ioutil.ReadDir(dir)
+	if err == nil {
+		return true
+	} else {
+		return false
+	}
 }
 
 //
@@ -42,9 +58,9 @@ func crunch_stats(repoUrl string) (string, error) {
 	perl -pe 's/},]/}]/'`
 
 	cmd := exec.Command("/bin/bash", "-c", "cd "+dir+" && "+script)
-	fmt.Print("crunching the numbers...")
+	//fmt.Print("crunching the numbers...")
 	out, err := cmd.Output()
-	fmt.Println("done")
+	//fmt.Println("done")
 
 	if err != nil {
 		fmt.Print("an error occured running 'git log' on repo/dir '" + dir + "'. ")
@@ -75,30 +91,17 @@ func clone_repo(repoUrl string) error {
 		return err
 	}
 
-	fmt.Printf("waiting for clone to finish...")
-	//go enter_credentials(stdin)
+	//fmt.Printf("waiting for clone to finish...")
 	err = cmd.Wait()
-	fmt.Printf("done\n")
+	//fmt.Printf("done\n")
 
 	if err != nil {
 		fmt.Printf("an error occured during the execution of 'git clone': %s\n", err)
 		return err
 	}
 
-	fmt.Println("git clone completed successfully")
+	//fmt.Println("git clone completed successfully")
 	return nil
-}
-
-//
-// input the credentials to the command line git
-// this method must be called on a new thread to avoid blocking
-//
-func enter_credentials(in io.WriteCloser) {
-	time.Sleep(3000 * time.Millisecond)
-	bytes := []byte("schurman@ca.ibm.com\n")
-	in.Write(bytes)
-	time.Sleep(3000 * time.Millisecond)
-	fmt.Println("schurman0x5D")
 }
 
 //
@@ -118,6 +121,6 @@ func delete_repo(repoUrl string) error {
 		return err
 	}
 
-	fmt.Println("local git repo deleted successfully")
+	//fmt.Println("local git repo deleted successfully")
 	return nil
 }

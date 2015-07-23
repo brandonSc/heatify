@@ -6,6 +6,7 @@ import (
 	"os"
 	//for extracting service credentials from VCAP_SERVICES
 	//"github.com/cloudfoundry-community/go-cfenv"
+	"hub.jazz.net/git/schurman93/Git-Monitor/gitutil"
 	"hub.jazz.net/git/schurman93/Git-Monitor/route"
 )
 
@@ -15,6 +16,7 @@ const (
 )
 
 func main() {
+	// setup host and port for server
 	var port string
 	if port = os.Getenv("VCAP_APP_PORT"); len(port) == 0 {
 		port = DEFAULT_PORT
@@ -25,10 +27,13 @@ func main() {
 		host = DEFAULT_HOST
 	}
 
+	// grab the router and request handlers
 	router := route.NewRouter()
 
-	//http.HandleFunc("/", helloworld)
+	// run the git update loop in the background
+	go gitutil.RunUpdateLoop()
 
+	// launch the server
 	log.Printf("Starting app on %+v:%+v\n", host, port)
 	log.Fatal(http.ListenAndServe(host+":"+port, router))
 }
