@@ -84,6 +84,10 @@ h1 {
     text-align:center;
 }
 
+.urlinput { 
+    width: 60;
+}
+
 .leftHalf {
     float: left;
     background-color: #26343f;

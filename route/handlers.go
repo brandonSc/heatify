@@ -7,6 +7,7 @@ import (
 	"html/template"
 	"hub.jazz.net/git/schurman93/Git-Monitor/gitutil"
 	"net/http"
+	"net/url"
 	"strings"
 )
 
@@ -36,7 +37,13 @@ func HeatMapAsync(w http.ResponseWriter, r *http.Request) {
 // handle the request for `/heatmap`
 //
 func HeatMap(w http.ResponseWriter, r *http.Request) {
-	repo := r.URL.Query().Get("repo")
+	repo, err := url.QueryUnescape(r.URL.Query().Get("repo"))
+	if err != nil {
+		fmt.Println("Error decoding repository from URL: %s", err)
+		fmt.Fprintf(w, "Error %s", err)
+		return
+	}
+
 	name := parse_repo_name(repo)
 
 	res, err := gitutil.ParseCommits(repo)
