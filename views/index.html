@@ -1,31 +1,74 @@
 {{ define "title" }}Git-Monitor{{ end }}
 {{ define "content"}}
-<table>
-	<tr>
-		<td style='width: 30%;'>
-			<img class = 'newappIcon' src='/static/images/newapp-icon.png'>
-		</td>
-		<td>
+
+<table style="width:50%; margin-left:20%;">
+
+    <tr> 
+        <td style='width: 40%; padding-top:10%;'>
+            <img class='newappIcon' src='/static/images/gitmonitorlogo.png'>
+        </td>
+        <td style='padding-top:15%'>
             <h1 id="message">Git-Monitor [<i>BETA</i>]</h1>
-			<p>
-                If you want to view a HeatMap for a public repository,
-                simply enter the git URL into the field below.
+            <p>
+            View a HeatMap for a public Jazz or GitHub repository,
+            simply enter the git URL into the field below.
             </p>
             <p>
-                If you would like to view a HeatMap for a private repository, 
-                you will have to first add the <b>Git Bot</b> user to your repo.
+            If you would like to view a HeatMap for a private repository, 
+            you will have to first add the <b>Git Bot</b> user to your repo.
             </p>
             <p>
-                The bot's email is:<br>
-                <code><a hfre="mailto:git-monitor@bg.vnet.ibm.com">git-monitor@bg.vnet.ibm.com</a></code>
+            The bot's email is:<br>
+            <code><a href="mailto:git-monitor@bg.vnet.ibm.com">git-monitor@bg.vnet.ibm.com</a></code>
             </p>
-            <form class="urlinput" action="/heatmap">
-                Repository URL: <input type="text/plain" size="50" name="repo" value="hub.jazz.net/git/schurman93/Git-Monitor"><br>
-                <div class="heatbutton">
-                    <input type="submit" value="Measure the Heat" class="btn">
+
+            <form action="heatmap/repo" onsubmit="loadMap(this)">
+                <div style="padding-top:20px;">
+                    <div class="input-field col s12">
+                        <input value="hub.jazz.net/git/schurman93/Git-Monitor" id="url" type="text" name="url" class="validate">
+                        <label style="position:absolute"class="active" for="url">Git URL:</label>
+                    </div>
+                </div>
+
+                <div class="heatbtn" id="id">
+                    <button  type="submit" href="/heatmap/repo" class="btn waves-effect waves-light">Measure the Heat</button>
                 </div>
             </form>
-		</td>
-	</tr>
+        </td>
+    </tr>
+    <script type="text/javascript">
+        var spinner;
+        var loadMap = function ( form ) { 
+            var opts = {
+                lines: 13 // The number of lines to draw
+                    , length: 28 // The length of each line
+                    , width: 20 // The line thickness
+                    , radius: 42 // The radius of the inner circle
+                    , scale: 1 // Scales overall size of the spinner
+                    , corners: 1 // Corner roundness (0..1)
+                    , color: '#000' // #rgb or #rrggbb or array of colors
+                    , opacity: 0.25 // Opacity of the lines
+                    , rotate: 0 // The rotation offset
+                    , direction: 1 // 1: clockwise, -1: counterclockwise
+                    , speed: 1 // Rounds per second
+                    , trail: 60 // Afterglow percentage
+                    , fps: 20 // Frames per second when using setTimeout() as a fallback for CSS
+                    , zIndex: 2e9 // The z-index (defaults to 2000000000)
+                    , className: 'spinner' // The CSS class to assign to the spinner
+                    , top: '50%' // Top position relative to parent
+                    , left: '50%' // Left position relative to parent
+                    , shadow: false // Whether to render a shadow
+                    , hwaccel: false // Whether to use hardware acceleration
+                    , position: 'absolute' // Element positioning
+            };
+            var target = document.getElementById('id')
+                spinner = new Spinner(opts).spin(target);
+        };
+        $(document).unload(function() {
+            console.log(spinner)
+                if ( spinner ) spinner.stop(); 
+        });
+    </script>
+    <script type="text/javascript" src="static/javascripts/spin.min.js"></script>
 </table>
 {{ end }}

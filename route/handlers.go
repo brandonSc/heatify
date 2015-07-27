@@ -25,19 +25,20 @@ func Index(w http.ResponseWriter, r *http.Request) {
 }
 
 //
-// non-blocking `/heatmap` handler
+// non-blocking `/heatmap` handler runs in a go-routine
 // ** cloning more than one repo at once will cause errors **
 // ** avoid using this for now **
 //
 func HeatMapAsync(w http.ResponseWriter, r *http.Request) {
-	go HeatMap(w, r)
+	go HeatMapRepo(w, r)
 }
 
 //
-// handle the request for `/heatmap`
+// Return the page `/heatmap/repo` page
+// which generates a heatmap for a single repository
 //
-func HeatMap(w http.ResponseWriter, r *http.Request) {
-	repo, err := url.QueryUnescape(r.URL.Query().Get("repo"))
+func HeatMapRepo(w http.ResponseWriter, r *http.Request) {
+	repo, err := url.QueryUnescape(r.URL.Query().Get("url"))
 	repo = strings.TrimPrefix(repo, "http://")
 	repo = strings.TrimPrefix(repo, "https://")
 	if err != nil {
@@ -66,21 +67,28 @@ func HeatMap(w http.ResponseWriter, r *http.Request) {
 
 	//fmt.Println(res)
 
-	t, _ := template.ParseFiles("views/heatmap.html")
-	t.Execute(w, p)
+	page := template.Must(template.ParseFiles(
+		"views/_base.html",
+		"views/heatmap.html",
+	))
+	page.Execute(w, p)
+}
+
+func HeatMapUser(w http.ResponseWriter, r *http.Request) {
+	fmt.Println(w, "TODO")
 }
 
 //
-// Generate a heatmap for a specific repo `/heatmap/{repo}`
+// Return a page about heatmaps
 //
-/*
-func GenHeatMap(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	repo := vars["repo"]
-	fmt.Fprintln(w, "Todo show:", todoId)
+func HeatMap(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintln(w, "TODO")
 }
-*/
 
+//
+// Get the name of the repository from the full git URL
+// (works for jazz and github)
+//
 func parse_repo_name(url string) string {
 	parts := strings.SplitAfter(url, "/")
 	str := parts[len(parts)-1]
