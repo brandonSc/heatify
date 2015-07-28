@@ -30,7 +30,7 @@ func RunUpdateLoop() {
 //
 func UpdateRefs(path string) {
 	//fmt.Println("updating refs for " + path + "...")
-	cmd := exec.Command("/bin/bash", "-c", "cd "+path+" && git fetch --prune")
+	cmd := exec.Command("/bin/bash", "-c", "cd "+path+" && git pull origin master")
 	err := cmd.Run()
 	if err != nil {
 		fmt.Printf("error fetching refs for %s. error is %s\n", path, err)

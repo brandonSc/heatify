@@ -77,11 +77,11 @@ func crunch_stats(repoUrl string) (string, error) {
 func clone_repo(repoUrl string) error {
 	var arg0 = "git"
 	var arg1 = "clone"
-	var arg2 = "--bare"
-	var arg3 = "http://" + repoUrl
-	var arg4 = ".clones/" + strings.Replace(repoUrl, "/", ".", -1)
+	//var arg2 = "--bare"
+	var arg2 = "http://" + repoUrl
+	var arg3 = ".clones/" + strings.Replace(repoUrl, "/", ".", -1)
 
-	cmd := exec.Command(arg0, arg1, arg2, arg3, arg4)
+	cmd := exec.Command(arg0, arg1, arg2, arg3)
 	err := cmd.Start()
 	//stdin, _ := cmd.StdinPipe()
 
