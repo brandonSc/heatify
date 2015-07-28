@@ -48,6 +48,9 @@ func HeatMapRepo(w http.ResponseWriter, r *http.Request) {
 	}
 
 	name := parse_repo_name(repo)
+	if name == "" {
+		name = "Git-Monitor"
+	}
 
 	res, err := gitutil.ParseCommits(repo)
 	if err != nil {
