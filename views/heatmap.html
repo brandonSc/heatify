@@ -1,59 +1,73 @@
 <!DOCTYPE html>
 {{ define "title" }}Heatify{{ end }}
 {{ define "content"}}
-<html>
-    <head>
-        <script type="text/javascript" src="//d3js.org/d3.v3.min.js"></script>
-        <script type="text/javascript" src="//cdn.jsdelivr.net/cal-heatmap/3.3.10/cal-heatmap.min.js"></script>
-        <link rel="stylesheet" href="//cdn.jsdelivr.net/cal-heatmap/3.3.10/cal-heatmap.css" />
-        <link rel="stylesheet" href="/static/stylesheets/style.css" />
-        <title>{{.Title}}</title>
-    </head>
-    <body>
-        <div class="center">
-            <h1 class="title">{{.Title}}</h1>
-            <div id="cal-heatmap"></div>
-            <script type="text/javascript">
-                
-                var data = {{.Data}};
-                data = JSON.parse(data);
-                
-                // the starting date (assuming data comes in sorted order) 
-                var d = new Date(data[data.length-1].date);
-                
-                var parse = function(data) { 
-                    var parsed = {};
-                    for ( var i=0; i<data.length; i++ ) { 
-                        var d = new Date(data[i].date);
-                        d = ""+(d.getTime()/1000);
-                        if ( parsed[d] )
-                            parsed[d]++
-                        else
-                            parsed[d] = 1;
-                    }
-                    return parsed;
-                };
-                var p = parse(data);
-                console.log(p);
-
-                var cal = new CalHeatMap();
-                cal.init({
-                    itemName: "commit",
-                    considerMissingDataAsZero: true,
-                    cellSize: 15,
-                    legendCellSize: 15,
-                    legend: [0, 4, 10, 20, 30], 
-                    animationDuration: 1500,
-                    range: 12,
-                    domain: "month",
-                    subDomain: "day",
-                    tooltip: true,
-                    start:  new Date(d.getFullYear(), d.getMonth(), d.getDay()),
-                    data: p
-                });
-            </script>
-            <a class="heatmeter">HeatMeter</a>
+<head>
+    <script type="text/javascript" src="//d3js.org/d3.v3.min.js"></script>
+    <script type="text/javascript" src="//cdn.jsdelivr.net/cal-heatmap/3.3.10/cal-heatmap.min.js"></script>
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/cal-heatmap/3.3.10/cal-heatmap.css" />
+    <link rel="stylesheet" href="/static/stylesheets/style.css" /> 
+    <link rel="stylesheet" href="/static/stylesheets/style.css" />
+    <link rel="stylesheet" href="/static/stylesheets/materialize.css" />
+    <title>{{.Title}}</title>
+</head>
+<body>
+    <div class="center">
+        <h3 class="title">{{.Title}}</h3>
+        <div class="container" style="padding-bottom:10px">
+            <a id="right-pan" style="font-size: 24px; right: 0%" class="waves-effect waves-teal btn-flat">&#60;</a>
+            <a id="left-pan" style="font-size: 24px; left: 0%" class="waves-effect waves-teal btn-flat">&#62;</a>
         </div>
-    </body>
-</html>
+        <div id="cal-heatmap"></div>
+        <a class="heatmeter">HeatMeter</a>
+        <script type="text/javascript">
+            
+            var data = {{.Data}};
+            data = JSON.parse(data);
+            
+            // the starting date (assuming data comes in sorted order) 
+            var d = new Date(data[data.length-1].date);
+            
+            var parse = function(data) { 
+                var parsed = {};
+                for ( var i=0; i<data.length; i++ ) { 
+                    var d = new Date(data[i].date);
+                    d = ""+(d.getTime()/1000);
+                    if ( parsed[d] )
+                        parsed[d]++
+                    else
+                        parsed[d] = 1;
+                }
+                return parsed;
+            };
+            var p = parse(data);
+            console.log(p);
+
+            var cal = new CalHeatMap();
+            cal.init({
+                itemName: "commit",
+                considerMissingDataAsZero: true,
+                cellSize: 15,
+                legendCellSize: 15,
+                legend: [0, 4, 10, 20, 30], 
+                nimationDuration: 600,
+                range: 12,
+                domain: "month",
+                subDomain: "day",
+                tooltip: true,
+                start:  new Date(d.getFullYear(), d.getMonth(), d.getDay()),
+                data: p
+            });
+
+            $("#left-pan").on("click", function(e) {  
+                e.preventDefault();
+                cal.next();
+            });
+
+            $("#right-pan").on("click", function(e) {
+                e.preventDefault();
+                cal.previous();
+            });
+        </script>
+    </div>
+</body>
 {{ end }} 
