@@ -1,4 +1,4 @@
-{{ define "title" }}Git-Monitor{{ end }}
+{{ define "title" }}Heatify{{ end }}
 {{ define "content"}}
 
 <table style="width:50%; margin-left:20%;">
@@ -6,20 +6,28 @@
     <tr> 
         <td style='width: 40%; padding-top:10%;'>
             <img class='newappIcon' src='/static/images/gitmonitorlogo.png'>
-        </td>
-        <td style='padding-top:15%'>
-            <h1 id="message">Git-Monitor [<i>BETA</i>]</h1>
-            <p>
-            View a HeatMap for a public Jazz or GitHub repository,
-            simply enter the git URL into the field below.
-            </p>
-            <p>
-            If you would like to view a HeatMap for a private repository, 
-            you will have to first add the <b>Git Bot</b> user to your repo.
-            </p>
-            <p>
-            The bot's email is:<br>
+            <p align="center">
+            The <b>Git-Monitor Bot</b>'s email is:<br>
             <code><a href="mailto:git-monitor@bg.vnet.ibm.com">git-monitor@bg.vnet.ibm.com</a></code>
+            </p>
+        </td>
+        <td style='padding-top:10%'>
+            <h1 id="message">Heatify [<i>BETA</i>]</h1>
+            <p>
+            Heatify tracks your git repositories from Jazz and GitHub,
+            and crunches the latest commit statistics for you to view in a HeatMap. 
+            </p>
+            <p>
+            The goal of Heatify is to encourage good Agile development practices. 
+            That is, we would like to encourage developers to contribute small, coherent commits, frequently.
+            Commits should precisely address one issue or feature within the project. 
+            </p>
+            <p>
+            <h5 style="padding-top: 5px">Getting Started</h5>
+            Heatify works out-of-the-box on public Jazz and GitHub git repositories; 
+            simply copy and paste the http URL into the field below to start tracking and view the HeatMap!
+            To view a HeatMap for a private repository, 
+            first add the <b>Git-Monitor Bot</b> as a member to your repo.
             </p>
 
             <form action="heatmap/repo" onsubmit="loadMap(this)">
