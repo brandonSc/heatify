@@ -25,6 +25,13 @@
 
             var spinner = null; // the spinning-wheel shown when loading
 
+            var cellSize = 15;
+            if ( $(window).width() < 1700 ) 
+                cellSize = 10;
+            if ( $(window).width() < 1000 ) 
+                cellSize = 5;
+                
+
             //$(document).ready(function() {
                 var loadMap = function ( form ) { 
                     var opts = {
@@ -79,7 +86,7 @@
             cal.init({
                 itemName: "commit",
                 considerMissingDataAsZero: true,
-                cellSize: 15,
+                cellSize: cellSize,
                 legendCellSize: 15,
                 legend: [0, 4, 10, 20, 30], 
                 nimationDuration: 600,
