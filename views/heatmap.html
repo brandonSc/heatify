@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-{{ define "title" }}Heatify{{ end }}
+{{ define "title" }}Heatify - {{.Title}}{{ end }}
 {{ define "content"}}
 <head>
     <script type="text/javascript" src="//d3js.org/d3.v3.min.js"></script>
@@ -12,7 +12,7 @@
 </head>
 <body>
     <div class="center">
-        <h3 class="title">{{.Title}}</h3>
+        <h3 class="title">HeatMap of '{{.Title}}'</h3>
         <div class="container" style="padding-bottom:10px">
             <a id="right-pan" style="font-size: 24px; right: 0%" class="waves-effect waves-teal btn-flat">&#60;</a>
             <a id="left-pan" style="font-size: 24px; left: 0%" class="waves-effect waves-teal btn-flat">&#62;</a>

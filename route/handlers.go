@@ -43,7 +43,7 @@ func HeatMapRepo(w http.ResponseWriter, r *http.Request) {
 	repo = strings.TrimPrefix(repo, "https://")
 	if err != nil {
 		fmt.Println("Error decoding repository from URL: %s", err)
-		fmt.Fprintf(w, "Error %s", err)
+		ShowError(w, ERROR_REPO_URL)
 		return
 	}
 
@@ -55,20 +55,18 @@ func HeatMapRepo(w http.ResponseWriter, r *http.Request) {
 	res, err := gitutil.ParseCommits(repo)
 	if err != nil {
 		fmt.Println("Error cloning or parsing repository: %s", err)
-		fmt.Fprintf(w, "Error %s", err)
+		ShowError(w, ERROR_CLONE_REPO)
 		return
 	}
 
 	p, err := LoadPage("heatmap")
 	if err != nil {
 		fmt.Println("Error: %s", err)
-		fmt.Fprintf(w, "Error")
+		ShowError(w, ERROR_PARSE_PAGE)
 		return
 	}
-	p.Title = "HeatMap of '" + name + "'"
+	p.Title = name
 	p.Data = res
-
-	//fmt.Println(res)
 
 	page := template.Must(template.ParseFiles(
 		"views/_base.html",
@@ -97,4 +95,24 @@ func parse_repo_name(url string) string {
 	str := parts[len(parts)-1]
 	str = strings.TrimRight(str, ".git")
 	return str
+}
+
+//
+// show an error page
+//
+func ShowError(w http.ResponseWriter, reason string) {
+	p, err := LoadPage("error")
+	if err != nil {
+		fmt.Println("Error: %s", err)
+		fmt.Fprintf(w, "An error occured while rendering a page")
+		return
+	}
+	p.Title = "Error :("
+	p.Data = reason
+
+	page := template.Must(template.ParseFiles(
+		"views/_base.html",
+		"views/error.html",
+	))
+	page.Execute(w, p)
 }
