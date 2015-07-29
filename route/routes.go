@@ -36,4 +36,10 @@ var routes = Routes{
 		"/heatmap/user",
 		HeatMapUser,
 	},
+	Route{
+		"About",
+		"GET",
+		"/about",
+		ShowAbout,
+	},
 }

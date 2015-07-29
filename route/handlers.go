@@ -116,3 +116,19 @@ func ShowError(w http.ResponseWriter, reason string) {
 	))
 	page.Execute(w, p)
 }
+
+func ShowAbout(w http.ResponseWriter, r *http.Request) {
+	p, err := LoadPage("about")
+	if err != nil {
+		fmt.Println("Error: %s", err)
+		fmt.Fprintf(w, "An error occured while rendering a page")
+		return
+	}
+	p.Title = "About"
+
+	page := template.Must(template.ParseFiles(
+		"views/_base.html",
+		"views/about.html",
+	))
+	page.Execute(w, p)
+}
