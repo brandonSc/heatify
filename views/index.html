@@ -1,8 +1,8 @@
 {{ define "title" }}Heatify{{ end }}
 {{ define "content"}}
 
-<table style="width:50%; margin-left:20%;">
-
+<div class="container">
+<table>
     <tr> 
         <td style='width: 40%; padding-top:10%;'>
             <img class='newappIcon' src='/static/images/gitmonitorlogo.png'>
@@ -11,7 +11,7 @@
             <code><a href="mailto:git-monitor@bg.vnet.ibm.com">git-monitor@bg.vnet.ibm.com</a></code>
             </p>
         </td>
-        <td style='padding-top:10%'>
+        <td style='padding-right: 15%; padding-top:10%;'>
             <h1 id="message">Heatify [<i>BETA</i>]</h1>
             <p>
             Heatify tracks your git repositories from Jazz and GitHub,
@@ -79,4 +79,5 @@
     </script>
     <script type="text/javascript" src="static/javascripts/spin.min.js"></script>
 </table>
+</div>
 {{ end }}

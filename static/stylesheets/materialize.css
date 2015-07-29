@@ -5273,7 +5273,7 @@ nav {
   nav .brand-logo {
     position: absolute;
     color: #fff;
-    margin-left: 20%;
+    /*margin-left: 20%;*/
     display: inline-block;
     font-size: 2.1rem;
     padding: 0;
@@ -5297,7 +5297,7 @@ nav {
       right: 0.5rem;
       padding: 0; }
   nav ul {
-    margin: 0; margin-right:20%;}
+    margin: 0;}
     nav ul li {
       -webkit-transition: background-color .3s;
       -moz-transition: background-color .3s;

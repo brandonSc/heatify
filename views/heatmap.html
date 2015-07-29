@@ -17,9 +17,42 @@
             <a id="right-pan" style="font-size: 24px; right: 0%" class="waves-effect waves-teal btn-flat">&#60;</a>
             <a id="left-pan" style="font-size: 24px; left: 0%" class="waves-effect waves-teal btn-flat">&#62;</a>
         </div>
-        <div id="cal-heatmap"></div>
-        <a class="heatmeter">HeatMeter</a>
+        <div style="margin: auto; display: inline-block;">
+            <div id="cal-heatmap"></div>
+            <div><a class="heatmeter">HeatMeter</a></div>
+        </div>
         <script type="text/javascript">
+
+            var spinner = null; // the spinning-wheel shown when loading
+
+            //$(document).ready(function() {
+                var loadMap = function ( form ) { 
+                    var opts = {
+                        lines: 13 // The number of lines to draw
+                            , length: 28 // The length of each line
+                            , width: 20 // The line thickness
+                            , radius: 42 // The radius of the inner circle
+                            , scale: 1 // Scales overall size of the spinner
+                            , corners: 1 // Corner roundness (0..1)
+                            , color: '#000' // #rgb or #rrggbb or array of colors
+                            , opacity: 0.25 // Opacity of the lines
+                            , rotate: 0 // The rotation offset
+                            , direction: 1 // 1: clockwise, -1: counterclockwise
+                            , speed: 1 // Rounds per second
+                            , trail: 60 // Afterglow percentage
+                            , fps: 20 // Frames per second when using setTimeout() as a fallback for CSS
+                            , zIndex: 2e9 // The z-index (defaults to 2000000000)
+                            , className: 'spinner' // The CSS class to assign to the spinner
+                            , top: '50%' // Top position relative to parent
+                            , left: '50%' // Left position relative to parent
+                            , shadow: false // Whether to render a shadow
+                            , hwaccel: false // Whether to use hardware acceleration
+                            , position: 'absolute' // Element positioning
+                    };
+                    var target = document.getElementById('cal-heatmap')
+                    spinner = new Spinner(opts).spin(target);
+                };
+            //});
             
             var data = {{.Data}};
             data = JSON.parse(data);
@@ -55,7 +88,8 @@
                 subDomain: "day",
                 tooltip: true,
                 start:  new Date(d.getFullYear(), d.getMonth(), d.getDay()),
-                data: p
+                data: p,
+                onComplete: function() { if(spinner) spinner.stop(); } 
             });
 
             $("#left-pan").on("click", function(e) {  

@@ -7,6 +7,8 @@ import (
 	"time"
 )
 
+const INTERVAL = 10 // update interval in minutes
+
 //
 // runs continually forever (should run this in a new goroutine)
 // asynchronously dispatches update requests to each tracked repository
@@ -21,7 +23,7 @@ func RunUpdateLoop() {
 			dir := dirs[i].Name()
 			go UpdateRefs(".clones/" + dir)
 		}
-		time.Sleep(5 * time.Minute)
+		time.Sleep(INTERVAL * time.Minute)
 	}
 }
 
