@@ -18,13 +18,12 @@ $ cd $GOPATH/src/hub.jazz.net/git/schurman93/Git-Monitor
 ```
 You are ready to build the project. Execute the following:
 ```
-$ go get
 $ go build 
 ```
 Then run with 
 ```
 $ ./Git-Monitor
 ```
-(or if you have the $GOPATH/bin configured globally, you can run anywhere with `$ Git-Monitor`).
+(or if you have the $GOPATH/bin configured globally, you can run in any directory by invoking `$ Git-Monitor`).
 
-Navigate to http://localhost:8080 in your browser. Hit http://localhost:8080/heatmap to access the BETA HeatMap on the [Metrics Microservice](hub.jazz.net/git/schurman93/metrics-service) repository.
+Navigate to http://localhost:8080 in your browser. 
