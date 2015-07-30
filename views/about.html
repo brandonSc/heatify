@@ -4,14 +4,20 @@
 <div class="container">
     <h1 style="text-align: center">About Heatify</h1>
     <h5 style="color: grey; text-align: center">Version 0.1 [<i>BETA</i>]</h5>
-    <p class="flow-text">Heatify is developed by the Reference-Apps squad of the IBM Alchemy project.
-    It's main purpose is to encourage good Agile development practice, where contributors make small and frequent commits. 
+    <p class="flow-text">
+    The main purpose of Heatify is to encourage good Agile development practice, where contributors make small and frequent commits. 
     Heatify accomplishes this by showing developers, quickly and visually, their project activity and commits are. 
     <br><br>
-    The Reference-Apps team develops applications which test our IBM Bluemix cloud platform, as well as teach our customers about the advantages of using Bluemix and how to use it.
+    Heatify works by keeping track of Git repositories that are entered in by users. 
+    We use our Git-Monitor system to track repositories, while Heatify is the User Interface that works on top of Git-Monitor.
+    You might notice that it takes longer to view a HeatMap for a new repository (time will vary depending on the size of the repository). 
+    That's because the Git-Monitor has more work to do for new entries. Afterwards, when the repository is tracked, things will run rather quickly.
+    <br><br>
+    Heatify is developed by the Reference-Apps squad of the IBM Alchemy project (the driving force behind the development of IBM Bluemix).
+    The Reference-Apps team develops applications which test our IBM Bluemix cloud platform, as well as teach our customers about the advantages of Bluemix, and how to use it.
     <br> <br>
     <!-- <img src="/static/images/golang.png" width="55px" height="75px"></img> -->
-    Haetify is our squad's first reference-app written in <a href="http://golang.org/">Go</a>.
+    Heatify is our squad's first reference-app written in <a href="http://golang.org/">Go</a>.
     </p>
     <h3 style="padding-top: 2%; padding-left: 10%">Usage</h3>
     <p class="flow-text">
@@ -20,7 +26,7 @@
     <br><br>
     - Public Repositories: easily render a public repo into a HeatMap. Simply copy and paste the HTTP or HTTPS URL into the field on the <a href="/">Landing Page</a>
     <br><br>
-    - Private Repositores: first add the <b>Git Monitr</b> bot as a member to your private repo. Heatify's is becoming increasingly more secure, but for now becareful if you have code you don't want out in the world.
+    - Private Repositores: first add the <b>Git-Monitor Bot</b> as a member to your private repo. Heatify is becoming increasingly more secure, but for now be careful if you have code you don't want out in the world.
     <br><br>
     - Repository HeatMap: By default, Heatify will generate a HeatMap showing how many commits are made on each day of the month. The HeatMeter shows how many commits qualify for each tier.
     <br><br>
