@@ -75,8 +75,23 @@ func HeatMapRepo(w http.ResponseWriter, r *http.Request) {
 	page.Execute(w, p)
 }
 
+//
+// show the HeatMap search page for Users
+//
 func HeatMapUser(w http.ResponseWriter, r *http.Request) {
-	fmt.Println(w, "TODO")
+	p, err := LoadPage("users")
+	if err != nil {
+		fmt.Println("Error: %s", err)
+		fmt.Fprintf(w, "An error occured while rendering a page")
+		return
+	}
+	p.Title = "Users"
+
+	page := template.Must(template.ParseFiles(
+		"views/_base.html",
+		"views/users.html",
+	))
+	page.Execute(w, p)
 }
 
 //
@@ -117,6 +132,9 @@ func ShowError(w http.ResponseWriter, reason string) {
 	page.Execute(w, p)
 }
 
+//
+// show the 'about' page /about
+//
 func ShowAbout(w http.ResponseWriter, r *http.Request) {
 	p, err := LoadPage("about")
 	if err != nil {
