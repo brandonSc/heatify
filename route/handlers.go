@@ -47,7 +47,7 @@ func HeatMapRepo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	name := parse_repo_name(repo)
+	name, repo := parse_repo(repo)
 	if name == "" {
 		name = "Git-Monitor"
 	}
@@ -102,14 +102,28 @@ func HeatMap(w http.ResponseWriter, r *http.Request) {
 }
 
 //
+// Return a list of all repositories
+// The user could pick from this list to view the HeatMap
+// ** Private repositories must not be displayed **
+//
+func AllRepos(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "%s", gitutil.AllTrackedRepos())
+}
+
+//
 // Get the name of the repository from the full git URL
 // (works for jazz and github)
+// if random is provided, then the original url is replaced
 //
-func parse_repo_name(url string) string {
+func parse_repo(url string) (string, string) {
+	if url == "random" {
+		url = gitutil.GetRandomRepo()
+	}
 	parts := strings.SplitAfter(url, "/")
 	str := parts[len(parts)-1]
 	str = strings.TrimRight(str, ".git")
-	return str
+	fmt.Println(url)
+	return str, url
 }
 
 //

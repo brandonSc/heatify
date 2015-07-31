@@ -42,4 +42,10 @@ var routes = Routes{
 		"/about",
 		ShowAbout,
 	},
+	Route{
+		"AllRepos",
+		"GET",
+		"/heatmap/repo/all",
+		AllRepos,
+	},
 }
