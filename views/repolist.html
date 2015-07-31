@@ -1,0 +1,64 @@
+{{ define "title" }}Heatify - Repositories{{ end }}
+{{ define "content"}}
+
+<div class="container">
+    <h3 style="text-align: center; padding:20px;">All Tracked Repositories</h3>
+    <ul id="table" class="collection">
+        <!-- table populated in script below -->
+    </ul>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function(){
+    var parseGitName = function(url) {
+        var strs = url.split("/");
+        return strs[strs.length-1].replace(".git", "");
+    };
+
+    var parseJazzName = function(url) { 
+        var strs = url.split("/");
+        return strs[strs.length-1];
+    };
+    var data = {{.Extra}}
+    var ul = document.getElementById("table");
+    console.log(table);
+    for ( var i=0; i<data.length; i++ ) {
+        var li = document.createElement("li");
+        li.className = "collection-item avatar";
+        var url = data[i];
+        var img = document.createElement("img");
+        img.className = "circle";
+        var name = "";
+        if ( url.indexOf("github.com") > -1 ) { 
+            img.src = "/static/images/github.png";
+            name = parseGitName(url);
+        } else if ( url.indexOf("hub.jazz.net") > -1 ) {
+            img.src = "/static/images/bluemix.png";
+            name = parseJazzName(url);
+        } 
+        li.appendChild(img);
+        var b = document.createElement("b");
+        b.style = "color:black";
+        b.innerHTML = name;
+        li.appendChild(b);
+        var br = document.createElement("br");
+        li.appendChild(br);
+        var a = document.createElement("a");
+        a.href = "http://"+url;
+        a.style="color:grey";
+        a.target="_blank";
+        a.innerHTML = url;
+        li.appendChild(a);
+        var aSend = document.createElement("a");
+        aSend.href = "/heatmap/repo?url="+encodeURIComponent(url);
+        aSend.className = "secondary-content";
+        var it = document.createElement("i");
+        it.className = "material-icons";
+        it.innerHTML = "send";
+        aSend.appendChild(it);
+        li.appendChild(aSend);
+        ul.appendChild(li);
+    }
+});
+</script>
+{{ end }}

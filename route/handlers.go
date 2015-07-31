@@ -67,6 +67,7 @@ func HeatMapRepo(w http.ResponseWriter, r *http.Request) {
 	}
 	p.Title = name
 	p.Data = res
+	p.Repo = repo
 
 	page := template.Must(template.ParseFiles(
 		"views/_base.html",
@@ -107,7 +108,20 @@ func HeatMap(w http.ResponseWriter, r *http.Request) {
 // ** Private repositories must not be displayed **
 //
 func AllRepos(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "%s", gitutil.AllTrackedRepos())
+	p, err := LoadPage("repolist")
+	if err != nil {
+		fmt.Println("Error: %s", err)
+		fmt.Fprintf(w, "An error occured while rendering a page")
+		return
+	}
+	p.Title = "About"
+	p.Extra = gitutil.AllTrackedRepos()
+
+	page := template.Must(template.ParseFiles(
+		"views/_base.html",
+		"views/repolist.html",
+	))
+	page.Execute(w, p)
 }
 
 //
@@ -121,8 +135,7 @@ func parse_repo(url string) (string, string) {
 	}
 	parts := strings.SplitAfter(url, "/")
 	str := parts[len(parts)-1]
-	str = strings.TrimRight(str, ".git")
-	fmt.Println(url)
+	str = strings.TrimSuffix(str, ".git")
 	return str, url
 }
 

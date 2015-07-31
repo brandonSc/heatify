@@ -9,6 +9,8 @@ type Page struct {
 	Title string
 	Body  []byte
 	Data  string
+	Repo  string
+	Extra []string
 }
 
 //

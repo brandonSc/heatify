@@ -12,7 +12,10 @@
 </head>
 <body>
     <div class="center">
-        <h3 class="title">HeatMap of '{{.Title}}'</h3>
+        <div class="title">
+            <h3>HeatMap of '{{.Title}}'</h3>
+            <a target="_blank" href="http://{{.Repo}}" style="text-align:center;color:grey">{{.Repo}}</a>
+        </div>
         <div class="container" style="padding-bottom:10px">
             <a id="right-pan" style="font-size: 24px; right: 0%" class="waves-effect waves-teal btn-flat">&#60;</a>
             <a id="left-pan" style="font-size: 24px; left: 0%" class="waves-effect waves-teal btn-flat">&#62;</a>
