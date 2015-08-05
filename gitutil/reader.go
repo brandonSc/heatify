@@ -31,7 +31,7 @@ func AllTrackedRepos() []string {
 func RebuildUrlFromDir(dir string) string {
 	url := strings.Replace(dir, ".", "/", -1)
 	url = strings.Replace(url, "/git", ".git", -1)
-	url = strings.Replace(url, "hub/jazz/net", "hub.jazz.net", -1)
+	url = strings.Replace(url, "hub/jazz/net.git", "hub.jazz.net/git", -1)
 	url = strings.Replace(url, "/com", ".com", -1)
 	return url
 }

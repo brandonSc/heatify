@@ -38,14 +38,14 @@ $(document).ready(function(){
         } 
         li.appendChild(img);
         var b = document.createElement("b");
-        b.style = "color:black";
+        b.className = "list-item-title";
         b.innerHTML = name;
         li.appendChild(b);
         var br = document.createElement("br");
         li.appendChild(br);
         var a = document.createElement("a");
+        a.className = "list-item-url";
         a.href = "http://"+url;
-        a.style="color:grey";
         a.target="_blank";
         a.innerHTML = url;
         li.appendChild(a);
