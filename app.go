@@ -6,6 +6,7 @@ import (
 	"os"
 	//for extracting service credentials from VCAP_SERVICES
 	//"github.com/cloudfoundry-community/go-cfenv"
+	"hub.jazz.net/git/schurman93/Git-Monitor/cadb"
 	"hub.jazz.net/git/schurman93/Git-Monitor/gitutil"
 	"hub.jazz.net/git/schurman93/Git-Monitor/route"
 )
@@ -26,6 +27,10 @@ func main() {
 	if host = os.Getenv("VCAP_APP_HOST"); len(host) == 0 {
 		host = DEFAULT_HOST
 	}
+
+	// setup the database
+	cadb.Init()
+	//cadb.Get("gitmonitor-repos", "_all_docs")
 
 	// grab the router and request handlers
 	router := route.NewRouter()
