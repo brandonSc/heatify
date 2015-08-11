@@ -1,13 +1,16 @@
 package main
 
 import (
+	//	"fmt"
 	"log"
 	"net/http"
 	"os"
+	"time"
 	//for extracting service credentials from VCAP_SERVICES
 	//"github.com/cloudfoundry-community/go-cfenv"
 	"hub.jazz.net/git/schurman93/Git-Monitor/cadb"
 	"hub.jazz.net/git/schurman93/Git-Monitor/gitutil"
+	"hub.jazz.net/git/schurman93/Git-Monitor/model"
 	"hub.jazz.net/git/schurman93/Git-Monitor/route"
 )
 
@@ -30,7 +33,18 @@ func main() {
 
 	// setup the database
 	cadb.Init()
-	//cadb.Get("gitmonitor-repos", "_all_docs")
+
+	// test the database
+	rc := model.RepoCommits{
+		"hub.jazz.net/test/example",
+		time.Now(),
+		"0x1ab234c56d",
+		3,
+	}
+
+	rc.DbCreate()
+
+	model.DbRetrieveAllRepoCommits()
 
 	// grab the router and request handlers
 	router := route.NewRouter()
