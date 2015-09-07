@@ -41,10 +41,8 @@ func main() {
 		"0x1ab234c56d",
 		3,
 	}
-
 	rc.DbCreate()
-
-	model.DbRetrieveAllRepoCommits()
+	model.DbRetrieveAllRepoCommits("whatev")
 
 	// grab the router and request handlers
 	router := route.NewRouter()

@@ -10,13 +10,13 @@ import (
 )
 
 //
-// Indicates the number of commits to a repository on particular day
+// This structure holds the number of commits to a repository on particular day
 //
 type RepoCommits struct {
 	URL     string    `json:"url"`     // URL of the repository
 	Date    time.Time `json:"date"`    // date of the commits on the repo: YYYY/MM/DD
 	LastId  string    `json:"lastId"`  // most recent commit ID (hex) for distinguishing new commits on current date
-	Commits int       `json:"commits"` // number of commits on this day
+	Commits float64   `json:"commits"` // number of commits on this day
 }
 
 //
@@ -39,7 +39,8 @@ func (rc RepoCommits) DbCreate() {
 // Get a list of all db records created under the URL
 // this is the function that is called to get the data for the Repository HeatMap
 //
-func DbRetrieveAllRepoCommits() []RepoCommits {
+func DbRetrieveAllRepoCommits(url string) []RepoCommits {
+	fmt.Println("(TODO) retrieving for URL: " + url)
 	json := `{
 		"selector": {
 			"_id": {
@@ -55,6 +56,7 @@ func DbRetrieveAllRepoCommits() []RepoCommits {
 	res, err := cadb.Post("gitmonitor-repos", json, "_find")
 	if err != nil {
 		fmt.Printf("error, model.RepoCommits.DbRetrieveAll: %s\n", err)
+		return nil
 	}
 	buf := new(bytes.Buffer)
 	buf.ReadFrom(res.Body)
@@ -71,10 +73,16 @@ func json_to_array(js string) []RepoCommits {
 	docs := m["docs"].([]interface{})
 	var a []RepoCommits
 	for i := range docs {
-		c := &RepoCommits{}
-		json.Unmarshal([]byte(docs[i]), &c)
-		fmt.Println(c)
+		//c := &RepoCommits{}
+		c := docs[i].(map[string]interface{})
+		a = append(a, RepoCommits{
+			c["URL"].(string),
+			time.Now(),
+			//c["date"].(time.Time),
+			c["LastId"].(string),
+			c["Commits"].(float64),
+		})
 	}
 
-	return nil
+	return a
 }
