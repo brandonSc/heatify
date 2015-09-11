@@ -5,7 +5,6 @@ import (
 	//"hub.jazz.net/git/schurman93/Git-Monitor/model"
 	"io/ioutil"
 	"os/exec"
-	"strings"
 )
 
 //

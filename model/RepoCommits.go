@@ -14,7 +14,7 @@ import (
 //
 type RepoCommits struct {
 	URL     string    `json:"url"`     // URL of the repository
-	Date    time.Time `json:"date"`    // date of the commits on the repo: YYYY/MM/DD
+	Date    time.Time `json:"date"`    // date of the commits on the repo: YYYY/MM/DD (TODO confirm this)
 	LastId  string    `json:"lastId"`  // most recent commit ID (hex) for distinguishing new commits on current date
 	Commits float64   `json:"commits"` // number of commits on this day
 }
@@ -45,7 +45,8 @@ func DbRetrieveAllRepoCommits(url string) []RepoCommits {
 		"selector": {
 			"_id": {
 				"$gt": 0
-			}
+			}, 
+			"url": "` + url + `" 
 		},
 		"sort": [
 			{
@@ -83,6 +84,5 @@ func json_to_array(js string) []RepoCommits {
 			c["Commits"].(float64),
 		})
 	}
-
 	return a
 }
