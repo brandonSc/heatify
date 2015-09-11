@@ -37,38 +37,13 @@ func ParseCommits(repoUrl string) (string, error) {
 }
 
 func check_exists(repoUrl string) bool {
-	var dir = ".clones/" + strings.Replace(repoUrl, "/", ".", -1)
+	var dir = ".clones/" + UrlToDir(repoUrl)
 	_, err := ioutil.ReadDir(dir)
 	if err == nil {
 		return true
 	} else {
 		return false
 	}
-}
-
-//
-// run the 'git logs' command and parse the output into JSON
-//
-func crunch_stats(repoUrl string) (string, error) {
-	var dir = ".clones/" + strings.Replace(repoUrl, "/", ".", -1)
-	var script = `git log \
-	--pretty=format:'{%n  "commit": "%H",%n  "author": "%an <%ae>",%n  "date": "%ad",%n  "message": "%f"%n},' \
-	$@ | \
-	perl -pe 'BEGIN{print "["}; END{print "]\n"}' | \
-	perl -pe 's/},]/}]/'`
-
-	cmd := exec.Command("/bin/bash", "-c", "cd "+dir+" && "+script)
-	//fmt.Print("crunching the numbers...")
-	out, err := cmd.Output()
-	//fmt.Println("done")
-
-	if err != nil {
-		fmt.Print("an error occured running 'git log' on repo/dir '" + dir + "'. ")
-		fmt.Printf("error is: %s\n", err)
-		return "error in crunch_stats", err
-	}
-
-	return string(out[:]), nil
 }
 
 //
@@ -79,7 +54,7 @@ func clone_repo(repoUrl string) error {
 	var arg1 = "clone"
 	//var arg2 = "--bare"
 	var arg2 = "http://" + repoUrl
-	var arg3 = ".clones/" + strings.Replace(repoUrl, "/", ".", -1)
+	var arg3 = ".clones/" + UrlToDir(repoUrl)
 
 	cmd := exec.Command(arg0, arg1, arg2, arg3)
 	err := cmd.Start()
@@ -111,7 +86,7 @@ func clone_repo(repoUrl string) error {
 func delete_repo(repoUrl string) error {
 	var arg0 = "rm"
 	var arg1 = "-rf"
-	var arg2 = ".clones/" + strings.Replace(repoUrl, "/", ".", -1)
+	var arg2 = ".clones/" + UrlToDir(repoUrl)
 
 	cmd := exec.Command(arg0, arg1, arg2)
 	err := cmd.Run()

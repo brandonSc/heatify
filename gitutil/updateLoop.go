@@ -38,4 +38,5 @@ func UpdateRefs(path string) {
 		fmt.Printf("error fetching refs for %s. error is %s\n", path, err)
 	}
 	//fmt.Println("done updating refs for " + path)
+	//crunch_stats
 }
