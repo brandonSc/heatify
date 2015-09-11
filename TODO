@@ -8,3 +8,5 @@
 - update UI with "track this repository" toggle 
     - this should send an invite to the repository from git-monitor
     - similarily, git-monitor should scrape the web ui for invites and 'track' repositories that way
+
+- somewhere in there: gitlab repository support
