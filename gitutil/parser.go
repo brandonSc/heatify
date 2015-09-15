@@ -8,7 +8,12 @@ import (
 )
 
 //
-// Public - parse the results of git clone and git logs into structs
+// This is the entry point for parsing a given repository URL,
+// then generating returning the repository's git commit history (which can be heat-mapped)
+// The function does the following:
+// - parse the URL into a directory path
+// - clone the repository into that directory, if it does not exist
+// - convert the git logs into JSON and return that to send back to the browser
 //
 func ParseCommits(repoUrl string) (string, error) {
 	//fmt.Println("parsing commit history")
@@ -35,6 +40,10 @@ func ParseCommits(repoUrl string) (string, error) {
 	return res, nil
 }
 
+//
+// if reading a directory returns an error,
+// we will assume it doesn't exist
+//
 func check_exists(repoUrl string) bool {
 	var dir = ".clones/" + UrlToDir(repoUrl)
 	_, err := ioutil.ReadDir(dir)
@@ -46,56 +55,26 @@ func check_exists(repoUrl string) bool {
 }
 
 //
-// Clone the git repository into the temporary .clones/ directory
+// run the 'git logs' command and parse the output into JSON
 //
-func clone_repo(repoUrl string) error {
-	var arg0 = "git"
-	var arg1 = "clone"
-	//var arg2 = "--bare"
-	var arg2 = "http://" + repoUrl
-	var arg3 = ".clones/" + UrlToDir(repoUrl)
+func crunch_stats(repoUrl string) (string, error) {
+	var dir = ".clones/" + UrlToDir(repoUrl)
+	var script = `git log \
+	--pretty=format:'{%n  "commit": "%H",%n  "author": "%an <%ae>",%n  "date": "%ad",%n  "message": "%f"%n},' \
+	$@ | \
+	perl -pe 'BEGIN{print "["}; END{print "]\n"}' | \
+	perl -pe 's/},]/}]/'`
 
-	cmd := exec.Command(arg0, arg1, arg2, arg3)
-	err := cmd.Start()
-	//stdin, _ := cmd.StdinPipe()
+	cmd := exec.Command("/bin/bash", "-c", "cd "+dir+" && "+script)
+	//fmt.Print("crunching the numbers...")
+	out, err := cmd.Output()
+	//fmt.Println("done")
 
 	if err != nil {
-		fmt.Print("an error occured attempting to execute 'git clone' ")
-		fmt.Print("with parameters: " + arg2 + ", " + arg3 + ": ")
+		fmt.Print("an error occured running 'git log' on repo/dir '" + dir + "'. ")
 		fmt.Printf("error is: %s\n", err)
-		return err
+		return "error in crunch_stats", err
 	}
 
-	//fmt.Printf("waiting for clone to finish...")
-	err = cmd.Wait()
-	//fmt.Printf("done\n")
-
-	if err != nil {
-		fmt.Printf("an error occured during the execution of 'git clone': %s\n", err)
-		return err
-	}
-
-	//fmt.Println("git clone completed successfully")
-	return nil
-}
-
-//
-// Delete the git repo from .clones/
-//
-func delete_repo(repoUrl string) error {
-	var arg0 = "rm"
-	var arg1 = "-rf"
-	var arg2 = ".clones/" + UrlToDir(repoUrl)
-
-	cmd := exec.Command(arg0, arg1, arg2)
-	err := cmd.Run()
-
-	if err != nil {
-		fmt.Print("an error occured during the deletion 'rm -rf' of: " + arg2 + ". ")
-		fmt.Printf("error is: %s\n", err)
-		return err
-	}
-
-	//fmt.Println("local git repo deleted successfully")
-	return nil
+	return string(out[:]), nil
 }

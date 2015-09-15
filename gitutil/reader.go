@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"math/rand"
-	"strings"
 )
 
 //
@@ -19,21 +18,9 @@ func AllTrackedRepos() []string {
 	repos := make([]string, len(dirs))
 	for i := 0; i < len(dirs); i++ {
 		dir := dirs[i].Name()
-		repos[i] = RebuildUrlFromDir(dir)
+		repos[i] = DirToUrl(dir)
 	}
 	return repos
-}
-
-//
-// rebuild the url from the directory format
-// some serious ad-hoc stuff..
-//
-func RebuildUrlFromDir(dir string) string {
-	url := strings.Replace(dir, ".", "/", -1)
-	url = strings.Replace(url, "/git", ".git", -1)
-	url = strings.Replace(url, "hub/jazz/net.git", "hub.jazz.net/git", -1)
-	url = strings.Replace(url, "/com", ".com", -1)
-	return url
 }
 
 //
@@ -47,5 +34,5 @@ func GetRandomRepo() string {
 		fmt.Printf("error reading directory structure of .clones %s\n", err)
 	}
 	r := rand.Intn(len(dirs))
-	return RebuildUrlFromDir(dirs[r].Name())
+	return DirToUrl(dirs[r].Name())
 }
