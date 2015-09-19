@@ -27,7 +27,7 @@ func ParseCommits(repoUrl string) (string, error) {
 		}
 	}
 
-	res, err := crunch_stats(repoUrl)
+	res, err := commits_to_json(repoUrl)
 	if err != nil {
 		return "error", err
 	}
@@ -57,7 +57,7 @@ func check_exists(repoUrl string) bool {
 //
 // run the 'git logs' command and parse the output into JSON
 //
-func crunch_stats(repoUrl string) (string, error) {
+func commits_to_json(repoUrl string) (string, error) {
 	var dir = ".clones/" + UrlToDir(repoUrl)
 	var script = `git log \
 	--pretty=format:'{%n  "commit": "%H",%n  "author": "%an <%ae>",%n  "date": "%ad",%n  "message": "%f"%n},' \

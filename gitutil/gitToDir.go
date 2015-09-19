@@ -6,9 +6,9 @@ import (
 
 const (
 	GITHUB_URL_IDENTIFIER = "github.com"
-	GITHUB_DIR_IDENTIFIER = "github/com"
+	GITHUB_DIR_IDENTIFIER = "github.com"
 	JAZZ_URL_IDENTIFIER   = "hub.jazz.net"
-	JAZZ_DIR_IDENTIFIER   = "hub/jazz/net"
+	JAZZ_DIR_IDENTIFIER   = "hub.jazz.net"
 )
 
 func UrlToDir(url string) string {
@@ -27,6 +27,9 @@ func UrlToDir(url string) string {
 }
 
 func DirToUrl(path string) string {
+	if strings.Contains(path, ".clones") {
+		path = strings.Replace(path, ".clones", "", -1)
+	}
 	if strings.Contains(path, GITHUB_DIR_IDENTIFIER) {
 		// standard github URL
 		return github_dir_to_url(path)
@@ -37,7 +40,7 @@ func DirToUrl(path string) string {
 		// IBM GitLab url
 		return "not implemented"
 	} else {
-		return "repository type not supported: " + path
+		return "directory type not supported: " + path
 	}
 }
 
@@ -58,7 +61,7 @@ func jazzhub_url_to_dir(url string) string {
 
 func jazzhub_dir_to_url(path string) string {
 	url := strings.Replace(path, ".", "/", -1)
-	url = strings.Replace(url, "hub/jazz/net.git", "hub.jazz.net/git", -1)
+	url = strings.Replace(url, "hub/jazz/net", "hub.jazz.net", -1)
 	url = strings.Replace(url, "/com", ".com", -1)
 	return url
 }

@@ -1,6 +1,7 @@
-- convert to use better URL to DIR conversion functions
 - store #commits per day for each repo in cloudant
-    - refactor the updateLoop and parser to talk to cloudant and use the model structs
+    - build an array of RepoCommits
+        - check the dates on the commit log and concatenate them into single days (ie remove the time from the date string)
+        - compare LastId in cloudant, and update cloudant with any RepoCommits that come after LastId 
 - store users encountered in cloudant
 - store #commits made by each user on each day
 - update UI for users heatmaps

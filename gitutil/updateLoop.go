@@ -6,7 +6,10 @@ import (
 	"time"
 )
 
-const INTERVAL = 10 // update interval in minutes
+const (
+	INTERVAL   = 10 // update interval in minutes
+	CLONES_DIR = ".clones"
+)
 
 //
 // runs continually forever (should run this in a new goroutine)
@@ -14,13 +17,13 @@ const INTERVAL = 10 // update interval in minutes
 //
 func RunUpdateLoop() {
 	for {
-		dirs, err := ioutil.ReadDir(".clones")
+		dirs, err := ioutil.ReadDir(CLONES_DIR)
 		if err != nil {
 			fmt.Printf("error reading directory structure of .clones %s\n", err)
 		}
 		for i := 0; i < len(dirs); i++ {
 			dir := dirs[i].Name()
-			go UpdateRefs(".clones/" + dir)
+			go UpdateRefs(dir)
 		}
 		time.Sleep(INTERVAL * time.Minute)
 	}
