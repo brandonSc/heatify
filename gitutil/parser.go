@@ -60,7 +60,7 @@ func check_exists(repoUrl string) bool {
 func commits_to_json(repoUrl string) (string, error) {
 	var dir = ".clones/" + UrlToDir(repoUrl)
 	var script = `git log \
-	--pretty=format:'{%n  "commit": "%H",%n  "author": "%an <%ae>",%n  "date": "%ad",%n  "message": "%f"%n},' \
+	--pretty=format:'{%n  "commit": "%H",%n  "author": "%an <%ae>",%n  "date": "%at",%n  "message": "%f"%n},' \
 	$@ | \
 	perl -pe 'BEGIN{print "["}; END{print "]\n"}' | \
 	perl -pe 's/},]/}]/'`
