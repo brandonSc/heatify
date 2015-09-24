@@ -29,7 +29,7 @@ func UpdateRefs(path string) {
 		return
 	}
 	// parse the JSON into go structs
-	allCommits := json_to_gostruct(js)
+	allCommits := json_to_gostruct(js, url)
 	fmt.Printf("LEN: %d\n", len(allCommits))
 
 	// calculate the latest commits
@@ -42,30 +42,78 @@ func UpdateRefs(path string) {
 
 }
 
-func json_to_gostruct(js string) []model.RepoCommits {
-	var rc []model.RepoCommits
+//
+// Convert a JSON string to an array of RepoCommits structs
+//
+func json_to_gostruct(js string, url string) []model.RepoCommits {
+	// a list of RepoCommits - indication commits-per-day
+	var rcList []model.RepoCommits
+	// a map used to build the list of RepoCommits
+	rcMap := make(map[int64]model.RepoCommits)
 
-	//datePos := time.Now()
 	var f []interface{}
 	json.Unmarshal([]byte(js), &f)
 
 	for i := range f {
 		m := f[i].(map[string]interface{})
+		// parse the date from the JSON
 		secs, err := strconv.ParseInt(m["date"].(string), 10, 64)
 		if err != nil {
 			fmt.Println("Error, gitutil.json_to_gostruct: %s\n")
 		}
 		cDate := time.Unix(secs, 0)
-		fmt.Printf("date: %s\n", cDate)
+		// remove the time on the date so that only DD/MM/YYYY info remain
+		nDate := time.Date(cDate.Year(), cDate.Month(), cDate.Day(), 0, 0, 0, 0, time.UTC)
+		// concatenate the dates ..
+		if rcMap[nDate.Unix()].URL == "" {
+			rcMap[nDate.Unix()] = model.RepoCommits{
+				url,
+				nDate,
+				"",
+				1,
+			}
+		} else {
+			rc := rcMap[nDate.Unix()]
+			rc.Commits += 1
+			rcMap[nDate.Unix()] = rc
+		}
 	}
 
-	return rc
+	fmt.Println("For repository: " + url)
+	for _, j := range rcMap {
+		fmt.Printf("\tOn %s -> %d commits made\n", j.Date, j.Commits)
+	}
+
+	return rcList
 }
 
+//
+// compare local RepoCommits to the ones stored on cloudant,
+// to determine which RepoCommits are new
+//
 func filter_changeset(allCommits []model.RepoCommits, dbCommits []model.RepoCommits) []model.RepoCommits {
 	var rc []model.RepoCommits
 
 	// TODO
 
 	return rc
+}
+
+//
+// returns true if the dates without the time (hours, minutes, etc) are equal
+//
+func equal_dates(date1 time.Time, date2 time.Time) bool {
+	return date1.Year() == date2.Year() &&
+		date1.Month() == date2.Month() &&
+		date1.Day() == date2.Day()
+}
+
+//
+// returns true if the `date1` without the time
+// (hours, minutes, etc) is less than `date2`
+//
+func before_date(date1 time.Time, date2 time.Time) bool {
+	return date1.Year() < date2.Year() ||
+		date1.Month() < date2.Month() ||
+		date1.Day() < date2.Day()
 }

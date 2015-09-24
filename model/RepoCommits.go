@@ -16,7 +16,7 @@ type RepoCommits struct {
 	URL     string    `json:"url"`     // URL of the repository
 	Date    time.Time `json:"date"`    // date of the commits on the repo: YYYY/MM/DD (TODO confirm this)
 	LastId  string    `json:"lastId"`  // most recent commit ID (hex) for distinguishing new commits on current date
-	Commits float64   `json:"commits"` // number of commits on this day
+	Commits int       `json:"commits"` // number of commits on this day
 }
 
 //
@@ -81,7 +81,7 @@ func json_to_array(js string) []RepoCommits {
 			time.Now(),
 			//c["date"].(time.Time),
 			c["LastId"].(string),
-			c["Commits"].(float64),
+			c["Commits"].(int),
 		})
 	}
 	return a
