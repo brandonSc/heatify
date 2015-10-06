@@ -18,7 +18,7 @@ func UpdateRefs(path string) {
 	cmd := exec.Command("/bin/bash", "-c", "cd "+CLONES_DIR+"/"+path+" && git pull origin master")
 	err := cmd.Run()
 	if err != nil {
-		log.Printf("error fetching refs for %s. error is %s\n", path, err)
+		log.Printf("error, gitutil.UpdateRefs: error fetching refs for %s. error is %s\n", path, err)
 		return
 	}
 	// get the local git commits in JSON
@@ -30,7 +30,7 @@ func UpdateRefs(path string) {
 	}
 	// parse the JSON into go structs
 	allCommits := json_to_gostruct(js, url)
-	fmt.Printf("LEN: %d\n", len(allCommits))
+	fmt.Printf("%s LEN: %d\n", url, len(allCommits))
 
 	// calculate the latest commits
 	//dbCommits := model.DbRetrieveAllRepoCommits(url)
@@ -81,7 +81,8 @@ func json_to_gostruct(js string, url string) []model.RepoCommits {
 
 	fmt.Println("For repository: " + url)
 	for _, j := range rcMap {
-		fmt.Printf("\tOn %s -> %d commits made\n", j.Date, j.Commits)
+		//fmt.Printf("\tOn %s -> %d commits made\n", j.Date, j.Commits)
+		rcList = append(rcList, j)
 	}
 
 	return rcList
