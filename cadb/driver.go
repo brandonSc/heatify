@@ -61,8 +61,8 @@ func Get(collection string, apiEndpoint string) (*http.Response, error) {
 //
 // Submit a POST to Cloudant with the `json` body to the `apiEndpoint`
 //
-func Post(collection string, json string, apiEndpoint string) (*http.Response, error) {
-	req := build_request("POST", collection, json, apiEndpoint)
+func Post(collection string, js string, apiEndpoint string) (*http.Response, error) {
+	req := build_request("POST", collection, js, apiEndpoint)
 	res, err := client.Do(req)
 	return res, err
 }
@@ -70,8 +70,8 @@ func Post(collection string, json string, apiEndpoint string) (*http.Response, e
 //
 // Delete a collection with the provided apiEndpoints
 //
-func Delete(collection string, json string, apiEndpoint string) (*http.Response, error) {
-	req := build_request("DELETE", collection, json, apiEndpoint)
+func Delete(collection string, js string, apiEndpoint string) (*http.Response, error) {
+	req := build_request("DELETE", collection, js, apiEndpoint)
 	res, err := client.Do(req)
 	return res, err
 }
@@ -79,8 +79,8 @@ func Delete(collection string, json string, apiEndpoint string) (*http.Response,
 //
 // PUT request to Cloudant
 //
-func Put(collection string, json string, apiEndpoint string) (*http.Response, error) {
-	req := build_request("PUT", collection, json, apiEndpoint)
+func Put(collection string, js string, apiEndpoint string) (*http.Response, error) {
+	req := build_request("PUT", collection, js, apiEndpoint)
 	res, err := client.Do(req)
 	return res, err
 }

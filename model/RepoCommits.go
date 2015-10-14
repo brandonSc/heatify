@@ -41,12 +41,12 @@ func (rc RepoCommits) DbCreate() {
 //
 func DbRetrieveAllRepoCommits(url string) []RepoCommits {
 	fmt.Println("(TODO) retrieving for URL: " + url)
-	json := `{
+	js := `{
 		"selector": {
 			"_id": {
 				"$gt": 0
 			}, 
-			"url": "` + url + `" 
+			"URL": "` + url + `" 
 		},
 		"sort": [
 			{
@@ -54,7 +54,7 @@ func DbRetrieveAllRepoCommits(url string) []RepoCommits {
 			}
 		]
 	}`
-	res, err := cadb.Post("gitmonitor-repos", json, "_find")
+	res, err := cadb.Post("gitmonitor-repos", js, "_find")
 	if err != nil {
 		fmt.Printf("error, model.RepoCommits.DbRetrieveAll: %s\n", err)
 		return nil

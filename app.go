@@ -8,7 +8,7 @@ import (
 	//"time"
 	//for extracting service credentials from VCAP_SERVICES
 	//"github.com/cloudfoundry-community/go-cfenv"
-	//"hub.jazz.net/git/schurman93/Git-Monitor/cadb"
+	"hub.jazz.net/git/schurman93/Git-Monitor/cadb"
 	"hub.jazz.net/git/schurman93/Git-Monitor/gitutil"
 	//"hub.jazz.net/git/schurman93/Git-Monitor/model"
 	"hub.jazz.net/git/schurman93/Git-Monitor/route"
@@ -31,10 +31,9 @@ func main() {
 		host = DEFAULT_HOST
 	}
 
+	// setup the database
+	cadb.Init()
 	/*
-		// setup the database
-		cadb.Init()
-
 		// test the database
 		rc := model.RepoCommits{
 			"hub.jazz.net/test/example",

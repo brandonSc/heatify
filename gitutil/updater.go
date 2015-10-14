@@ -33,10 +33,12 @@ func UpdateRefs(path string) {
 	fmt.Printf("%s LEN: %d\n", url, len(allCommits))
 
 	// calculate the latest commits
-	//dbCommits := model.DbRetrieveAllRepoCommits(url)
-	//newCommits := filter_changeset(allCommits, dbCommits)
+	dbCommits := model.DbRetrieveAllRepoCommits(url)
+	newCommits := filter_changeset(allCommits, dbCommits)
 
-	//fmt.Printf("%s\n", newCommits)
+	for i := range newCommits {
+		fmt.Printf("%s\n", newCommits[i])
+	}
 
 	// send to cloudant database
 
@@ -79,7 +81,6 @@ func json_to_gostruct(js string, url string) []model.RepoCommits {
 		}
 	}
 
-	fmt.Println("For repository: " + url)
 	for _, j := range rcMap {
 		//fmt.Printf("\tOn %s -> %d commits made\n", j.Date, j.Commits)
 		rcList = append(rcList, j)
@@ -91,11 +92,29 @@ func json_to_gostruct(js string, url string) []model.RepoCommits {
 //
 // compare local RepoCommits to the ones stored on cloudant,
 // to determine which RepoCommits are new
+// -- runs in O(n^2) where dbCommits ~= allCommits = n
 //
-func filter_changeset(allCommits []model.RepoCommits, dbCommits []model.RepoCommits) []model.RepoCommits {
+func filter_changeset(localCommits []model.RepoCommits, dbCommits []model.RepoCommits) []model.RepoCommits {
 	var rc []model.RepoCommits
 
-	// TODO
+	for i := range localCommits {
+		found := false
+		for j := range dbCommits {
+			if dbCommits[j].Date == localCommits[i].Date {
+				found = true
+				// found a set of commits in cloudant that matches the local set
+				// now need to determine if the cloudant set needs to be updated
+				if dbCommits[j].Commits < localCommits[i].Commits {
+					rc = append(rc, localCommits[i])
+				}
+			}
+		}
+		if !found {
+			// didn't find a matching commit set in cloudant
+			// need to add it to the changeset
+			rc = append(rc, localCommits[i])
+		}
+	}
 
 	return rc
 }
