@@ -1,7 +1,4 @@
-- store #commits per day for each repo in cloudant
-    - build an array of RepoCommits
-        - check the dates on the commit log and concatenate them into single days (ie remove the time from the date string)
-        - compare LastId in cloudant, and update cloudant with any RepoCommits that come after LastId 
+- need to get retrieval of list of commits in cloudant working, for updater to work
 - store users encountered in cloudant
 - store #commits made by each user on each day
 - update UI for users heatmaps

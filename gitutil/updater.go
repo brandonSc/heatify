@@ -34,6 +34,8 @@ func UpdateRefs(path string) {
 	// calculate the latest commits
 	dbCommits := model.DbRetrieveAllRepoCommits(url)
 	newCommits := filter_changeset(allCommits, dbCommits)
+	fmt.Println(dbCommits)
+	return
 
 	fmt.Println("LEN of changeset: %d\n", len(newCommits))
 
