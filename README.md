@@ -3,7 +3,9 @@ Git-Monitoring
 
 Running Locally 
 ---------------
-First download and install the latest Golang distribution [here](https://golang.org/doc/install#tarball).
+You will need Cloudant DBaaS configured within your `VCAP_SERVICES` environment. This means you will need to either deploy the application as Cloud Foundry droplet, deploy it within a container bound to a Cloud Foundry app to access it's services, or copy-and-paste the contents of `VCAP_SERVICES` into an environment variable if testing on your local machine. 
+
+youniteyouniteFirst download and install the latest Golang distribution [here](https://golang.org/doc/install#tarball).
 Note: if you are using ubuntu, do not install Go through apt-get. The version in the apt repository is out of date and will not work JazzHub URLs.
 If you are new to go, you will have to setup your workspace first. See [How to Write Go Code](https://golang.org/doc/code.html) for official documentation.
 Ensure your `$GOPATH` environment variable should be set to your desired workspace.

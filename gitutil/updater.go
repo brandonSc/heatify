@@ -30,18 +30,15 @@ func UpdateRefs(path string) {
 	}
 	// parse the JSON into go structs
 	allCommits := json_to_gostruct(js, url)
-	fmt.Printf("%s LEN: %d\n", url, len(allCommits))
 
 	// calculate the latest commits
 	dbCommits := model.DbRetrieveAllRepoCommits(url)
 	newCommits := filter_changeset(allCommits, dbCommits)
 
-	for i := range newCommits {
-		fmt.Printf("%s\n", newCommits[i])
-	}
+	fmt.Println("LEN of changeset: %d\n", len(newCommits))
 
 	// send to cloudant database
-
+	model.DbSendRepoCommitsArray(newCommits)
 }
 
 //

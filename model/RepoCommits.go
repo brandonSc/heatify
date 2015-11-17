@@ -36,6 +36,24 @@ func (rc RepoCommits) DbCreate() {
 }
 
 //
+// send an array of `RepoCommits` in JSON to cloudant
+//
+func DbSendRepoCommitsArray(rcs []RepoCommits) {
+	js, err := json.Marshal(rcs)
+	if err != nil {
+		fmt.Printf("error, model.RepoCommits.DbSendRepoCommitsArray: %s\n", err)
+		return
+	}
+	fmt.Println("---------------\n" + `{"docs":` + string(js) + `}` + "\n--------------")
+	res, err := cadb.Post("gitmonitor-repos", `{"docs":`+string(js)+`}`, "_bulk_docs")
+	if err != nil {
+		fmt.Printf("error, model.RepoCommits.DbSendRepoCommitsArray: %s\n", err)
+	} else {
+		fmt.Printf("model.RepoCommits.DbSendRepoCommitsArray: %s\n", res)
+	}
+}
+
+//
 // Get a list of all db records created under the URL
 // this is the function that is called to get the data for the Repository HeatMap
 //
