@@ -35,10 +35,10 @@ func UpdateRefs(path string) {
 	dbCommits := model.DbRetrieveAllRepoCommits(url)
 	newCommits := filter_changeset(allCommits, dbCommits)
 
-	fmt.Println("LEN of changeset: " + len(newCommits))
-
 	// send to cloudant database
-	model.DbSendRepoCommitsArray(newCommits)
+	if len(newCommits) > 0 {
+		model.DbSendRepoCommitsArray(newCommits)
+	}
 }
 
 //
