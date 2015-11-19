@@ -34,10 +34,8 @@ func UpdateRefs(path string) {
 	// calculate the latest commits
 	dbCommits := model.DbRetrieveAllRepoCommits(url)
 	newCommits := filter_changeset(allCommits, dbCommits)
-	fmt.Println(dbCommits)
-	return
 
-	fmt.Println("LEN of changeset: %d\n", len(newCommits))
+	fmt.Println("LEN of changeset: " + len(newCommits))
 
 	// send to cloudant database
 	model.DbSendRepoCommitsArray(newCommits)
@@ -70,7 +68,6 @@ func json_to_gostruct(js string, url string) []model.RepoCommits {
 			rcMap[nDate.Unix()] = model.RepoCommits{
 				url,
 				nDate,
-				"",
 				1,
 			}
 		} else {

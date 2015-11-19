@@ -15,7 +15,7 @@ import (
 )
 
 const (
-	DEFAULT_PORT = "8080"
+	DEFAULT_PORT = "5050"
 	DEFAULT_HOST = ""
 )
 
