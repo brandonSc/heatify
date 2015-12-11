@@ -32,11 +32,13 @@ func UpdateRefs(path string) {
 	allCommits := json_to_gostruct(js, url)
 
 	// calculate the latest commits
-	dbCommits := model.DbRetrieveAllRepoCommits(url)
-	newCommits := filter_changeset(allCommits, dbCommits)
+	dbCommits := model.DbRetrieveAllRepoCommits(url)      // commits in cloudant
+	newCommits := filter_changeset(allCommits, dbCommits) // commits not in cloudant
 
 	// send to cloudant database
 	if len(newCommits) > 0 {
+		fmt.Println(newCommits)
+		return
 		model.DbSendRepoCommitsArray(newCommits)
 	}
 }

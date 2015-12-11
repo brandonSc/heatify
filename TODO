@@ -1,6 +1,6 @@
-- need to get retrieval of list of commits in cloudant working, for updater to work
-- store users encountered in cloudant
+- store users encountered in cloudant 
 - store #commits made by each user on each day
+    - there's a problem with a date from the parser .. comes up as 0/0/0 00:00:00 for some reason..
 - update UI for users heatmaps
 - update UI with "Running on IBM Bluemix" ad
 - update UI with "track this repository" toggle 

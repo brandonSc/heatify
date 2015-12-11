@@ -14,7 +14,7 @@ import (
 //
 type RepoCommits struct {
 	URL     string    `json:"url"`     // URL of the repository
-	Date    time.Time `json:"date"`    // date of the commits on the repo: YYYY/MM/DD (TODO confirm this)
+	Date    time.Time `json:"date"`    // date of the commits on the repo (UNIX epoch)
 	Commits int       `json:"commits"` // number of commits on this day
 	//LastId  string    `json:"lastId"`  // most recent commit ID (hex) for distinguishing new commits on current date
 }
@@ -56,7 +56,6 @@ func DbSendRepoCommitsArray(rcs []RepoCommits) {
 // this is the function that is called to get the data for the Repository HeatMap
 //
 func DbRetrieveAllRepoCommits(url string) []RepoCommits {
-	fmt.Println("(TODO) retrieving for URL: " + url)
 	js := `{
 		"selector": {
 			"_id": {
