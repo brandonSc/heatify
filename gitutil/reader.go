@@ -1,8 +1,10 @@
 package gitutil
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"math/rand"
 )
 
@@ -35,4 +37,20 @@ func GetRandomRepo() string {
 	}
 	r := rand.Intn(len(dirs))
 	return DirToUrl(dirs[r].Name())
+}
+
+//
+// Get a list of commits-per-day,
+// from local clone of repo
+//
+func GetLocalCommits(url string) (string, error) {
+	js, err := commits_to_json(url)
+	if err != nil {
+		log.Printf("Error, gitutil.UpdateRefs: %s\n", err)
+		return "error", err
+	}
+	allCommits := json_to_gostruct(js, url)
+	b, err := json.Marshal(allCommits)
+	fmt.Printf("%s\n", string(b))
+	return string(b), nil
 }

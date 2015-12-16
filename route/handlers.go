@@ -1,11 +1,11 @@
 package route
 
 import (
-	//"encoding/json"
+	"encoding/json"
 	"fmt"
-	//"github.com/gorilla/mux"
 	"html/template"
 	"hub.jazz.net/git/schurman93/Git-Monitor/gitutil"
+	"hub.jazz.net/git/schurman93/Git-Monitor/model"
 	"net/http"
 	"net/url"
 	"strings"
@@ -52,11 +52,24 @@ func HeatMapRepo(w http.ResponseWriter, r *http.Request) {
 		name = "Git-Monitor"
 	}
 
-	res, err := gitutil.ParseCommits(repo)
-	if err != nil {
-		fmt.Println("Error cloning or parsing repository: %s", err)
-		ShowError(w, ERROR_CLONE_REPO)
-		return
+	var data string
+	exists := gitutil.CheckExists(repo)
+	if exists {
+		dbCommits := model.DbRetrieveAllRepoCommits(repo)
+		b, err := json.Marshal(dbCommits)
+		if err != nil {
+			ShowError(w, ERROR_CLONE_REPO)
+			return
+		}
+		data = string(b)
+	} else {
+		res, err := gitutil.CloneRepo(repo)
+		if err != nil {
+			fmt.Println("Error cloning or parsing repository: %s", err)
+			ShowError(w, ERROR_CLONE_REPO)
+			return
+		}
+		data = res
 	}
 
 	p, err := LoadPage("heatmap")
@@ -66,7 +79,7 @@ func HeatMapRepo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	p.Title = name
-	p.Data = res
+	p.Data = data
 	p.Repo = repo
 
 	page := template.Must(template.ParseFiles(

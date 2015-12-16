@@ -15,10 +15,10 @@ import (
 // - clone the repository into that directory, if it does not exist
 // - convert the git logs into JSON and return that to send back to the browser
 //
-func ParseCommits(repoUrl string) (string, error) {
+func CloneRepo(repoUrl string) (string, error) {
 	//fmt.Println("parsing commit history")
 
-	isCloned := check_exists(repoUrl)
+	isCloned := CheckExists(repoUrl)
 
 	if isCloned == false {
 		err := clone_repo(repoUrl)
@@ -27,16 +27,11 @@ func ParseCommits(repoUrl string) (string, error) {
 		}
 	}
 
-	res, err := commits_to_json(repoUrl)
+	res, err := GetLocalCommits(repoUrl)
 	if err != nil {
 		return "error", err
 	}
-	/*
-		err = delete_repo(repoUrl)
-		if err != nil {
-			return "error", err
-		}
-	*/
+
 	return res, nil
 }
 
@@ -44,7 +39,7 @@ func ParseCommits(repoUrl string) (string, error) {
 // if reading a directory returns an error,
 // we will assume it doesn't exist
 //
-func check_exists(repoUrl string) bool {
+func CheckExists(repoUrl string) bool {
 	var dir = ".clones/" + UrlToDir(repoUrl)
 	_, err := ioutil.ReadDir(dir)
 	if err == nil {
