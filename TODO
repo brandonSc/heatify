@@ -1,6 +1,7 @@
 - store users encountered in cloudant 
 - store #commits made by each user on each day
     - theres a problem (leak) where a commit from Git-Monitor repo is getting re-added each time
+      - the commit on Monday, November 16, 2015 is always increased ... :S
 - update UI for users heatmaps
 - update UI with "Running on IBM Bluemix" ad
 - update UI with "track this repository" toggle 

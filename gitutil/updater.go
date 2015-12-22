@@ -37,8 +37,7 @@ func UpdateRefs(path string) {
 
 	// send to cloudant database
 	if len(newCommits) > 0 {
-		fmt.Println(newCommits)
-		return
+		log.Printf("adding %d new commits to %s", len(newCommits), url)
 		model.DbSendRepoCommitsArray(newCommits)
 	}
 }

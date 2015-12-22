@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"hub.jazz.net/git/schurman93/Git-Monitor/gitutil"
 	"hub.jazz.net/git/schurman93/Git-Monitor/model"
+	"log"
 	"net/http"
 	"net/url"
 	"strings"
@@ -35,7 +36,11 @@ func HeatMapAsync(w http.ResponseWriter, r *http.Request) {
 
 //
 // Return the page `/heatmap/repo` page
-// which generates a heatmap for a single repository
+// which generates a heatmap for a single repository.
+// The process works as follows:
+// if the repo exists locally on disk, then grab the commits-per-day from cloudant
+// else clone the repo, crunch the commits-per-day, draw the heatmap with that data,
+// then push that data to cloudant.
 //
 func HeatMapRepo(w http.ResponseWriter, r *http.Request) {
 	repo, err := url.QueryUnescape(r.URL.Query().Get("url"))
@@ -62,6 +67,7 @@ func HeatMapRepo(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		data = string(b)
+		log.Println("Reading activity for existing repo: " + repo)
 	} else {
 		res, err := gitutil.CloneRepo(repo)
 		if err != nil {
@@ -70,6 +76,7 @@ func HeatMapRepo(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		data = res
+		log.Println("New repository: " + repo)
 	}
 
 	p, err := LoadPage("heatmap")

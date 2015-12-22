@@ -45,9 +45,7 @@ func DbSendRepoCommitsArray(rcs []RepoCommits) {
 	}
 	res, err := cadb.Post("gitmonitor-repos", `{"docs":`+string(js)+`}`, "_bulk_docs")
 	if err != nil {
-		fmt.Printf("error, model.RepoCommits.DbSendRepoCommitsArray: %s\n", err)
-	} else {
-		fmt.Printf("model.RepoCommits.DbSendRepoCommitsArray: %s\n", res)
+		fmt.Printf("error, model.RepoCommits.DbSendRepoCommitsArray: %s. Response is: %s\n", err, res)
 	}
 }
 

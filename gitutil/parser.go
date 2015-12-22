@@ -61,9 +61,7 @@ func commits_to_json(repoUrl string) (string, error) {
 	perl -pe 's/},]/}]/'`
 
 	cmd := exec.Command("/bin/bash", "-c", "cd "+dir+" && "+script)
-	//fmt.Print("crunching the numbers...")
 	out, err := cmd.Output()
-	//fmt.Println("done")
 
 	if err != nil {
 		fmt.Print("an error occured running 'git log' on repo/dir '" + dir + "'. ")

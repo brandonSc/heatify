@@ -51,6 +51,6 @@ func GetLocalCommits(url string) (string, error) {
 	}
 	allCommits := json_to_gostruct(js, url)
 	b, err := json.Marshal(allCommits)
-	fmt.Printf("%s\n", string(b))
+	//fmt.Printf("%s\n", string(b))
 	return string(b), nil
 }
