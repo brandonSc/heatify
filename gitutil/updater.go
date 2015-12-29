@@ -29,7 +29,7 @@ func UpdateRefs(path string) {
 		return
 	}
 	// parse the JSON into go structs
-	allCommits := json_to_gostruct(js, url)
+	allCommits := json_to_repoCommits(js, url)
 
 	// calculate the latest commits
 	dbCommits := model.DbRetrieveAllRepoCommits(url)      // commits in cloudant
@@ -43,10 +43,10 @@ func UpdateRefs(path string) {
 }
 
 //
-// Convert a JSON string to an array of RepoCommits structs
+// Convert a JSON string from `git log` to an array of RepoCommits structs
 //
-func json_to_gostruct(js string, url string) []model.RepoCommits {
-	// a list of RepoCommits - indication commits-per-day
+func json_to_repoCommits(js string, url string) []model.RepoCommits {
+	// a list of RepoCommits - indicating commits-per-day
 	var rcList []model.RepoCommits
 	// a map used to build the list of RepoCommits
 	rcMap := make(map[int64]model.RepoCommits)
@@ -59,12 +59,12 @@ func json_to_gostruct(js string, url string) []model.RepoCommits {
 		// parse the date from the JSON
 		secs, err := strconv.ParseInt(m["date"].(string), 10, 64)
 		if err != nil {
-			fmt.Println("Error, gitutil.json_to_gostruct: %s\n")
+			fmt.Println("Error, gitutil.json_to_repoCommits: %s\n")
 		}
 		cDate := time.Unix(secs, 0)
 		// remove the time on the date so that only DD/MM/YYYY info remain
 		nDate := time.Date(cDate.Year(), cDate.Month(), cDate.Day(), 0, 0, 0, 0, time.UTC)
-		// concatenate the dates ..
+		// merge the commits on each day ..
 		if rcMap[nDate.Unix()].URL == "" {
 			rcMap[nDate.Unix()] = model.RepoCommits{
 				url,

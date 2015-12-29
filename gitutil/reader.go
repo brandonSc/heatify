@@ -49,7 +49,7 @@ func GetLocalCommits(url string) (string, error) {
 		log.Printf("Error, gitutil.UpdateRefs: %s\n", err)
 		return "error", err
 	}
-	allCommits := json_to_gostruct(js, url)
+	allCommits := json_to_repoCommits(js, url)
 	b, err := json.Marshal(allCommits)
 	//fmt.Printf("%s\n", string(b))
 	return string(b), nil
