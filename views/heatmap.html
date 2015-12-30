@@ -68,16 +68,21 @@
             
             var data = {{.Data}};
             data = JSON.parse(data);
-
+            var graphData = {};
+            var startDate = new Date();
+            for ( var i=0; i<data.length; i++ ) { 
+                var d = new Date(data[i].date);
+                d.setDate(d.getDate() + 1);
+                graphData[d.getTime()/1000] = data[i].commits;
+                if ( d.getTime() < startDate.getTime() ) 
+                    startDate = d
+            }
             
             var total = document.getElementById('total-commits');
             total.innertHtml += " "+ data.length;
-            console.log("!"+total.innerHtml);
-            console.log("?"+data.length);
             
-            // the starting date (assuming data comes in sorted order) 
-            var d = new Date(data[data.length-1].date);
-            
+           
+            /*
             var parse = function(data) { 
                 var parsed = {};
                 for ( var i=0; i<data.length; i++ ) { 
@@ -92,6 +97,7 @@
             };
             var p = parse(data);
             console.log(p);
+                */
 
             var cal = new CalHeatMap();
             cal.init({
@@ -105,8 +111,8 @@
                 domain: "month",
                 subDomain: "day",
                 tooltip: true,
-                start:  new Date(d.getFullYear(), d.getMonth(), d.getDay()),
-                data: p,
+                start:  new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDay()),
+                data: graphData,
                 onComplete: function() { if(spinner) spinner.stop(); } 
             });
 

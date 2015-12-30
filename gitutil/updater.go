@@ -49,7 +49,7 @@ func json_to_repoCommits(js string, url string) []model.RepoCommits {
 	// a list of RepoCommits - indicating commits-per-day
 	var rcList []model.RepoCommits
 	// a map used to build the list of RepoCommits
-	rcMap := make(map[int64]model.RepoCommits)
+	//rcMap := make(map[int64]model.RepoCommits)
 
 	var f []interface{}
 	json.Unmarshal([]byte(js), &f)
@@ -65,23 +65,42 @@ func json_to_repoCommits(js string, url string) []model.RepoCommits {
 		// remove the time on the date so that only DD/MM/YYYY info remain
 		nDate := time.Date(cDate.Year(), cDate.Month(), cDate.Day(), 0, 0, 0, 0, time.UTC)
 		// merge the commits on each day ..
-		if rcMap[nDate.Unix()].URL == "" {
-			rcMap[nDate.Unix()] = model.RepoCommits{
+		exists := false
+		for i := range rcList {
+			if rcList[i].Date == nDate {
+				rcList[i].Commits = rcList[i].Commits + 1
+				exists = true
+			}
+		}
+		if !exists {
+			rcList = append(rcList, model.RepoCommits{
 				url,
 				nDate,
 				1,
-			}
-		} else {
-			rc := rcMap[nDate.Unix()]
-			rc.Commits += 1
-			rcMap[nDate.Unix()] = rc
+			})
 		}
+
+		/*
+			if rcMap[nDate.Unix()].URL == "" {
+				rcMap[nDate.Unix()] = model.RepoCommits{
+					url,
+					nDate,
+					1,
+				}
+			} else {
+				rc := rcMap[nDate.Unix()]
+				rc.Commits += 1
+				rcMap[nDate.Unix()] = rc
+			}
+		*/
 	}
 
-	for _, j := range rcMap {
-		//fmt.Printf("\tOn %s -> %d commits made\n", j.Date, j.Commits)
-		rcList = append(rcList, j)
-	}
+	/*
+		for _, j := range rcMap {
+			//fmt.Printf("\tOn %s -> %d commits made\n", j.Date, j.Commits)
+			rcList = append(rcList, j)
+		}
+	*/
 
 	return rcList
 }
