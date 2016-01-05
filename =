@@ -156,13 +156,8 @@ func AllSquads(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "An error occured while rendering a page")
 		return
 	}
-
-	squads := model.InitSquadsFromJson()
-	data, err := json.Marshal(squads)
-
 	p.Title = "All Tracked Squads"
-	p.Data = string(data)
-	fmt.Println(string(data))
+	p.Extra = gitutil.AllTrackedSquads()
 
 	page := template.Must(template.ParseFiles(
 		"views/_base.html",

@@ -11,7 +11,7 @@
         <td style='width: 40%; padding-top:10%;'>
             <img class='newappIcon' src='/static/images/gitmonitorlogo.png'>
             <p align="center">
-            The <b>Git-Monitor Bot</b>'s email is:<br>
+            The <b>Git Monitor</b> bot's email is:<br>
             <code><a href="mailto:git-monitor@bg.vnet.ibm.com">git-monitor@bg.vnet.ibm.com</a></code>
             </p>
         </td>
@@ -19,7 +19,7 @@
             <h1 id="message">Heatify [<i>BETA</i>]</h1>
             <p>
             Heatify tracks your git repositories from Jazz and GitHub,
-            and crunches the latest commit statistics for you to view in a HeatMap. 
+            and crunches the latest commit statistics for you to view in a Heatmap. 
             </p>
             <p>
             The goal of Heatify is to encourage good Agile development practices. 
@@ -29,9 +29,9 @@
             <p>
             <h5 style="padding-top: 5px">Getting Started</h5>
             Heatify works out-of-the-box on public Jazz and GitHub git repositories; 
-            simply copy and paste the http URL into the field below to start tracking and view the HeatMap!
-            To view a HeatMap for a private repository, 
-            first add the <b>Git-Monitor Bot</b> as a member to your repo.
+            simply copy and paste the http URL into the field below to start tracking and view the Heatmap!
+            To view a Heatmap for a private repository, 
+            first add <b>Git Monitor</b> as a member to your repo.
             </p>
 
             <form id="measure-the-heat">
@@ -87,12 +87,12 @@
         var showEmptyRepoWarn = function() { 
             return swal({
                   title: "Git URL is empty",
-                  text: "You left the Git URL field empty. You can go back and enter a URL now, or view a HeatMap for a random repository.",
+                  text: "You left the Git URL field empty. You can go back and enter a URL now, or view a Heatmap for a random repository.",
                   type: "info",
                   showCancelButton: true,
                   cancelButtonText: "Go back",
                   confirmButtonColor: "#26A69A",
-                  confirmButtonText: "Random HeatMap!",
+                  confirmButtonText: "Random Heatmap!",
                   closeOnConfirm: false
             },
             function(isConfirm){

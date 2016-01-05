@@ -1,0 +1,7 @@
+{
+    "name": "Dashboard",
+    "repos": [
+        "hub.jazz.net/git/schurman93/Git-Monitor",
+        "hub.jazz.net/git/schurman93/workitems-api"
+    ]
+}

@@ -124,7 +124,7 @@ h1 {
 }
 
 .list-item-title { 
-   color: black; 
+    color: black; 
 }
 
 .list-item-url {
@@ -172,6 +172,10 @@ th {
 th, td {
     text-align: left;
     padding: 2px 20px;
+}
+
+ul li:hover { 
+    color: #999999;
 }
 
 .env-var {
