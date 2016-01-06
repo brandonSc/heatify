@@ -162,11 +162,10 @@ func AllSquads(w http.ResponseWriter, r *http.Request) {
 
 	p.Title = "All Tracked Squads"
 	p.Data = string(data)
-	fmt.Println(string(data))
 
 	page := template.Must(template.ParseFiles(
 		"views/_base.html",
-		"views/repolist.html",
+		"views/squadslist.html",
 	))
 	page.Execute(w, p)
 }

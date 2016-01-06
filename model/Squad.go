@@ -12,8 +12,9 @@ const CONFIG_DIR = "config/squads"
 // This structure holds the number of commits to a repository on particular day
 //
 type Squad struct {
-	Name  string `json:"name"`  // URL of the repository
-	Repos string `json:"repos"` // number of commits on this day
+	Name  string   `json:"name"`  // Name of the squad
+	Image string   `json:"image"` // image URL to display for squad
+	Repos []string `json:"repos"` // an array of repo URLs
 }
 
 //
@@ -27,7 +28,7 @@ func InitSquadsFromJson() []Squad {
 		fmt.Printf("error reading directory structure: %s\n", err)
 	}
 	for i := range names {
-		js, _ := ioutil.ReadFile(names[i].Name())
+		js, _ := ioutil.ReadFile(CONFIG_DIR + "/" + names[i].Name())
 
 		var squad Squad
 		json.Unmarshal([]byte(js), &squad)

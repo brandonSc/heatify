@@ -19,7 +19,9 @@ $(document).ready(function(){
         var strs = url.split("/");
         return strs[strs.length-1];
     };
-    var data = {{.Extra}}
+    var data = {{.Data}}
+    data = JSON.parse(data);
+    console.log(data);
     var ul = document.getElementById("repo-table");
     for ( var i=0; i<data.length; i++ ) {
         var li = document.createElement("li");
@@ -27,19 +29,12 @@ $(document).ready(function(){
         var url = data[i];
         var img = document.createElement("img");
         img.className = "circle";
-        var name = "";
-        if ( url.indexOf("github.com") > -1 ) { 
-            img.src = "/static/images/github.png";
-            name = parseGitName(url);
-        } else if ( url.indexOf("hub.jazz.net") > -1 ) {
-            img.src = "/static/images/bluemix.png";
-            name = parseJazzName(url);
-        } 
+        img.src = "/static/images/github.png";
         li.appendChild(img);
         var b = document.createElement("b");
         b.className = "list-item-title";
         b.style = "color:black";
-        b.innerHTML = name;
+        b.innerHTML = data[i].name;
         li.appendChild(b);
         var br = document.createElement("br");
         li.appendChild(br);
@@ -48,7 +43,7 @@ $(document).ready(function(){
         a.href = "http://"+url;
         a.style="color:grey";
         a.target="_blank";
-        a.innerHTML = url;
+        a.innerHTML = data[i].repos;
         li.appendChild(a);
         var aSend = document.createElement("a");
         aSend.href = "/heatmap/repo?url="+encodeURIComponent(url);
