@@ -23,16 +23,36 @@ type Squad struct {
 //
 func InitSquadsFromJson() []Squad {
 	var a []Squad
-	names, err := ioutil.ReadDir(CONFIG_DIR)
+	files, err := ioutil.ReadDir(CONFIG_DIR)
 	if err != nil {
 		fmt.Printf("error reading directory structure: %s\n", err)
 	}
-	for i := range names {
-		js, _ := ioutil.ReadFile(CONFIG_DIR + "/" + names[i].Name())
-
-		var squad Squad
-		json.Unmarshal([]byte(js), &squad)
+	for i := range files {
+		squad := InitSquadFromJson(files[i].Name())
 		a = append(a, squad)
+	}
+	return a
+}
+
+func InitSquadFromJson(name string) Squad {
+	js, _ := ioutil.ReadFile(CONFIG_DIR + "/" + name)
+	var squad Squad
+	json.Unmarshal([]byte(js), &squad)
+	return squad
+}
+
+//
+// Get all the RepoCommtis from Cloudant
+// for the Squad with the @param name
+//
+func GetSquadRepoCommits(name string) []RepoCommits {
+	var a []RepoCommits
+	squad := InitSquadFromJson(name)
+	for i := range squad.Repos {
+		commits := DbRetrieveAllRepoCommits(squad.Repos[i])
+		for j := range commits {
+			a = append(a, commits[j])
+		}
 	}
 	return a
 }

@@ -1,6 +1,10 @@
-- store users encountered in cloudant 
+- host on stage1.bluemix
+
+- encryption 
+
 - 'squad' heatmaps
 
+- store users encountered in cloudant 
 - update UI for users heatmaps
 - update UI with "Running on IBM Bluemix" ad
 - update UI with "track this repository" toggle 

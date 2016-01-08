@@ -79,28 +79,7 @@ func json_to_repoCommits(js string, url string) []model.RepoCommits {
 				1,
 			})
 		}
-
-		/*
-			if rcMap[nDate.Unix()].URL == "" {
-				rcMap[nDate.Unix()] = model.RepoCommits{
-					url,
-					nDate,
-					1,
-				}
-			} else {
-				rc := rcMap[nDate.Unix()]
-				rc.Commits += 1
-				rcMap[nDate.Unix()] = rc
-			}
-		*/
 	}
-
-	/*
-		for _, j := range rcMap {
-			//fmt.Printf("\tOn %s -> %d commits made\n", j.Date, j.Commits)
-			rcList = append(rcList, j)
-		}
-	*/
 
 	return rcList
 }

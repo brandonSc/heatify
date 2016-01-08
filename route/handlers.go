@@ -97,6 +97,35 @@ func HeatMapRepo(w http.ResponseWriter, r *http.Request) {
 }
 
 //
+// Show a heatmap containing the activity for a squad.
+// basically, this is multiple repository heatmaps spliced together
+//
+func HeatMapSquad(w http.ResponseWriter, r *http.Request) {
+	squad, err := url.QueryUnescape(r.URL.Query().Get("squad"))
+	if err != nil {
+		str := fmt.Sprintf("Oops. Problem accessing the 'squad' parameter in the URL.\n%s\n", err)
+		log.Printf(str)
+		ShowError(w, str)
+	}
+	commits := model.GetSquadRepoCommits(squad)
+	p, err := LoadPage("squadheatmap")
+	if err != nil {
+		log.Printf("Error loading squad heatmap page: %s\n", err)
+		str := fmt.Sprintf("Oops. Something went wrong.\n%s\n", err)
+		ShowError(w, str)
+	}
+	data, err := json.Marshal(commits)
+	fmt.Println(string(data))
+	p.Title = "Heatmap of " + squad
+	p.Data = string(data)
+	page := template.Must(template.ParseFiles(
+		"views/_base.html",
+		"views/squadheatmap.html",
+	))
+	page.Execute(w, p)
+}
+
+//
 // show the HeatMap search page for Users
 //
 func HeatMapUser(w http.ResponseWriter, r *http.Request) {

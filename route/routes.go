@@ -54,4 +54,10 @@ var routes = Routes{
 		"/heatmap/squads/all",
 		AllSquads,
 	},
+	Route{
+		"HeatMapSquad",
+		"GET",
+		"/heatmap/squads",
+		HeatMapSquad,
+	},
 }
