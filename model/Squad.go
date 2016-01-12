@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"strings"
 )
 
 const CONFIG_DIR = "config/squads"
@@ -12,9 +13,10 @@ const CONFIG_DIR = "config/squads"
 // This structure holds the number of commits to a repository on particular day
 //
 type Squad struct {
-	Name  string   `json:"name"`  // Name of the squad
-	Image string   `json:"image"` // image URL to display for squad
-	Repos []string `json:"repos"` // an array of repo URLs
+	Name    string   `json:"name"`    // Name of the squad
+	Image   string   `json:"image"`   // image URL to display for squad
+	Repos   []string `json:"repos"`   // an array of repo URLs
+	Members []string `json:"members"` // an array of member's Slack usernames
 }
 
 //
@@ -34,6 +36,10 @@ func InitSquadsFromJson() []Squad {
 	return a
 }
 
+//
+// initialize a single squad
+// using the JSON config file name
+//
 func InitSquadFromJson(name string) Squad {
 	js, _ := ioutil.ReadFile(CONFIG_DIR + "/" + name)
 	var squad Squad
@@ -47,7 +53,8 @@ func InitSquadFromJson(name string) Squad {
 //
 func GetSquadRepoCommits(name string) []RepoCommits {
 	var a []RepoCommits
-	squad := InitSquadFromJson(name)
+	file := strings.ToLower(name) + ".json"
+	squad := InitSquadFromJson(file)
 	for i := range squad.Repos {
 		commits := DbRetrieveAllRepoCommits(squad.Repos[i])
 		for j := range commits {

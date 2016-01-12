@@ -3,6 +3,8 @@
 - encryption 
 
 - 'squad' heatmaps
+  - more efficient cloudant query for squads
+    -> instead of searching each repo individually, build a query that selects an array of repos
 
 - store users encountered in cloudant 
 - update UI for users heatmaps

@@ -10,6 +10,15 @@
 
 <script type="text/javascript">
 $(document).ready(function(){
+    var parseRepoName = function(url) { 
+        if ( url.indexOf("github.com") > -1 ) { 
+            return parseGitName(url);
+        } else if ( url.indexOf("hub.jazz.net") > -1 ) { 
+            return parseJazzName(url);
+        } else { 
+            return url;
+        }
+    };
     var parseGitName = function(url) {
         var strs = url.split("/");
         return strs[strs.length-1].replace(".git", "");
@@ -29,7 +38,7 @@ $(document).ready(function(){
         var url = data[i];
         var img = document.createElement("img");
         img.className = "circle";
-        img.src = "/static/images/github.png";
+        img.src = data[i].image;
         li.appendChild(img);
         var b = document.createElement("b");
         b.className = "list-item-title";
@@ -38,15 +47,13 @@ $(document).ready(function(){
         li.appendChild(b);
         var br = document.createElement("br");
         li.appendChild(br);
-        var a = document.createElement("a");
+        var a = document.createElement("div");
         a.className = "list-item-url";
-        a.href = "http://"+url;
         a.style="color:grey";
-        a.target="_blank";
-        a.innerHTML = data[i].repos;
+        a.innerHTML = data[i].repos.length + " repos, "+data[i].members.length+" members";
         li.appendChild(a);
         var aSend = document.createElement("a");
-        aSend.href = "/heatmap/repo?url="+encodeURIComponent(url);
+        aSend.href = "/heatmap/squads?squad="+encodeURIComponent(data[i].name);
         aSend.className = "secondary-content";
         var it = document.createElement("i");
         it.className = "material-icons";

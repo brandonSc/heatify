@@ -113,10 +113,10 @@ func HeatMapSquad(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Error loading squad heatmap page: %s\n", err)
 		str := fmt.Sprintf("Oops. Something went wrong.\n%s\n", err)
 		ShowError(w, str)
+		return
 	}
 	data, err := json.Marshal(commits)
-	fmt.Println(string(data))
-	p.Title = "Heatmap of " + squad
+	p.Title = squad
 	p.Data = string(data)
 	page := template.Must(template.ParseFiles(
 		"views/_base.html",
