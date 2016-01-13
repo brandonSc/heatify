@@ -41,6 +41,9 @@ $(document).ready(function(){
         } else if ( url.indexOf("github.rtp") > -1 ) { 
             img.src = "/static/images/gitlab.png";
             name = parseGitlabName(url);
+        } else if ( url.indexOf("github.ibm.com") > -1 ) { 
+            img.src = "/static/images/github.png";
+            name = parseGitName(url);
         }
         li.appendChild(img);
         var b = document.createElement("b");

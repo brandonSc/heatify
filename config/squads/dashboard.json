@@ -3,7 +3,9 @@
     "image": "https://tempoplugin.jira.com/wiki/download/attachments/22315019/TD?version=1&modificationDate=1367856396377&api=v2",
     "repos": [
         "hub.jazz.net/git/schurman93/Git-Monitor",
-        "hub.jazz.net/git/schurman93/workitems-api"
+        "hub.jazz.net/git/schurman93/workitems-api",
+        "github.rtp.raleigh.ibm.com/project-alchemy/executive-dashboard.git",
+        "github.ibm.com/alchemy-dashboard/executive-dashboard-ui.git"
     ],
     "members": [
         "alex",

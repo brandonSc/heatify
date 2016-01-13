@@ -5,12 +5,14 @@ import (
 )
 
 const (
-	GITHUB_URL_IDENTIFIER = "github.com"
-	GITHUB_DIR_IDENTIFIER = "github.com"
-	JAZZ_URL_IDENTIFIER   = "hub.jazz.net"
-	JAZZ_DIR_IDENTIFIER   = "hub.jazz.net"
-	GITLAB_URL_IDENTIFIER = "github.rtp"
-	GITLAB_DIR_IDENTIFIER = "github.rtp"
+	GITHUB_URL_IDENTIFIER    = "github.com"
+	GITHUB_DIR_IDENTIFIER    = "github.com"
+	JAZZ_URL_IDENTIFIER      = "hub.jazz.net"
+	JAZZ_DIR_IDENTIFIER      = "hub.jazz.net"
+	GITLAB_URL_IDENTIFIER    = "github.rtp"
+	GITLAB_DIR_IDENTIFIER    = "github.rtp"
+	GITHUBIBM_URL_IDENTIFIER = "github.ibm.com"
+	GITHUBIBM_DIR_IDENTIFIER = "github.ibm.com"
 )
 
 // should return errors here instead ..
@@ -24,6 +26,9 @@ func UrlToDir(url string) string {
 	} else if strings.Contains(url, GITLAB_URL_IDENTIFIER) {
 		// IBM GitLab url
 		return gitlab_url_to_dir(url)
+	} else if strings.Contains(url, GITHUBIBM_URL_IDENTIFIER) {
+		// IBM private github
+		return githubIBM_url_to_dir(url)
 	} else {
 		return "repository type not supported: " + url
 	}
@@ -42,6 +47,9 @@ func DirToUrl(path string) string {
 	} else if strings.Contains(path, GITLAB_DIR_IDENTIFIER) {
 		// IBM GitLab url
 		return gitlab_dir_to_url(path)
+	} else if strings.Contains(path, GITHUBIBM_DIR_IDENTIFIER) {
+		// IBM private Github
+		return githubIBM_dir_to_url(path)
 	} else {
 		return "directory type not supported: " + path
 	}
@@ -92,5 +100,31 @@ func gitlab_dir_to_url(path string) string {
 	// changes to: github.rtp.raleigh.ibm.com/project-alchemy/executive-dashboard/git
 	url = strings.Replace(url, "/git", ".git", -1)
 	// changes to: github.rtp.raleigh.ibm.com/project-alchemy/executive-dashboard.git
+	return url
+}
+
+//
+// e.g.: consumes:
+// github.ibm.com/alchemy-dashboard/executive-dashboard-ui.git
+// e.g.: produces:
+// github.ibm.com.alchemy-dashboard.executive-dashboard-ui.git
+//
+func githubIBM_url_to_dir(url string) string {
+	return strings.Replace(url, "/", ".", -1)
+}
+
+//
+// e.g.: consumes:
+// github.ibm.com.alchemy-dashboard.executive-dashboard-ui.git
+// e.g.: produces:
+// github.ibm.com/alchemy-dashboard/executive-dashboard-ui.git
+//
+func githubIBM_dir_to_url(path string) string {
+	url := strings.Replace(path, ".", "/", -1)
+	// changes to: github/ibm/com/alchemy-dashboard/executive-dashboard-ui/git
+	url = strings.Replace(url, "github/ibm/com", "github.ibm.com", -1)
+	// changes to: github.ibm.com/alchemy-dashboard/executive-dashboard-ui/git
+	url = strings.Replace(url, "/git", ".git", -1)
+	// changes to: github.ibm.com/alchemy-dashboard/executive-dashboard-ui.git
 	return url
 }
