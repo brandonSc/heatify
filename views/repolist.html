@@ -19,6 +19,10 @@ $(document).ready(function(){
         var strs = url.split("/");
         return strs[strs.length-1];
     };
+    var parseGitlabName = function(url) {
+        var strs = url.split("/");
+        return strs[strs.length-1].replace(".git", "");
+    };
     var data = {{.Extra}}
     var ul = document.getElementById("repo-table");
     for ( var i=0; i<data.length; i++ ) {
@@ -34,7 +38,10 @@ $(document).ready(function(){
         } else if ( url.indexOf("hub.jazz.net") > -1 ) {
             img.src = "/static/images/bluemix.png";
             name = parseJazzName(url);
-        } 
+        } else if ( url.indexOf("github.rtp") > -1 ) { 
+            img.src = "/static/images/gitlab.png";
+            name = parseGitlabName(url);
+        }
         li.appendChild(img);
         var b = document.createElement("b");
         b.className = "list-item-title";
