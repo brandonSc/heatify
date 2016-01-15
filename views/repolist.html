@@ -8,68 +8,43 @@
     </ul>
 </div>
 
+<script src="/static/javascripts/gitUrlParser.js"></script>
 <script type="text/javascript">
-$(document).ready(function(){
-    var parseGitName = function(url) {
-        var strs = url.split("/");
-        return strs[strs.length-1].replace(".git", "");
-    };
-
-    var parseJazzName = function(url) { 
-        var strs = url.split("/");
-        return strs[strs.length-1];
-    };
-    var parseGitlabName = function(url) {
-        var strs = url.split("/");
-        return strs[strs.length-1].replace(".git", "");
-    };
-    var data = {{.Extra}}
-    var ul = document.getElementById("repo-table");
-    for ( var i=0; i<data.length; i++ ) {
-        var li = document.createElement("li");
-        li.className = "collection-item avatar";
-        var url = data[i];
-        var img = document.createElement("img");
-        img.className = "circle";
-        var name = "";
-        if ( url.indexOf("github.com") > -1 ) { 
-            img.src = "/static/images/github.png";
-            name = parseGitName(url);
-        } else if ( url.indexOf("hub.jazz.net") > -1 ) {
-            img.src = "/static/images/bluemix.png";
-            name = parseJazzName(url);
-        } else if ( url.indexOf("github.rtp") > -1 ) { 
-            img.src = "/static/images/gitlab.png";
-            name = parseGitlabName(url);
-        } else if ( url.indexOf("github.ibm.com") > -1 ) { 
-            img.src = "/static/images/github.png";
-            name = parseGitName(url);
+    $(document).ready(function(){
+        var data = {{.Extra}}
+        var ul = document.getElementById("repo-table");
+        for ( var i=0; i<data.length; i++ ) {
+            var li = document.createElement("li");
+            li.className = "collection-item avatar";
+            var url = data[i];
+            var obj = parseNameAndImgFromGit(url);
+            var img = obj.img;
+            var name = obj.name;
+            li.appendChild(img);
+            var b = document.createElement("b");
+            b.className = "list-item-title";
+            b.style = "color:black";
+            b.innerHTML = name;
+            li.appendChild(b);
+            var br = document.createElement("br");
+            li.appendChild(br);
+            var a = document.createElement("a");
+            a.className = "list-item-url";
+            a.href = "http://"+url;
+            a.style="color:grey";
+            a.target="_blank";
+            a.innerHTML = url;
+            li.appendChild(a);
+            var aSend = document.createElement("a");
+            aSend.href = "/heatmap/repo?url="+encodeURIComponent(url);
+            aSend.className = "secondary-content";
+            var it = document.createElement("i");
+            it.className = "material-icons";
+            it.innerHTML = "send";
+            aSend.appendChild(it);
+            li.appendChild(aSend);
+            ul.appendChild(li);
         }
-        li.appendChild(img);
-        var b = document.createElement("b");
-        b.className = "list-item-title";
-        b.style = "color:black";
-        b.innerHTML = name;
-        li.appendChild(b);
-        var br = document.createElement("br");
-        li.appendChild(br);
-        var a = document.createElement("a");
-        a.className = "list-item-url";
-        a.href = "http://"+url;
-        a.style="color:grey";
-        a.target="_blank";
-        a.innerHTML = url;
-        li.appendChild(a);
-        var aSend = document.createElement("a");
-        aSend.href = "/heatmap/repo?url="+encodeURIComponent(url);
-        aSend.className = "secondary-content";
-        var it = document.createElement("i");
-        it.className = "material-icons";
-        it.innerHTML = "send";
-        aSend.appendChild(it);
-        li.appendChild(aSend);
-        ul.appendChild(li);
-    }
-});
+    });
 </script>
 {{ end }}

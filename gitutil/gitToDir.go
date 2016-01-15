@@ -13,6 +13,7 @@ const (
 	GITLAB_DIR_IDENTIFIER    = "github.rtp"
 	GITHUBIBM_URL_IDENTIFIER = "github.ibm.com"
 	GITHUBIBM_DIR_IDENTIFIER = "github.ibm.com"
+	GITHUBIBM_SSH_IDENTIFIER = "git@github.ibm.com"
 )
 
 // should return errors here instead ..
@@ -29,6 +30,8 @@ func UrlToDir(url string) string {
 	} else if strings.Contains(url, GITHUBIBM_URL_IDENTIFIER) {
 		// IBM private github
 		return githubIBM_url_to_dir(url)
+	} else if strings.Contains(url, GITHUBIBM_SSH_IDENTIFIER) {
+		return githubIBM_url_to_dir(ConvertHttpsToSsh(url))
 	} else {
 		return "repository type not supported: " + url
 	}
@@ -127,4 +130,14 @@ func githubIBM_dir_to_url(path string) string {
 	url = strings.Replace(url, "/git", ".git", -1)
 	// changes to: github.ibm.com/alchemy-dashboard/executive-dashboard-ui.git
 	return url
+}
+
+//
+// e.g. consumes:
+// github.ibm.com/alchemy-dashboard/executive-dashboard-ui.git
+// e.g. produces:
+// git@github.ibm.com:alchemy-dashboard/executive-dashboard-ui.git
+//
+func ConvertHttpsToSsh(url string) string {
+	return strings.Replace(url, "github.ibm.com/", "git@github.ibm.com:", -1)
 }

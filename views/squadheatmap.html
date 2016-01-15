@@ -26,105 +26,120 @@
                 <a id="total-commits" class="heatmeter" style="float: right;"></a> 
             </div>
         </div>
-        <script type="text/javascript">
-
-            var spinner = null; // the spinning-wheel shown when loading
-
-            var cellSize = 15;
-            if ( $(window).width() < 1700 ) 
-                cellSize = 10;
-            if ( $(window).width() < 1000 ) 
-                cellSize = 5;
-             
-            //$(document).ready(function() {
-                var loadMap = function ( form ) { 
-                    var opts = {
-                        lines: 13 // The number of lines to draw
-                            , length: 28 // The length of each line
-                            , width: 20 // The line thickness
-                            , radius: 42 // The radius of the inner circle
-                            , scale: 1 // Scales overall size of the spinner
-                            , corners: 1 // Corner roundness (0..1)
-                            , color: '#000' // #rgb or #rrggbb or array of colors
-                            , opacity: 0.25 // Opacity of the lines
-                            , rotate: 0 // The rotation offset
-                            , direction: 1 // 1: clockwise, -1: counterclockwise
-                            , speed: 1 // Rounds per second
-                            , trail: 60 // Afterglow percentage
-                            , fps: 20 // Frames per second when using setTimeout() as a fallback for CSS
-                            , zIndex: 2e9 // The z-index (defaults to 2000000000)
-                            , className: 'spinner' // The CSS class to assign to the spinner
-                            , top: '50%' // Top position relative to parent
-                            , left: '50%' // Left position relative to parent
-                            , shadow: false // Whether to render a shadow
-                            , hwaccel: false // Whether to use hardware acceleration
-                            , position: 'absolute' // Element positioning
-                    };
-                    var target = document.getElementById('cal-heatmap')
-                    spinner = new Spinner(opts).spin(target);
-                };
-            //});
-            
-            var data = {{.Data}};
-            data = JSON.parse(data);
-            var graphData = {};
-            var startDate = new Date();
-            for ( var i=0; i<data.length; i++ ) { 
-                var d = new Date(data[i].date);
-                d.setDate(d.getDate() + 1);
-                graphData[d.getTime()/1000] = data[i].commits;
-                if ( d.getTime() < startDate.getTime() ) 
-                    startDate = d
-            }
-            
-            var total = document.getElementById('total-commits');
-            total.innertHtml += " "+ data.length;
-            
-           
-            /*
-            var parse = function(data) { 
-                var parsed = {};
-                for ( var i=0; i<data.length; i++ ) { 
-                    var d = new Date(data[i].date);
-                    d = ""+(d.getTime()/1000);
-                    if ( parsed[d] )
-                        parsed[d]++
-                    else
-                        parsed[d] = 1;
-                }
-                return parsed;
-            };
-            var p = parse(data);
-            console.log(p);
-                */
-
-            var cal = new CalHeatMap();
-            cal.init({
-                itemName: "commit",
-                considerMissingDataAsZero: true,
-                cellSize: cellSize,
-                legendCellSize: 15,
-                legend: [0, 4, 10, 20, 30], 
-                nimationDuration: 600,
-                range: 12,
-                domain: "month",
-                subDomain: "day",
-                tooltip: true,
-                start:  new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDay()),
-                data: graphData,
-                onComplete: function() { if(spinner) spinner.stop(); } 
-            });
-
-            $("#left-pan").on("click", function(e) {  
-                e.preventDefault();
-                cal.next();
-            });
-
-            $("#right-pan").on("click", function(e) {
-                e.preventDefault();
-                cal.previous();
-            });
-        </script>
     </div>
+    <div class="container center">
+        <div id="repos-list">
+            <h5>Repos</h5>
+        </div>
+        <br>
+        <div id="members-list">
+            <h5>Members</h5>
+        </div>
+    </div>
+    
+    <script src="/static/javascripts/gitUrlParser.js"></script>
+    <script type="text/javascript">
+
+        var spinner = null; // the spinning-wheel shown when loading
+
+        var cellSize = 15;
+        if ( $(window).width() < 1700 ) 
+            cellSize = 10;
+        if ( $(window).width() < 1000 ) 
+            cellSize = 5;
+         
+        //$(document).ready(function() {
+            var loadMap = function ( form ) { 
+                var opts = {
+                    lines: 13 // The number of lines to draw
+                        , length: 28 // The length of each line
+                        , width: 20 // The line thickness
+                        , radius: 42 // The radius of the inner circle
+                        , scale: 1 // Scales overall size of the spinner
+                        , corners: 1 // Corner roundness (0..1)
+                        , color: '#000' // #rgb or #rrggbb or array of colors
+                        , opacity: 0.25 // Opacity of the lines
+                        , rotate: 0 // The rotation offset
+                        , direction: 1 // 1: clockwise, -1: counterclockwise
+                        , speed: 1 // Rounds per second
+                        , trail: 60 // Afterglow percentage
+                        , fps: 20 // Frames per second when using setTimeout() as a fallback for CSS
+                        , zIndex: 2e9 // The z-index (defaults to 2000000000)
+                        , className: 'spinner' // The CSS class to assign to the spinner
+                        , top: '50%' // Top position relative to parent
+                        , left: '50%' // Left position relative to parent
+                        , shadow: false // Whether to render a shadow
+                        , hwaccel: false // Whether to use hardware acceleration
+                        , position: 'absolute' // Element positioning
+                };
+                var target = document.getElementById('cal-heatmap')
+                spinner = new Spinner(opts).spin(target);
+            };
+        //});
+        
+        var obj = {{.Data}};
+        obj = JSON.parse(obj);
+        var data = obj.commits;
+        var graphData = {};
+        var startDate = new Date();
+        for ( var i=0; i<data.length; i++ ) { 
+            var d = new Date(data[i].date);
+            d.setDate(d.getDate() + 1);
+            graphData[d.getTime()/1000] = data[i].commits;
+            if ( d.getTime() < startDate.getTime() ) 
+                startDate = d
+        }
+        
+        var total = document.getElementById('total-commits');
+        total.innertHtml += " "+ data.length;
+
+        var cal = new CalHeatMap();
+        cal.init({
+            itemName: "commit",
+            considerMissingDataAsZero: true,
+            cellSize: cellSize,
+            legendCellSize: 15,
+            legend: [0, 4, 10, 20, 30], 
+            nimationDuration: 600,
+            range: 12,
+            domain: "month",
+            subDomain: "day",
+            tooltip: true,
+            start:  new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDay()),
+            data: graphData,
+            onComplete: function() { if(spinner) spinner.stop(); } 
+        });
+
+        $("#left-pan").on("click", function(e) {  
+            e.preventDefault();
+            cal.next();
+        });
+
+        $("#right-pan").on("click", function(e) {
+            e.preventDefault();
+            cal.previous();
+        });
+
+        $(document).ready(function() { 
+            var squad = obj.squad;
+            var repos = document.getElementById("repos-list");
+            var reposStr = "";
+            for ( var i=0; i<squad.repos.length; i++ ) {
+                var name = parseNameFromGit(squad.repos[i]);
+                reposStr += "<a target='_blank' href='http://"+squad.repos[i]+"' style='color:white;font-size:17px;'>"+name+"</a>";
+                if ( i != squad.repos.length-1 ) 
+                    reposStr += ", ";
+            }
+            repos.innerHTML += reposStr;
+            var members = document.getElementById("members-list");
+            var membersStr = "";
+            for ( var i=0; i<squad.members.length; i++ ) {
+                membersStr += "<a target='_blank' href='/heatmap/users/"+squad.members[i]+"' style='color:white;font-size:17px;'>"+squad.members[i]+"</a>";
+                if ( i != squad.members.length-1 ) 
+                    membersStr += ", ";
+            }
+            members.innerHTML += membersStr;
+        });
+    </script>
 </body>
 {{ end }} 

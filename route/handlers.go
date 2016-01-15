@@ -116,10 +116,11 @@ func HeatMapSquad(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	data, err := json.Marshal(commits)
-	squadInfo := model.InitSquadFromJson(squad)
-	fmt.Printf("squad info: %s\n", squadInfo)
+	squadInfo := model.InitSquadFromJson(strings.ToLower(squad) + ".json")
+	squadData, err := json.Marshal(squadInfo)
 	p.Title = squad
-	p.Data = string(data)
+	p.Data = `{"commits":` + string(data) + `,"squad":` + string(squadData) + `}`
+	fmt.Printf("%s\n", p.Data)
 	page := template.Must(template.ParseFiles(
 		"views/_base.html",
 		"views/squadheatmap.html",
