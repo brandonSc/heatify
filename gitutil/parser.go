@@ -2,52 +2,8 @@ package gitutil
 
 import (
 	"fmt"
-	//"hub.jazz.net/git/schurman93/Git-Monitor/model"
-	"io/ioutil"
 	"os/exec"
 )
-
-//
-// This is the entry point for parsing a given repository URL,
-// then generating returning the repository's git commit history (which can be heat-mapped)
-// The function does the following:
-// - parse the URL into a directory path
-// - clone the repository into that directory, if it does not exist
-// - convert the git logs into JSON and return that to send back to the browser
-//
-func CloneRepo(repoUrl string) (string, error) {
-	//fmt.Println("parsing commit history")
-
-	isCloned := CheckExists(repoUrl)
-
-	if isCloned == false {
-		err := clone_repo(repoUrl)
-		if err != nil {
-			return "error", err
-		}
-	}
-
-	res, err := GetLocalCommits(repoUrl)
-	if err != nil {
-		return "error", err
-	}
-
-	return res, nil
-}
-
-//
-// if reading a directory returns an error,
-// we will assume it doesn't exist
-//
-func CheckExists(repoUrl string) bool {
-	var dir = ".clones/" + UrlToDir(repoUrl)
-	_, err := ioutil.ReadDir(dir)
-	if err == nil {
-		return true
-	} else {
-		return false
-	}
-}
 
 //
 // run the 'git logs' command and parse the output into JSON
