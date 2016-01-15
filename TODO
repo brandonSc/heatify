@@ -1,16 +1,24 @@
 - host on stage1.bluemix
 
+- 
+
+- fix up UI 
+  - heatmap adapts to screen size
+    - vertical for mobile, automatically resize on window size change events
+  - update about page and description on landing page
+  - eventually: update materialize
+
 - encryption 
 
 - 'squad' heatmaps
   - more efficient cloudant query for squads
     -> instead of searching each repo individually, build a query that selects an array of repos
 
+- user heatmaps
 - store users encountered in cloudant 
 - update UI for users heatmaps
 - update UI with "Running on IBM Bluemix" ad
-- update UI with "track this repository" toggle 
+- update UI with "track this repository" toggle  ??? is this necessary ?
     - this should send an invite to the repository from git-monitor
     - similarily, git-monitor should scrape the web ui for invites and 'track' repositories that way
 
-- somewhere in there: gitlab repository support
