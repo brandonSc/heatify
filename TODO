@@ -1,6 +1,6 @@
 - host on stage1.bluemix
-
-- 
+  - figure out how to cache git-monitor's credentials for multiple accounts (ie gitlab, github, and ids)
+    - GHE is different as it uses SSH to clone 
 
 - fix up UI 
   - heatmap adapts to screen size
