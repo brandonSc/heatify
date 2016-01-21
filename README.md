@@ -28,4 +28,10 @@ $ ./Git-Monitor
 ```
 (or if you have the $GOPATH/bin configured globally, you can run in any directory by invoking `$ Git-Monitor`).
 
-Navigate to http://localhost:8080 in your browser. 
+Navigate to http://localhost:5050 in your browser. 
+
+Note that it may be problematic if your git credentials are not stored or cached, as the Heatify app will have to constantly ask you for your git username and password.
+You can configure git to permanently store these, for example: 
+```
+git config --global credential.helper store --file ~/.git-credentials
+```
