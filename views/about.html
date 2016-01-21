@@ -2,37 +2,33 @@
 {{ define "content"}}
 
 <div class="container">
+    <br>
     <h1 style="text-align: center">About Heatify</h1>
-    <h5 style="color: grey; text-align: center">Version 0.1.2 [<i>BETA</i>]</h5>
+    <h5 style="color: grey; text-align: center">Version 0.2.1 [<i>BETA</i>]</h5>
     <p class="flow-text">
     The main purpose of Heatify is to encourage good Agile development practice, where contributors make small and frequent commits. 
-    Heatify accomplishes this by showing developers, quickly and visually, their project activity and commits. 
+    Heatify accomplishes this by conveniently showing developers and manager their project commit activity. 
     <br><br>
     Heatify works by keeping track of Git repositories that are entered in by users. 
-    We use our Git-Monitor system to track repositories, while Heatify is the User Interface that works on top of Git-Monitor.
-    You might notice that it takes longer to view a HeatMap for a new repository (time will vary depending on the size of the repository). 
-    That's because the Git-Monitor has more work to do for new entries. Afterwards, when the repository is tracked, things will run rather quickly.
+    Under the hood, Heatify clones repositories, analyses their activity, and keeps new data in-sync with a Cloudant database. 
+    By nature, viewing of a Heatmap for a brand-new repository can take a bit longer to load, depending on how large the repository is. This is because Heatify must clone the repository for the first time.
     <br><br>
-    Heatify is developed by the Reference-Apps squad of the IBM Alchemy project (the driving force behind the development of IBM Bluemix).
-    The Reference-Apps team develops applications which test our IBM Bluemix cloud platform, as well as teach our customers about the advantages of Bluemix, and how to use it.
-    <br> <br>
+    Heatify is developed and maintained by Brandon on the Dashboard squad of IBM Alchemy, with much of the high-level design coming from Andrew (Roo) Low, our squads STSM.
+    <br><br>
     <!-- <img src="/static/images/golang.png" width="55px" height="75px"></img> -->
-    Heatify is our squad's first reference-app written in <a href="http://golang.org/">Go</a>.
     </p>
     <h3 style="padding-top: 2%; padding-left: 10%">Usage</h3>
     <p class="flow-text">
-    Heatify currently supports both GitHub and IBM Jazz git repositories.
-    Here are some of the things you can do with Heatify.
-    <br><br>
-    - Public Repositories: easily render a public repo into a HeatMap. Simply copy and paste the HTTP or HTTPS URL into the field on the <a href="/">Landing Page</a>
+    Heatify currently supports repositories from <a href="http://github.com">Github</a>, <a href="http://github.ibm.com">IBM GHE</a>, <a href="http://github.rtp.raleigh.ibm.com">IBM GitLab</a>, and <a href="http://hub.jazz.net">IBM DevOps Services</a>
+    Here are some of the things you can do with Heatify:
+    <br><br> <!-- ul and li don't work in materialize :( -->
+    - Public Repositories: easily render a public repo into a Heatmap. Simply copy and paste the HTTP or HTTPS URL (or for IBM GHE, the SSH link) into the Git Url field on the <a href="/">Landing Page</a>
     <br><br>
     - Private Repositores: first add the <b>Git-Monitor Bot</b> as a member to your private repo. Heatify is becoming increasingly more secure, but for now be careful if you have code you don't want out in the world.
     <br><br>
-    - Repository HeatMap: By default, Heatify will generate a HeatMap showing how many commits are made on each day of the month. The HeatMeter shows how many commits qualify for each tier.
+    - Squad Heatmaps: View a Heatmap showing an entire squad's activity on all of their repositories. For this feature, you must submit a JSON config file containing a list of a Squads members, and repositories. Please contact Brandon at <code><a href="mailto:schurman@ca.ibm.com">schurman@ca.ibm.com</a></code> or message @brandonsc on Slack. 
     <br><br>
-    - User HeatMap: coming soon! you can view a HeatMap showing your activity on all repositories you track on Heatify.
+    - User Heatmaps: coming soon! you can view a Heatmap showing your activity on all repositories you track on Heatify.
     </p>
-    <h3 style="padding-top: 2%; padding-left: 10%">Technical Support</h3>
-    <p class="flow-text">Message us on the #reference-apps squad channel through slack, or email Brandon at <a href="mailto:schurman@ca.ibm.com">schurman@ca.ibm.com</a></p>
 </div>
 {{ end }}
