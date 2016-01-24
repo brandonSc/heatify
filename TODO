@@ -1,3 +1,5 @@
+- figure out how git merged commits from Gitlab to GHE 
+
 - host on stage1.bluemix
   - figure out how to cache git-monitor's credentials for multiple accounts (ie gitlab, github, and ids)
     - GHE is different as it uses SSH to clone 

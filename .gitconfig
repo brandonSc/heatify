@@ -1,7 +1,15 @@
 [user]
-	email = git-monitor@bg.vnet.ibm.com
-    name = Git Bot
+	email = schurman@ca.ibm.com
+	name = Brandon Schurman
 [credential]
     helper = store
-[push]
-    default = simple
+
+[credential "https://shurman93@hub.jazz.net"]
+    username = schurman93
+    name = Brandon Schurman
+    helper = store
+
+[credential "http://schurman-ca@github.rtp.raleigh.ibm.com"]
+    username = schurman-ca
+    name = Brandon Schurman
+    helper = store
