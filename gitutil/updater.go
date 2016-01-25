@@ -39,6 +39,7 @@ func UpdateRefs(path string) {
 	if len(newCommits) > 0 {
 		log.Printf("adding %d new commits to %s", len(newCommits), url)
 		model.DbSendRepoCommitsArray(newCommits)
+		fmt.Println(newCommits)
 	}
 }
 
