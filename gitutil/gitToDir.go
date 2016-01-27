@@ -1,7 +1,6 @@
 package gitutil
 
 import (
-	"fmt"
 	"strings"
 )
 
