@@ -56,13 +56,15 @@ func clone_repo(repoUrl string) error {
 	var arg0 = "git"
 	var arg1 = "clone"
 	var arg2 = ""
+	var arg3 = ""
 	if strings.Contains(repoUrl, GITHUBIBM_SSH_IDENTIFIER) {
 		fmt.Println("GITHUB SSH!")
 		arg2 = repoUrl
+		arg3 = ".clones/" + UrlToDir(ConvertSshToHttps(repoUrl))
 	} else {
 		arg2 = "http://" + repoUrl
+		arg3 = ".clones/" + UrlToDir(repoUrl)
 	}
-	var arg3 = ".clones/" + UrlToDir(repoUrl)
 
 	cmd := exec.Command(arg0, arg1, arg2, arg3)
 	err := cmd.Start()

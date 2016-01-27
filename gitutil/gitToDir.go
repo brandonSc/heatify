@@ -1,6 +1,7 @@
 package gitutil
 
 import (
+	"fmt"
 	"strings"
 )
 
@@ -18,7 +19,9 @@ const (
 
 // should return errors here instead ..
 func UrlToDir(url string) string {
-	if strings.Contains(url, GITHUB_URL_IDENTIFIER) {
+	if strings.Contains(url, GITHUBIBM_SSH_IDENTIFIER) {
+		return githubIBM_url_to_dir(ConvertSshToHttps(url))
+	} else if strings.Contains(url, GITHUB_URL_IDENTIFIER) {
 		// regular github URL
 		return github_url_to_dir(url)
 	} else if strings.Contains(url, JAZZ_URL_IDENTIFIER) {
@@ -30,8 +33,6 @@ func UrlToDir(url string) string {
 	} else if strings.Contains(url, GITHUBIBM_URL_IDENTIFIER) {
 		// IBM private github
 		return githubIBM_url_to_dir(url)
-	} else if strings.Contains(url, GITHUBIBM_SSH_IDENTIFIER) {
-		return githubIBM_url_to_dir(ConvertHttpsToSsh(url))
 	} else {
 		return "repository type not supported: " + url
 	}
@@ -53,6 +54,8 @@ func DirToUrl(path string) string {
 	} else if strings.Contains(path, GITHUBIBM_DIR_IDENTIFIER) {
 		// IBM private Github
 		return githubIBM_dir_to_url(path)
+	} else if strings.Contains(path, GITHUBIBM_SSH_IDENTIFIER) {
+		return githubIBM_dir_to_url(ConvertSshToHttps(path))
 	} else {
 		return "directory type not supported: " + path
 	}
@@ -140,4 +143,14 @@ func githubIBM_dir_to_url(path string) string {
 //
 func ConvertHttpsToSsh(url string) string {
 	return strings.Replace(url, "github.ibm.com/", "git@github.ibm.com:", -1)
+}
+
+//
+// e.g. consumes:
+// git@github.ibm.com:alchemy-dashboard/executive-dashboard-ui.git
+// e.g. produces:
+// github.ibm.com/alchemy-dashboard/executive-dashboard-ui.git
+//
+func ConvertSshToHttps(url string) string {
+	return strings.Replace(url, "git@github.ibm.com:", "github.ibm.com/", -1)
 }

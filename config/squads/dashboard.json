@@ -4,7 +4,7 @@
     "repos": [
         "hub.jazz.net/git/schurman93/Git-Monitor",
         "hub.jazz.net/git/schurman93/workitems-api",
-        "github.rtp.raleigh.ibm.com/project-alchemy/executive-dashboard.git",
+        "github.ibm.com/alchemy-dashboard/executive-dashboard-dc.git",
         "github.ibm.com/alchemy-dashboard/executive-dashboard-ui.git"
     ],
     "members": [
@@ -20,6 +20,8 @@
         "rajeev",
         "chatko",
         "chad",
-        "albert"
+        "albert",
+        "daiheekim",
+        "shruti"
     ]
 }
