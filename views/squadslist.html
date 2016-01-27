@@ -8,26 +8,9 @@
     </ul>
 </div>
 
+<script src="/static/javascripts/gitUrlParser.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
-    var parseRepoName = function(url) { 
-        if ( url.indexOf("github.com") > -1 ) { 
-            return parseGitName(url);
-        } else if ( url.indexOf("hub.jazz.net") > -1 ) { 
-            return parseJazzName(url);
-        } else { 
-            return url;
-        }
-    };
-    var parseGitName = function(url) {
-        var strs = url.split("/");
-        return strs[strs.length-1].replace(".git", "");
-    };
-
-    var parseJazzName = function(url) { 
-        var strs = url.split("/");
-        return strs[strs.length-1];
-    };
     var data = {{.Data}}
     data = JSON.parse(data);
     console.log(data);

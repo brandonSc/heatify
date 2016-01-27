@@ -4,6 +4,7 @@
 <head>
     <script type="text/javascript" src="//d3js.org/d3.v3.min.js"></script>
     <script type="text/javascript" src="//cdn.jsdelivr.net/cal-heatmap/3.3.10/cal-heatmap.min.js"></script>
+    <script type="text/javascript" src="/static/javascripts/heatmapBuilder.js"></script>
     <link rel="stylesheet" href="//cdn.jsdelivr.net/cal-heatmap/3.3.10/cal-heatmap.css" />
     <link rel="stylesheet" href="/static/stylesheets/style.css" /> 
     <link rel="stylesheet" href="/static/stylesheets/style.css" />
@@ -32,9 +33,6 @@
             </div>
         </div>
         <script type="text/javascript">
-
-            var spinner = null; // the spinning-wheel shown when loading
-
             var cellSize = 15;
             if ( $(window).width() < 1700 ) 
                 cellSize = 10;
@@ -45,52 +43,29 @@
             data = JSON.parse(data);
             var graphData = {};
             var startDate = new Date();
+            var endDate = startDate;
             var totalCommits = 0;
-            var totalDays = 0;
             for ( var i=0; i<data.length; i++ ) { 
                 var d = new Date(data[i].date);
                 d.setDate(d.getDate() + 1);
                 graphData[d.getTime()/1000] = data[i].commits;
                 if ( d.getTime() < startDate.getTime() ) 
                     startDate = d
-                totalDays = totalDays + 1;
+                if ( d.getTime() > endDate.getTime() ) 
+                    endDate = d;
                 totalCommits = totalCommits + data[i].commits;
             }
 
+            buildHeatmap(graphData, null);
+
             // set the number of total commits and commits/day in UI
+            var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
+            var diffDays = Math.round(Math.abs((endDate.getTime() - startDate.getTime())/(oneDay)));
             document.getElementById("num-commits").innerHTML = totalCommits;
-            document.getElementById("commits-day").innerHTML = (totalCommits/totalDays).toFixed(2);
+            document.getElementById("commits-day").innerHTML = (totalCommits/diffDays).toFixed(2);
 
             var total = document.getElementById('total-commits');
             total.innertHtml += " "+ data.length;
-
-            var tdy = new Date();
-            var cal = new CalHeatMap();
-            cal.init({
-                itemName: "commit",
-                considerMissingDataAsZero: true,
-                cellSize: cellSize,
-                legendCellSize: 15,
-                legend: [0, 4, 10, 20, 30], 
-                nimationDuration: 600,
-                range: 12,
-                domain: "month",
-                subDomain: "day",
-                tooltip: true,
-                start: new Date(tdy.getFullYear(), tdy.getMonth()-11, tdy.getDay()),
-                //start:  new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDay()),
-                data: graphData,
-            });
-
-            $("#left-pan").on("click", function(e) {  
-                e.preventDefault();
-                cal.next();
-            });
-
-            $("#right-pan").on("click", function(e) {
-                e.preventDefault();
-                cal.previous();
-            });
         </script>
     </div>
 </body>
