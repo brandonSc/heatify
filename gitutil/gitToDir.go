@@ -14,12 +14,15 @@ const (
 	GITHUBIBM_URL_IDENTIFIER = "github.ibm.com"
 	GITHUBIBM_DIR_IDENTIFIER = "github.ibm.com"
 	GITHUBIBM_SSH_IDENTIFIER = "git@github.ibm.com"
+	GITLABIBM_SSH_IDENTIFIER = "git@github.rtp.raleigh.ibm.com:"
 )
 
 // should return errors here instead ..
 func UrlToDir(url string) string {
 	if strings.Contains(url, GITHUBIBM_SSH_IDENTIFIER) {
-		return githubIBM_url_to_dir(ConvertSshToHttps(url))
+		return githubIBM_url_to_dir(ConvertGheIbmSshToHttps(url))
+	} else if strings.Contains(url, GITLABIBM_SSH_IDENTIFIER) {
+		return gitlab_ibm_url_to_dir(ConvertGitlabIbmSshToHttps(url))
 	} else if strings.Contains(url, GITHUB_URL_IDENTIFIER) {
 		// regular github URL
 		return github_url_to_dir(url)
@@ -28,7 +31,7 @@ func UrlToDir(url string) string {
 		return github_url_to_dir(url)
 	} else if strings.Contains(url, GITLAB_URL_IDENTIFIER) {
 		// IBM GitLab url
-		return gitlab_url_to_dir(url)
+		return gitlab_ibm_url_to_dir(url)
 	} else if strings.Contains(url, GITHUBIBM_URL_IDENTIFIER) {
 		// IBM private github
 		return githubIBM_url_to_dir(url)
@@ -49,12 +52,14 @@ func DirToUrl(path string) string {
 		return jazzhub_dir_to_url(path)
 	} else if strings.Contains(path, GITLAB_DIR_IDENTIFIER) {
 		// IBM GitLab url
-		return gitlab_dir_to_url(path)
+		return gitlab_ibm_dir_to_url(path)
 	} else if strings.Contains(path, GITHUBIBM_DIR_IDENTIFIER) {
 		// IBM private Github
 		return githubIBM_dir_to_url(path)
 	} else if strings.Contains(path, GITHUBIBM_SSH_IDENTIFIER) {
-		return githubIBM_dir_to_url(ConvertSshToHttps(path))
+		return githubIBM_dir_to_url(ConvertGheIbmSshToHttps(path))
+	} else if strings.Contains(path, GITLABIBM_SSH_IDENTIFIER) {
+		return gitlab_ibm_dir_to_url(ConvertGitlabIbmSshToHttps(path))
 	} else {
 		return "directory type not supported: " + path
 	}
@@ -88,7 +93,7 @@ func jazzhub_dir_to_url(path string) string {
 // e.g.: produces;
 // github.rtp.raleigh.ibm.com.project-alchemy.executive-dashboard.git
 //
-func gitlab_url_to_dir(url string) string {
+func gitlab_ibm_url_to_dir(url string) string {
 	return strings.Replace(url, "/", ".", -1)
 }
 
@@ -98,7 +103,7 @@ func gitlab_url_to_dir(url string) string {
 // e.g.: produces;
 // github.rtp.raleigh.ibm.com/project-alchemy/executive-dashboard.git
 //
-func gitlab_dir_to_url(path string) string {
+func gitlab_ibm_dir_to_url(path string) string {
 	url := strings.Replace(path, ".", "/", -1)
 	// changes to: github/rtp/raleigh/ibm/com/project-alchemy/executive-dashboard/git
 	url = strings.Replace(url, "github/rtp/raleigh/ibm/com", "github.rtp.raleigh.ibm.com", -1)
@@ -140,7 +145,7 @@ func githubIBM_dir_to_url(path string) string {
 // e.g. produces:
 // git@github.ibm.com:alchemy-dashboard/executive-dashboard-ui.git
 //
-func ConvertHttpsToSsh(url string) string {
+func ConvertGheIbmHttpsToSsh(url string) string {
 	return strings.Replace(url, "github.ibm.com/", "git@github.ibm.com:", -1)
 }
 
@@ -150,6 +155,26 @@ func ConvertHttpsToSsh(url string) string {
 // e.g. produces:
 // github.ibm.com/alchemy-dashboard/executive-dashboard-ui.git
 //
-func ConvertSshToHttps(url string) string {
+func ConvertGheIbmSshToHttps(url string) string {
 	return strings.Replace(url, "git@github.ibm.com:", "github.ibm.com/", -1)
+}
+
+//
+// e.g. consumes:
+// github.rtp.raleigh.ibm.com/schurman-ca/executive-dashboard.git
+// e.g. produces:
+// git@github.rtp.raleigh.ibm.com:schurman-ca/executive-dashboard.git
+//
+func ConvertGitlabIbmHttpsToSsh(url string) string {
+	return strings.Replace(url, "github.rtp.raleigh.ibm.com/", "git@github.rtp.raleigh.ibm.com:", -1)
+}
+
+//
+// e.g. consumes:
+// git@github.rtp.raleigh.ibm.com:schurman-ca/executive-dashboard.git
+// e.g. produces:
+// github.rtp.raleigh.ibm.com/schurman-ca/executive-dashboard.git
+//
+func ConvertGitlabIbmSshToHttps(url string) string {
+	return strings.Replace(url, "git@github.rtp.raleigh.ibm.com:", "github.rtp.raleigh.ibm.com/", -1)
 }

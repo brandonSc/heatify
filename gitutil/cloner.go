@@ -57,10 +57,9 @@ func clone_repo(repoUrl string) error {
 	var arg1 = "clone"
 	var arg2 = ""
 	var arg3 = ""
-	if strings.Contains(repoUrl, GITHUBIBM_SSH_IDENTIFIER) {
-		fmt.Println("GITHUB SSH!")
+	if strings.Contains(repoUrl, "git@github") {
 		arg2 = repoUrl
-		arg3 = ".clones/" + UrlToDir(ConvertSshToHttps(repoUrl))
+		arg3 = ".clones/" + UrlToDir(repoUrl)
 	} else {
 		arg2 = "http://" + repoUrl
 		arg3 = ".clones/" + UrlToDir(repoUrl)
