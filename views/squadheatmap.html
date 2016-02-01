@@ -25,8 +25,9 @@
             <div>
                 <a class="heatmeter">HeatMeter</a>
                 <a id="total-commits" class="heatmeter" style="float: right;"></a> 
-                <nobr style="float:center;">Commits: 
-                    <span id="num-commits" style="color:red;"></span> 
+                <nobr style="float:center;"> 
+                    <span id="num-commits"></span> 
+                    commits
                     &nbsp; &mdash; &nbsp; ~
                     <span id="commits-day" style="color:red;"></span> / day</nobr>
             </div>
@@ -86,7 +87,7 @@
             var reposStr = "";
             for ( var i=0; i<squad.repos.length; i++ ) {
                 var name = parseNameFromGit(squad.repos[i]);
-                reposStr += "<a target='_blank' href='http://"+squad.repos[i]+"' style='color:white;font-size:17px;'>"+name+"</a>";
+                reposStr += "<a href='/heatmap/repo?url="+encodeURIComponent(squad.repos[i])+"' style='color:white;font-size:17px;'>"+name+"</a>";
                 if ( i != squad.repos.length-1 ) 
                     reposStr += ", ";
             }
@@ -94,7 +95,8 @@
             var members = document.getElementById("members-list");
             var membersStr = "";
             for ( var i=0; i<squad.members.length; i++ ) {
-                membersStr += "<a target='_blank' href='/heatmap/users/"+squad.members[i]+"' style='color:white;font-size:17px;'>"+squad.members[i]+"</a>";
+                //membersStr += "<a target='_blank' href='/heatmap/users/"+squad.members[i]+"' style='color:white;font-size:17px;'>"+squad.members[i]+"</a>";
+                membersStr += "<a href='/heatmap/user' style='color:white;font-size:17px;'>"+squad.members[i]+"</a>";
                 if ( i != squad.members.length-1 ) 
                     membersStr += ", ";
             }

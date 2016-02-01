@@ -9,7 +9,7 @@ import (
 	//for extracting service credentials from VCAP_SERVICES
 	//"github.com/cloudfoundry-community/go-cfenv"
 	"hub.jazz.net/git/schurman93/Git-Monitor/cadb"
-	"hub.jazz.net/git/schurman93/Git-Monitor/gitutil"
+	//"hub.jazz.net/git/schurman93/Git-Monitor/gitutil"
 	//"hub.jazz.net/git/schurman93/Git-Monitor/model"
 	"hub.jazz.net/git/schurman93/Git-Monitor/route"
 )
@@ -49,7 +49,7 @@ func main() {
 	router := route.NewRouter()
 
 	// run the git update loop in the background
-	go gitutil.RunUpdateLoop()
+	//go gitutil.RunUpdateLoop()
 
 	// launch the server
 	log.Printf("Starting app on %+v:%+v\n", host, port)

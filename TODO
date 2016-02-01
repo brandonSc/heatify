@@ -1,3 +1,10 @@
+notes: 
+1683   —   ~ 9.25 / day <-- results on dashboard-dc ghe
+Commits: 977   —   ~ 11.49 / day <-- dashboard-ui ghe
+
+
+commits leaking on 2014-09-09T00:00:00Z in v8ppc
+
 - figure out how git merged commits from Gitlab to GHE 
 
 - host on stage1.bluemix
