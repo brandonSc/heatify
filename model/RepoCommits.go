@@ -17,11 +17,11 @@ const COMMITS_DB = "gitmonitor-repos-dev"
 // This structure holds the number of commits to a repository on particular day
 //
 type RepoCommits struct {
-	URL     string    `json:"url"`     // URL of the repository
-	Date    time.Time `json:"date"`    // date of the commits on the repo (UNIX epoch)
-	Commits int       `json:"commits"` // number of commits on this day
-	Id      string    `json:"_id"`     // document ID from cloudant
-	Rev     string    `json:"_rev"`    // document revision from cloudant
+	URL     string    `json:"url"`            // URL of the repository
+	Date    time.Time `json:"date"`           // date of the commits on the repo (UNIX epoch)
+	Commits int       `json:"commits"`        // number of commits on this day
+	Id      string    `json:"_id,omitempty"`  // document ID from cloudant
+	Rev     string    `json:"_rev,omitempty"` // document revision from cloudant
 }
 
 //
@@ -52,6 +52,7 @@ func DbSendRepoCommitsArray(rcs []RepoCommits) {
 	if err != nil {
 		fmt.Printf("error, model.RepoCommits.DbSendRepoCommitsArray: %s. Response is: %s\n", err, res)
 	}
+	fmt.Println("cloudant: ", res)
 }
 
 //
