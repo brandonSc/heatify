@@ -75,9 +75,11 @@ func json_to_repoCommits(js string, url string) []model.RepoCommits {
 		}
 		if !exists {
 			rcList = append(rcList, model.RepoCommits{
-				url,
-				nDate,
-				1,
+				url,   // git url
+				nDate, // dd-mm-yyyy 00:00:00
+				1,     // num commits made
+				"",    // _id
+				"",    // _rev
 			})
 		}
 	}
@@ -101,7 +103,8 @@ func filter_changeset(localCommits []model.RepoCommits, dbCommits []model.RepoCo
 				// found a set of commits in cloudant that matches the local set
 				// now need to determine if the cloudant set needs to be updated
 				if dbCommits[j].Commits < localCommits[i].Commits {
-					rc = append(rc, localCommits[i])
+					dbCommits[j].Commits = localCommits[i].Commits
+					rc = append(rc, dbCommits[i])
 				}
 			}
 		}

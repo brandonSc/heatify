@@ -9,6 +9,10 @@ import (
 	"time"
 )
 
+// set this to `gitmonitor-repos-dev` for development,
+// or `git-monitor-repos` for production only the the RTP VM
+const COMMITS_DB = "gitmonitor-repos-dev"
+
 //
 // This structure holds the number of commits to a repository on particular day
 //
@@ -16,7 +20,8 @@ type RepoCommits struct {
 	URL     string    `json:"url"`     // URL of the repository
 	Date    time.Time `json:"date"`    // date of the commits on the repo (UNIX epoch)
 	Commits int       `json:"commits"` // number of commits on this day
-	//LastId  string    `json:"lastId"`  // most recent commit ID (hex) for distinguishing new commits on current date
+	Id      string    `json:"_id"`     // document ID from cloudant
+	Rev     string    `json:"_rev"`    // document revision from cloudant
 }
 
 //
@@ -28,7 +33,7 @@ func (rc RepoCommits) DbCreate() {
 		"Date": "%s",
 		"Commits": %d
 	}`, rc.URL, rc.Date, rc.Commits)
-	_, err := cadb.Post("gitmonitor-repos", json, "")
+	_, err := cadb.Post(COMMITS_DB, json, "")
 	if err != nil {
 		fmt.Printf("error, model.RepoCommits.DbCreate: %s\n", err)
 	}
@@ -43,7 +48,7 @@ func DbSendRepoCommitsArray(rcs []RepoCommits) {
 		fmt.Printf("error, model.RepoCommits.DbSendRepoCommitsArray: %s\n", err)
 		return
 	}
-	res, err := cadb.Post("gitmonitor-repos", `{"docs":`+string(js)+`}`, "_bulk_docs")
+	res, err := cadb.Post(COMMITS_DB, `{"docs":`+string(js)+`}`, "_bulk_docs")
 	if err != nil {
 		fmt.Printf("error, model.RepoCommits.DbSendRepoCommitsArray: %s. Response is: %s\n", err, res)
 	}
@@ -62,7 +67,7 @@ func DbRetrieveAllRepoCommits(url string) []RepoCommits {
 			"url": "` + url + `" 
 		}
 	}`
-	res, err := cadb.Post("gitmonitor-repos", js, "_find")
+	res, err := cadb.Post(COMMITS_DB, js, "_find")
 	if err != nil {
 		fmt.Printf("error, model.RepoCommits.DbRetrieveAll: %s\n", err)
 		return nil
@@ -89,6 +94,8 @@ func json_to_array(js string) []RepoCommits {
 			c["url"].(string),
 			day,
 			int(c["commits"].(float64)),
+			c["_id"].(string),
+			c["_rev"].(string),
 		})
 	}
 	return a
