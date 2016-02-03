@@ -81,10 +81,12 @@
 
         buildHeatmap(graphData, null);
 
-        $(document).ready(function() { 
+        $(document).ready(function() {
+            // build a list of a squad's repositories
             var squad = obj.squad;
             var repos = document.getElementById("repos-list");
             var reposStr = "";
+            squad.repos.sort();
             for ( var i=0; i<squad.repos.length; i++ ) {
                 var name = parseNameFromGit(squad.repos[i]);
                 reposStr += "<a href='/heatmap/repo?url="+encodeURIComponent(squad.repos[i])+"' style='color:white;font-size:17px;'>"+name+"</a>";
@@ -92,10 +94,11 @@
                     reposStr += ", ";
             }
             repos.innerHTML += reposStr;
+            // build a list of squad members
             var members = document.getElementById("members-list");
             var membersStr = "";
+            squad.members.sort();
             for ( var i=0; i<squad.members.length; i++ ) {
-                //membersStr += "<a target='_blank' href='/heatmap/users/"+squad.members[i]+"' style='color:white;font-size:17px;'>"+squad.members[i]+"</a>";
                 membersStr += "<a href='/heatmap/user' style='color:white;font-size:17px;'>"+squad.members[i]+"</a>";
                 if ( i != squad.members.length-1 ) 
                     membersStr += ", ";
