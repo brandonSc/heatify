@@ -10,7 +10,7 @@ import (
 )
 
 // set this to `gitmonitor-repos-dev` for development,
-// or `git-monitor-repos` for production only on the RTP VM
+// or `gitmonitor-repos` for production only on the RTP VM
 const COMMITS_DB = "gitmonitor-repos-dev"
 
 //
