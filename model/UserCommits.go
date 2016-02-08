@@ -1,5 +1,14 @@
 package model
 
+import (
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"time"
+
+	"hub.jazz.net/git/schurman93/Git-Monitor/cadb"
+)
+
 // set this to `gitmonitor-users-dev` for development,
 // or `gitmonitor-users` for production only on the RTP VM
 const USERS_DB = "gitmonitor-users-dev"
@@ -8,12 +17,12 @@ const USERS_DB = "gitmonitor-users-dev"
 // Stores the number of commits made to a repo each day by a particular user
 //
 type UserCommits struct {
-	User    string `json:"user"`           // username or email of the user
-	URL     string `json:"url"`            // URL of the repository
-	Date    string `json:"date"`           // date of the commits on the repo: YYYY/MM/DD
-	Commits int    `json:"commits"`        // number of commits on this day
-	Id      string `json:"_id,omitempty"`  // record ID in cloudant
-	Rev     string `json:"_rev,omitempty"` // revision ID in cloudant
+	User    string    `json:"user"`           // username or email of the user
+	URL     string    `json:"url"`            // URL of the repository
+	Date    time.Time `json:"date"`           // date of the commits on the repo: YYYY/MM/DD
+	Commits int       `json:"commits"`        // number of commits on this day
+	Id      string    `json:"_id,omitempty"`  // record ID in cloudant
+	Rev     string    `json:"_rev,omitempty"` // revision ID in cloudant
 }
 
 //
@@ -52,13 +61,13 @@ func DbRetrieveAllUserCommits(url string) []UserCommits {
 	}
 	buf := new(bytes.Buffer)
 	buf.ReadFrom(res.Body)
-	return json_to_array(buf.String())
+	return json_to_userCommits_array(buf.String())
 }
 
 //
 // private function for turning json response into an array in go
 //
-func json_to_array(js string) []UserCommits {
+func json_to_userCommits_array(js string) []UserCommits {
 	var f interface{}
 	json.Unmarshal([]byte(js), &f)
 	m := f.(map[string]interface{})

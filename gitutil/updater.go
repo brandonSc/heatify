@@ -21,13 +21,23 @@ func UpdateRefs(path string) {
 		log.Printf("error, gitutil.UpdateRefs: error fetching refs for %s. error is %s\n", path, err)
 		return
 	}
-	// get the local git commits in JSON
+	// get the local `git log` in JSON
 	url := DirToUrl(path)
 	js, err := commits_to_json(url)
 	if err != nil {
 		log.Printf("Error, gitutil.UpdateRefs: %s\n", err)
 		return
 	}
+	// sync with cloudant
+	//process_repo_commits(url, js)
+	process_user_commits(url, js)
+}
+
+//
+// Look at the local git log given by @param js
+// and sync with the repo's commits in cloudant
+//
+func process_repo_commits(url string, js string) {
 	// parse the JSON into go structs
 	allCommits := json_to_repoCommits(js, url)
 
@@ -37,10 +47,75 @@ func UpdateRefs(path string) {
 
 	// send to cloudant database
 	if len(newCommits) > 0 {
-		log.Printf("adding %d new commits to %s", len(newCommits), url)
+		log.Printf("adding %d new Repo Commits to %s\n", len(newCommits), url)
 		model.DbSendRepoCommitsArray(newCommits)
 		fmt.Println(newCommits)
 	}
+}
+
+//
+// sync user's commits per day in cloudant
+//
+func process_user_commits(url string, js string) {
+	// parse the json into a set of commits by each user
+	allUserCommits := json_to_userCommits(js, url)
+
+	// find the new commits that are not in cloudant
+	dbCommits := model.DbRetrieveAllUserCommits(url)
+	newCommits := filter_user_changeset(allUserCommits, dbCommits)
+
+	// send the new commits to cloudant
+	if len(newCommits) > 0 {
+		log.Printf("adding %d new User Commits to %s\n", len(newCommits), url)
+		//model.DbSendUserCommitsArray(newCommits)
+		fmt.Println(newCommits)
+	}
+}
+
+//
+// Convert a JSON string from `git log` to an array of RepoCommits structs
+//
+func json_to_userCommits(js string, url string) []model.UserCommits {
+	// a list of RepoCommits - indicating commits-per-day
+	var rcList []model.UserCommits
+	// a map used to build the list of RepoCommits
+	//rcMap := make(map[int64]model.RepoCommits)
+
+	var f []interface{}
+	json.Unmarshal([]byte(js), &f)
+
+	for i := range f {
+		m := f[i].(map[string]interface{})
+		// parse the date from the JSON
+		user := m["author"].(string)
+		secs, err := strconv.ParseInt(m["date"].(string), 10, 64)
+		if err != nil {
+			fmt.Println("Error, gitutil.json_to_repoCommits: %s\n")
+		}
+		cDate := time.Unix(secs, 0)
+		// remove the time on the date so that only DD/MM/YYYY info remain
+		nDate := time.Date(cDate.Year(), cDate.Month(), cDate.Day(), 0, 0, 0, 0, time.UTC)
+		// merge the commits on each day ..
+		exists := false
+		for i := range rcList {
+			if rcList[i].Date == nDate && rcList[i].User == user {
+				rcList[i].Commits = rcList[i].Commits + 1
+				exists = true
+			}
+		}
+		if !exists {
+			rcList = append(rcList, model.UserCommits{
+				user,  // git commit author
+				url,   // git url
+				nDate, // dd-mm-yyyy 00:00:00
+				1,     // num commits made
+				"",    // _id
+				"",    // _rev
+			})
+		}
+	}
+
+	return rcList
 }
 
 //
@@ -94,6 +169,37 @@ func json_to_repoCommits(js string, url string) []model.RepoCommits {
 //
 func filter_changeset(localCommits []model.RepoCommits, dbCommits []model.RepoCommits) []model.RepoCommits {
 	var rc []model.RepoCommits
+
+	for i := range localCommits {
+		found := false
+		for j := range dbCommits {
+			if dbCommits[j].Date == localCommits[i].Date {
+				found = true
+				// found a set of commits in cloudant that matches the local set
+				// now need to determine if the cloudant set needs to be updated
+				if dbCommits[j].Commits < localCommits[i].Commits {
+					dbCommits[j].Commits = localCommits[i].Commits
+					rc = append(rc, dbCommits[i])
+				}
+			}
+		}
+		if !found {
+			// didn't find a matching commit set in cloudant
+			// need to add it to the changeset
+			rc = append(rc, localCommits[i])
+		}
+	}
+
+	return rc
+}
+
+//
+// compare local RepoCommits to the ones stored on cloudant,
+// to determine which RepoCommits are new
+// -- runs in O(n^2) where dbCommits ~= allCommits = n
+//
+func filter_user_changeset(localCommits []model.UserCommits, dbCommits []model.UserCommits) []model.UserCommits {
+	var rc []model.UserCommits
 
 	for i := range localCommits {
 		found := false
