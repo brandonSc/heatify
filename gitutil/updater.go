@@ -29,7 +29,7 @@ func UpdateRefs(path string) {
 		return
 	}
 	// sync with cloudant
-	//process_repo_commits(url, js)
+	process_repo_commits(url, js)
 	process_user_commits(url, js)
 }
 
