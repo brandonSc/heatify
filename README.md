@@ -35,3 +35,19 @@ You can configure git to permanently store these, for example:
 ```
 git config --global credential.helper store --file ~/.git-credentials
 ```
+
+### Deployment 
+
+To deploying Heatify on a Linux VM, SSH keys must be configured with each git platform. Generate an ssh-key and copy and paste the public key into each git account's ssh settings. 
+
+Add the ssh-key to the agent (this is often a required every time before running Heatify) 
+```
+$ eval `ssh-agent -s`
+$ ssh-add ~/.ssh/id_rsa
+```
+
+Run in background and redirect logs to a file:
+```
+$ ./Git-Monitor > ~/heatify.log 2>&1 & 
+```
+
