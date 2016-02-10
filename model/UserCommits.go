@@ -34,7 +34,7 @@ func DbSendUserCommitsArray(ucs []UserCommits) {
 		fmt.Printf("error, model.UserCommits.DbSendUserCommitsArray: %s\n", err)
 		return
 	}
-	res, err := cadb.Post(COMMITS_DB, `{"docs":`+string(js)+`}`, "_bulk_docs")
+	res, err := cadb.Post(USERS_DB, `{"docs":`+string(js)+`}`, "_bulk_docs")
 	if err != nil {
 		fmt.Printf("error, model.UserCommits.DbSendUserCommitsArray: %s. Response is: %s\n", err, res)
 	}

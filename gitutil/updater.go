@@ -67,7 +67,7 @@ func process_user_commits(url string, js string) {
 	// send the new commits to cloudant
 	if len(newCommits) > 0 {
 		log.Printf("adding %d new User Commits to %s\n", len(newCommits), url)
-		//model.DbSendUserCommitsArray(newCommits)
+		model.DbSendUserCommitsArray(newCommits)
 		fmt.Println(newCommits)
 	}
 }
@@ -204,7 +204,7 @@ func filter_user_changeset(localCommits []model.UserCommits, dbCommits []model.U
 	for i := range localCommits {
 		found := false
 		for j := range dbCommits {
-			if dbCommits[j].Date == localCommits[i].Date {
+			if dbCommits[j].Date == localCommits[i].Date && dbCommits[i].User == localCommits[j].User {
 				found = true
 				// found a set of commits in cloudant that matches the local set
 				// now need to determine if the cloudant set needs to be updated
@@ -241,4 +241,12 @@ func before_date(date1 time.Time, date2 time.Time) bool {
 	return date1.Year() < date2.Year() ||
 		date1.Month() < date2.Month() ||
 		date1.Day() < date2.Day()
+}
+
+//
+// returns true if `date1` without the time
+// (hours, minutes, etc) is greater than `date2`
+//
+func after_date(date1 time.Time, date2 time.Time) bool {
+	return !before_date(date1, date2) && !equal_dates(date1, date2)
 }
