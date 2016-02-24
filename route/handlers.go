@@ -60,7 +60,7 @@ func HeatMapRepo(w http.ResponseWriter, r *http.Request) {
 	var data string
 	exists := gitutil.CheckExists(repo)
 	if exists {
-		dbCommits := model.DbRetrieveAllRepoCommits(repo)
+		dbCommits := model.DbRetrieveRepoCommits(repo)
 		b, err := json.Marshal(dbCommits)
 		if err != nil {
 			ShowError(w, ERROR_CLONE_REPO)

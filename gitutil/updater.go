@@ -42,7 +42,7 @@ func process_repo_commits(url string, js string) {
 	allCommits := json_to_repoCommits(js, url)
 
 	// calculate the latest commits
-	dbCommits := model.DbRetrieveAllRepoCommits(url)      // commits in cloudant
+	dbCommits := model.DbRetrieveRepoCommits(url)         // commits in cloudant
 	newCommits := filter_changeset(allCommits, dbCommits) // commits not in cloudant
 
 	// send to cloudant database

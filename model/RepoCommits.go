@@ -59,13 +59,40 @@ func DbSendRepoCommitsArray(rcs []RepoCommits) {
 // Get a list of all db records created under the URL
 // this is the function that is called to get the data for the Repository HeatMap
 //
-func DbRetrieveAllRepoCommits(url string) []RepoCommits {
+func DbRetrieveRepoCommits(url string) []RepoCommits {
 	js := `{
 		"selector": {
 			"_id": {
 				"$gt": 0
 			}, 
 			"url": "` + url + `" 
+		}
+	}`
+	res, err := cadb.Post(COMMITS_DB, js, "_find")
+	if err != nil {
+		fmt.Printf("error, model.RepoCommits.DbRetrieveAll: %s\n", err)
+		return nil
+	}
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(res.Body)
+	return json_to_array(buf.String())
+}
+
+//
+// Get a list of all db records created under the URL
+// this is the function that is called to get the data for the Repository HeatMap
+//
+func DbRetrieveMultiRepoCommits(urls []string) []RepoCommits {
+	byt, _ := json.Marshal(urls)
+	urlsjs := string(byt)
+	js := `{
+		"selector": {
+			"_id": {
+				"$gt": 0
+			}, 
+			"url": {
+				"$in": ` + urlsjs + `
+			}
 		}
 	}`
 	res, err := cadb.Post(COMMITS_DB, js, "_find")
