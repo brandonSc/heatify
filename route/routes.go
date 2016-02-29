@@ -60,4 +60,22 @@ var routes = Routes{
 		"/heatmap/squads",
 		HeatMapSquad,
 	},
+	Route{
+		"ApiUserCommits",
+		"GET",
+		"/api/commits/user",
+		GetCommitsByUser,
+	},
+	Route{
+		"ApiUserCommitsRepo",
+		"GET",
+		"/api/commits/repo/user",
+		GetCommitsByUserOnRepo,
+	},
+	Route{
+		"ApiUserCommitsSquad",
+		"GET",
+		"/api/commits/squad/user",
+		GetCommitsByUserOnMultiRepo,
+	},
 }
