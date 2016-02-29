@@ -52,14 +52,8 @@ func InitSquadFromJson(name string) Squad {
 // for the Squad with the @param name
 //
 func GetSquadRepoCommits(name string) []RepoCommits {
-	var a []RepoCommits
 	file := strings.ToLower(name) + ".json"
 	squad := InitSquadFromJson(file)
-	for i := range squad.Repos {
-		commits := DbRetrieveAllRepoCommits(squad.Repos[i])
-		for j := range commits {
-			a = append(a, commits[j])
-		}
-	}
-	return a
+	commits := DbRetrieveMultiRepoCommits(squad.Repos)
+	return commits
 }
