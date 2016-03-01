@@ -107,7 +107,7 @@ func HeatMapSquad(w http.ResponseWriter, r *http.Request) {
 		log.Printf(str)
 		ShowError(w, str)
 	}
-	commits := model.GetSquadRepoCommits(squad)
+	commits, _ := model.GetSquadRepoCommits(squad)
 	p, err := LoadPage("squadheatmap")
 	if err != nil {
 		log.Printf("Error loading squad heatmap page: %s\n", err)
@@ -116,7 +116,7 @@ func HeatMapSquad(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	data, err := json.Marshal(commits)
-	squadInfo := model.InitSquadFromJson(strings.ToLower(squad) + ".json")
+	squadInfo, _ := model.InitSquadFromJson(squad + ".json")
 	squadData, err := json.Marshal(squadInfo)
 	p.Title = squad
 	p.Data = `{"commits":` + string(data) + `,"squad":` + string(squadData) + `}`

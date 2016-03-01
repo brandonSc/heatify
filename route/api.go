@@ -56,27 +56,25 @@ func GetCommitsByUserOnRepo(w http.ResponseWriter, r *http.Request) {
 //
 // send back json array of all users commits on the provided array of repos (e.g. squad)
 // @param user is the git commit author provided in a url parameter
-// @param repo is the git url to look under
+// @param squad
 //
 func GetCommitsByUserOnMultiRepo(w http.ResponseWriter, r *http.Request) {
-	u, err := url.Parse(r.URL.String())
-	if err != nil {
-		panic(err)
-	} else {
-		m, _ := url.ParseQuery(u.RawQuery)
-		fmt.Println(m)
-	}
 	user, err := url.QueryUnescape(r.URL.Query().Get("user"))
 	if err != nil || user == "" {
 		fmt.Fprintf(w, `{"error":"'user' parameters is required."}`)
 		return
 	}
-	repo, err := url.QueryUnescape(r.URL.Query().Get("repo"))
-	if err != nil || repo == "" {
-		fmt.Fprintf(w, `{"error":"'repo' parameters is required."}`)
+	squad, err := url.QueryUnescape(r.URL.Query().Get("squad"))
+	if err != nil || squad == "" {
+		fmt.Fprintf(w, `{"error":"'squad' parameters is required."}`)
 		return
 	}
-	commits := model.FindUserCommitsOnRepo(user, repo)
+	s, err := model.InitSquadFromJson(squad + ".json")
+	if err != nil {
+		fmt.Fprintf(w, `{"error":"Squad not found."}`)
+		return
+	}
+	commits := model.FindUserCommitsOnMultiRepo(user, s.Repos)
 	js, err := json.Marshal(commits)
 	if err != nil {
 		fmt.Printf("GetCommitsByUser: error marshaling user commits to json: %s\n", err)

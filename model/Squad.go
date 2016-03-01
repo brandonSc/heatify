@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"strings"
 )
 
 const CONFIG_DIR = "config/squads"
@@ -30,7 +29,7 @@ func InitSquadsFromJson() []Squad {
 		fmt.Printf("error reading directory structure: %s\n", err)
 	}
 	for i := range files {
-		squad := InitSquadFromJson(files[i].Name())
+		squad, _ := InitSquadFromJson(files[i].Name())
 		a = append(a, squad)
 	}
 	return a
@@ -40,20 +39,25 @@ func InitSquadsFromJson() []Squad {
 // initialize a single squad
 // using the JSON config file name
 //
-func InitSquadFromJson(name string) Squad {
-	js, _ := ioutil.ReadFile(CONFIG_DIR + "/" + name)
+func InitSquadFromJson(name string) (Squad, error) {
+	js, err := ioutil.ReadFile(CONFIG_DIR + "/" + name)
+	if err != nil {
+		return Squad{}, err
+	}
 	var squad Squad
 	json.Unmarshal([]byte(js), &squad)
-	return squad
+	return squad, nil
 }
 
 //
 // Get all the RepoCommtis from Cloudant
 // for the Squad with the @param name
 //
-func GetSquadRepoCommits(name string) []RepoCommits {
-	file := strings.ToLower(name) + ".json"
-	squad := InitSquadFromJson(file)
+func GetSquadRepoCommits(name string) ([]RepoCommits, error) {
+	squad, err := InitSquadFromJson(name + ".json")
+	if err != nil {
+		return nil, err
+	}
 	commits := DbRetrieveMultiRepoCommits(squad.Repos)
-	return commits
+	return commits, nil
 }
