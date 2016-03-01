@@ -65,6 +65,79 @@ func DbRetrieveAllUserCommits(url string) []UserCommits {
 }
 
 //
+// all user commits from all repos
+// @param user git author
+//
+func FindUserCommits(user string) []UserCommits {
+	js := `{
+		"selector": {
+			"_id": {
+				"$gt": 0
+			}, 
+			"user": "` + user + `" 
+		}
+	}`
+	res, err := cadb.Post(USERS_DB, js, "_find")
+	if err != nil {
+		fmt.Printf("error, model.UserCommits.DbRetrieveAll: %s\n", err)
+		return nil
+	}
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(res.Body)
+	return json_to_userCommits_array(buf.String())
+}
+
+//
+// all user comiits on a specific repo
+//
+func FindUserCommitsOnRepo(user string, repo string) []UserCommits {
+	js := `{
+		"selector": {
+			"_id": {
+				"$gt": 0
+			}, 
+			"user": "` + user + `",
+			"url": "` + repo + `"
+		}
+	}`
+	res, err := cadb.Post(USERS_DB, js, "_find")
+	if err != nil {
+		fmt.Printf("error, model.UserCommits.DbRetrieveAll: %s\n", err)
+		return nil
+	}
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(res.Body)
+	return json_to_userCommits_array(buf.String())
+}
+
+//
+// all user commits on all provided repo (e.g. squad)
+//
+func FindUserCommitsOnMultiRepo(user string, repos []string) []UserCommits {
+	byt, _ := json.Marshal(repos)
+	urlsjs := string(byt)
+	js := `{
+		"selector": {
+			"_id": {
+				"$gt": 0
+			}, 
+			"user": "` + user + `",
+			"url": {
+				"$in": ` + urlsjs + `
+			}
+		}
+	}`
+	res, err := cadb.Post(USERS_DB, js, "_find")
+	if err != nil {
+		fmt.Printf("error, model.UserCommits.DbRetrieveAll: %s\n", err)
+		return nil
+	}
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(res.Body)
+	return json_to_userCommits_array(buf.String())
+}
+
+//
 // private function for turning json response into an array in go
 //
 func json_to_userCommits_array(js string) []UserCommits {
