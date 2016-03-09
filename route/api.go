@@ -34,6 +34,7 @@ func GetCommitsByUser(w http.ResponseWriter, r *http.Request) {
 // @param repo is the git url to look under
 //
 func GetCommitsByUserOnRepo(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
 	user, err := url.QueryUnescape(r.URL.Query().Get("user"))
 	if err != nil || user == "" {
 		fmt.Fprintf(w, `{"error":"'user' parameters is required."}`)
@@ -54,6 +55,7 @@ func GetCommitsByUserOnRepo(w http.ResponseWriter, r *http.Request) {
 }
 
 //
+// GET /api/commits/squad
 // send back json array of all users commits on the provided array of repos (e.g. squad)
 // @param user is the git commit author provided in a url parameter
 // @param squad

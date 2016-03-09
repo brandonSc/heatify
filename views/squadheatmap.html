@@ -15,12 +15,14 @@
     <div class="center">
         <div class="title">
             <h3>Heatmap of '{{.Title}}' Squad</h3>
+            <div id="repos-list" style="color:grey;">
+            </div>
         </div>
         <div class="container" style="padding-bottom:10px">
             <a id="right-pan" style="font-size: 24px; right: 0%" class="waves-effect waves-teal btn-flat">&#60;</a>
             <a id="left-pan" style="font-size: 24px; left: 0%" class="waves-effect waves-teal btn-flat">&#62;</a>
         </div>
-        <div style="margin: auto; display: inline-block;">
+        <div style="margin: auto; display: inline-block; padding-bottom:20px;">
             <div id="cal-heatmap"></div>
             <div>
                 <a class="heatmeter">HeatMeter</a>
@@ -34,13 +36,11 @@
         </div>
     </div>
     <div class="container center">
-        <div id="repos-list">
-            <h5>Repos</h5>
+        <div id="members-heatmaps">
         </div>
-        <br>
-        <div id="members-list">
+        <!--<div id="members-list">
             <h5>Members</h5>
-        </div>
+            </div>-->
     </div>
     
     <script src="/static/javascripts/gitUrlParser.js"></script>
@@ -89,12 +89,13 @@
             squad.repos.sort();
             for ( var i=0; i<squad.repos.length; i++ ) {
                 var name = parseNameFromGit(squad.repos[i]);
-                reposStr += "<a href='/heatmap/repo?url="+encodeURIComponent(squad.repos[i])+"' style='color:white;font-size:17px;'>"+name+"</a>";
+                reposStr += "<a href='/heatmap/repo?url="+encodeURIComponent(squad.repos[i])+"' style='color:grey;font-size:17px;'>"+name+"</a>";
                 if ( i != squad.repos.length-1 ) 
                     reposStr += ", ";
             }
             repos.innerHTML += reposStr;
             // build a list of squad members
+            /*
             var members = document.getElementById("members-list");
             var membersStr = "";
             squad.members.sort();
@@ -104,6 +105,10 @@
                     membersStr += ", ";
             }
             members.innerHTML += membersStr;
+*/
+            // build heatmaps for each of the squad members 
+            buildAllMembersHeatmaps(squad, document.getElementById("members-heatmaps"), cellSize);
+
         });
     </script>
 </body>
