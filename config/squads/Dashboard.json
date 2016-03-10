@@ -4,8 +4,10 @@
     "repos": [
         "hub.jazz.net/git/schurman93/Git-Monitor",
         "hub.jazz.net/git/schurman93/workitems-api",
+        "github.ibm.com/alchemy-dashboard/executive-dashboard-monitor.git",
         "github.ibm.com/alchemy-dashboard/executive-dashboard-dc.git",
-        "github.ibm.com/alchemy-dashboard/executive-dashboard-ui.git"
+        "github.ibm.com/alchemy-dashboard/executive-dashboard-ui.git",
+        "github.ibm.com/alchemy-dashboard/executive-dashboard-build.git"
     ],
     "members": [
         "Arsalan Rana <arsalan.rana@ca.ibm.com>", 
