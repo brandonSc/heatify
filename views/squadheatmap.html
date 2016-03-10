@@ -2,6 +2,7 @@
 {{ define "title" }}Heatify - {{.Title}}{{ end }}
 {{ define "content"}}
 <head>
+    <script type="text/javascript" src="/static/javascripts/spin.min.js"></script>
     <script type="text/javascript" src="//d3js.org/d3.v3.min.js"></script>
     <script type="text/javascript" src="//cdn.jsdelivr.net/cal-heatmap/3.3.10/cal-heatmap.min.js"></script>
     <script type="text/javascript" src="/static/javascripts/heatmapBuilder.js"></script>
@@ -41,6 +42,8 @@
         <!--<div id="members-list">
             <h5>Members</h5>
             </div>-->
+    </div>
+    <div id="spinner" style="position:fixed;bottom:50px;width:100%;">
     </div>
     
     <script src="/static/javascripts/gitUrlParser.js"></script>
@@ -105,9 +108,35 @@
                     membersStr += ", ";
             }
             members.innerHTML += membersStr;
-*/
+            */
+            var opts = {
+                    lines: 6 // The number of lines to draw
+                        , length: 0 // The length of each line
+                        , width: 10 // The line thickness
+                        , radius: 15 // The radius of the inner circle
+                        , scale: 1 // Scales overall size of the spinner
+                        , corners: 1 // Corner roundness (0..1)
+                        , color: '#F60' // #rgb or #rrggbb or array of colors
+                        , opacity: 0.50 // Opacity of the lines
+                        , rotate: 0 // The rotation offset
+                        , direction: 1 // 1: clockwise, -1: counterclockwise
+                        , speed: 1 // Rounds per second
+                        , trail: 60 // Afterglow percentage
+                        , fps: 20 // Frames per second when using setTimeout() as a fallback for CSS
+                        , zIndex: 2e9 // The z-index (defaults to 2000000000)
+                        , className: 'spinner' // The CSS class to assign to the spinner
+                        , top: '50%' // Top position relative to parent
+                        , left: '50%' // Left position relative to parent
+                        , shadow: true // Whether to render a shadow
+                        , hwaccel: false // Whether to use hardware acceleration
+                        , position: 'relative' // Element positioning
+                };
+
+                var target = document.getElementById('spinner')
+                    spinner = new Spinner(opts).spin(target);
+
             // build heatmaps for each of the squad members 
-            buildAllMembersHeatmaps(squad, document.getElementById("members-heatmaps"), cellSize);
+            buildAllMembersHeatmaps(squad, document.getElementById("members-heatmaps"), cellSize, spinner);
 
         });
     </script>

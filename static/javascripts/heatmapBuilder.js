@@ -35,21 +35,15 @@ function buildHeatmap(graphData, domElement) {
 /**
  * build a heatmap for a squad member's data and attach it to the given element
  */
-function buildSquadMemberHeatmap(member, squad, rank, element, cellSize) {
+function buildSquadMemberHeatmap(member, squad, rank, element, cellSize, terminate) {
     var memberId = memberNameToId(trimGitAuthorToMember(member));
     var url = "/api/commits/squad/user?user="+member+"&squad="+squad;
     $.get(url, function(response) {
         var memberElem = document.getElementById("heatmap-"+memberId);
         var data = commitsToCalData(JSON.parse(response));
-        
-        console.log('--');
-        console.log(response);
-        console.log('!!!');
-        console.log(data);
-        console.log('--');
-        
+
         var elem = document.createElement("div");
-        elem.style = "padding-top: 5px; padding-bottom:5px;";
+        elem.style = "padding-top: 15px; padding-bottom:50px;";
         
 
         leftPan = document.createElement("a");
@@ -64,18 +58,8 @@ function buildSquadMemberHeatmap(member, squad, rank, element, cellSize) {
         rightPan.style = "font-size: 24px; right: 0%";
         rightPan.innerHTML = "&#60;";
 
-        $("#left-pan-"+memberId).on("click", function(e) {  
-            e.preventDefault();
-            cal.next();
-        });
-
-        $("#right-pan-"+memberId).on("click", function(e) {
-            e.preventDefault();
-            cal.previous();
-        });
-
         var memElem = document.createElement("h5");
-        memElem.innerHTML = trimGitAuthorToMember(member) + ' #' + rank;
+        memElem.innerHTML = trimGitAuthorToMember(member) + ' &nbsp; #' + rank;
     //    var rankElem = document.createElement("h6");
     //    rankElem.innerHTML = '#'+rank;
 
@@ -105,6 +89,22 @@ function buildSquadMemberHeatmap(member, squad, rank, element, cellSize) {
             start: new Date(tdy.getFullYear(), tdy.getMonth()-11, tdy.getDay()),
             data: data,
         });
+        
+        $("#left-pan-"+memberId).on("click", function(e) {  
+            e.preventDefault();
+            cal.next();
+        });
+
+        $("#right-pan-"+memberId).on("click", function(e) {
+            e.preventDefault();
+            cal.previous();
+        });
+
+        if ( terminate ) { 
+            var target = document.getElementById('spinner')
+            target.innerHTML = "";
+        }
+
     });
 }
 
@@ -123,10 +123,17 @@ function buildAllMembersHeatmaps(squad, element, cellSize) {
         memberElem.style = "margin: auto; display: inline-block;";
         element.appendChild(memberElem);
     }
+
+
+
     // do this in a separate loop so elements are not added as data is loaded
     for ( var j=0; j<members.length; j++ ) { 
         var member = memberNameToId(trimGitAuthorToMember(members[j]));
-        buildSquadMemberHeatmap(members[j], squad.name, j, document.getElementById('heatmap-'+member), cellSize);
+        var terminate = false;
+        if ( j == members.length-1 ) 
+            terminate = true;
+            
+        buildSquadMemberHeatmap(members[j], squad.name, j+1, document.getElementById('heatmap-'+member), cellSize, terminate);
     }
 }
 
