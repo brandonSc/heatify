@@ -204,13 +204,14 @@ func filter_user_changeset(localCommits []model.UserCommits, dbCommits []model.U
 	for i := range localCommits {
 		found := false
 		for j := range dbCommits {
-			if dbCommits[j].Date == localCommits[i].Date && dbCommits[i].User == localCommits[j].User {
+			if dbCommits[j].Date == localCommits[i].Date && dbCommits[j].User == localCommits[i].User {
 				found = true
 				// found a set of commits in cloudant that matches the local set
 				// now need to determine if the cloudant set needs to be updated
+				// (i.e. if the local set has more commits than the cloudant set)
 				if dbCommits[j].Commits < localCommits[i].Commits {
 					dbCommits[j].Commits = localCommits[i].Commits
-					rc = append(rc, dbCommits[i])
+					rc = append(rc, localCommits[i])
 				}
 			}
 		}
