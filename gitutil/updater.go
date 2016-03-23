@@ -61,7 +61,11 @@ func process_user_commits(url string, js string) {
 	allUserCommits := json_to_userCommits(js, url)
 
 	// find the new commits that are not in cloudant
-	dbCommits := model.DbRetrieveAllUserCommits(url)
+	dbCommits, err := model.DbRetrieveAllUserCommits(url)
+	if err != nil {
+		// problem loading from cloudant, so gonna give up
+		return
+	}
 	newCommits := filter_user_changeset(allUserCommits, dbCommits)
 
 	// send the new commits to cloudant

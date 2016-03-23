@@ -19,7 +19,12 @@ func GetCommitsByUser(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, `{"error":"'user' parameters is required."}`)
 		return
 	}
-	commits := model.FindUserCommits(user)
+	commits, err := model.FindUserCommits(user)
+	if err != nil {
+		fmt.Fprintf(w, `{"error":"problem downloading commits from the cloud"}`)
+		fmt.Printf("Error loading commits from cloudant for user=" + user)
+		return
+	}
 	js, err := json.Marshal(commits)
 	if err != nil {
 		fmt.Printf("GetCommitsByUser: error marshaling user commits to json: %s\n", err)
@@ -45,7 +50,12 @@ func GetCommitsByUserOnRepo(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, `{"error":"'repo' parameters is required."}`)
 		return
 	}
-	commits := model.FindUserCommitsOnRepo(user, repo)
+	commits, err := model.FindUserCommitsOnRepo(user, repo)
+	if err != nil {
+		fmt.Fprintf(w, `{"error":"problem downloading commits from the cloud"}`)
+		fmt.Printf("Error loading commits from cloudant for user=" + user)
+		return
+	}
 	js, err := json.Marshal(commits)
 	if err != nil {
 		fmt.Printf("GetCommitsByUser: error marshaling user commits to json: %s\n", err)
@@ -76,7 +86,7 @@ func GetCommitsByUserOnMultiRepo(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, `{"error":"Squad not found."}`)
 		return
 	}
-	commits := model.FindUserCommitsOnMultiRepo(user, s.Repos)
+	commits, err := model.FindUserCommitsOnMultiRepo(user, s.Repos)
 	js, err := json.Marshal(commits)
 	if err != nil {
 		fmt.Printf("GetCommitsByUser: error marshaling user commits to json: %s\n", err)

@@ -14,7 +14,7 @@ func commits_to_json(repoUrl string) (string, error) {
 	--pretty=format:'{%n  "commit": "%H",%n  "author": "%an <%ae>",%n  "date": "%at",%n  "message": "%f"%n},' \
 	$@ | \
 	perl -pe 'BEGIN{print "["}; END{print "]\n"}' | \
-	perl -pe 's/},]/}]/'`
+	perl -pe 's/},]/}]/' && exit`
 
 	cmd := exec.Command("/bin/bash", "-c", "cd "+dir+" && "+script)
 	out, err := cmd.Output()

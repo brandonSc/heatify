@@ -45,7 +45,7 @@ func DbSendUserCommitsArray(ucs []UserCommits) {
 // Get a list of all db records created under the URL
 // this is the function that is called to get the data for the Repository HeatMap
 //
-func DbRetrieveAllUserCommits(url string) []UserCommits {
+func DbRetrieveAllUserCommits(url string) ([]UserCommits, error) {
 	js := `{
 		"selector": {
 			"_id": {
@@ -57,7 +57,7 @@ func DbRetrieveAllUserCommits(url string) []UserCommits {
 	res, err := cadb.Post(USERS_DB, js, "_find")
 	if err != nil {
 		fmt.Printf("error, model.UserCommits.DbRetrieveAll: %s\n", err)
-		return nil
+		return nil, err
 	}
 	buf := new(bytes.Buffer)
 	buf.ReadFrom(res.Body)
@@ -68,7 +68,7 @@ func DbRetrieveAllUserCommits(url string) []UserCommits {
 // all user commits from all repos
 // @param user git author
 //
-func FindUserCommits(user string) []UserCommits {
+func FindUserCommits(user string) ([]UserCommits, error) {
 	js := `{
 		"selector": {
 			"_id": {
@@ -80,7 +80,7 @@ func FindUserCommits(user string) []UserCommits {
 	res, err := cadb.Post(USERS_DB, js, "_find")
 	if err != nil {
 		fmt.Printf("error, model.UserCommits.DbRetrieveAll: %s\n", err)
-		return nil
+		return nil, err
 	}
 	buf := new(bytes.Buffer)
 	buf.ReadFrom(res.Body)
@@ -90,7 +90,7 @@ func FindUserCommits(user string) []UserCommits {
 //
 // all user comiits on a specific repo
 //
-func FindUserCommitsOnRepo(user string, repo string) []UserCommits {
+func FindUserCommitsOnRepo(user string, repo string) ([]UserCommits, error) {
 	js := `{
 		"selector": {
 			"_id": {
@@ -103,7 +103,7 @@ func FindUserCommitsOnRepo(user string, repo string) []UserCommits {
 	res, err := cadb.Post(USERS_DB, js, "_find")
 	if err != nil {
 		fmt.Printf("error, model.UserCommits.DbRetrieveAll: %s\n", err)
-		return nil
+		return nil, err
 	}
 	buf := new(bytes.Buffer)
 	buf.ReadFrom(res.Body)
@@ -113,7 +113,7 @@ func FindUserCommitsOnRepo(user string, repo string) []UserCommits {
 //
 // all user commits on all provided repo (e.g. squad)
 //
-func FindUserCommitsOnMultiRepo(user string, repos []string) []UserCommits {
+func FindUserCommitsOnMultiRepo(user string, repos []string) ([]UserCommits, error) {
 	byt, _ := json.Marshal(repos)
 	urlsjs := string(byt)
 	js := `{
@@ -130,7 +130,7 @@ func FindUserCommitsOnMultiRepo(user string, repos []string) []UserCommits {
 	res, err := cadb.Post(USERS_DB, js, "_find")
 	if err != nil {
 		fmt.Printf("error, model.UserCommits.DbRetrieveAll: %s\n", err)
-		return nil
+		return nil, err
 	}
 	buf := new(bytes.Buffer)
 	buf.ReadFrom(res.Body)
@@ -140,12 +140,15 @@ func FindUserCommitsOnMultiRepo(user string, repos []string) []UserCommits {
 //
 // private function for turning json response into an array in go
 //
-func json_to_userCommits_array(js string) []UserCommits {
+func json_to_userCommits_array(js string) ([]UserCommits, error) {
 	var f interface{}
-	json.Unmarshal([]byte(js), &f)
+	var a []UserCommits
+	err := json.Unmarshal([]byte(js), &f)
+	if err != nil {
+		return nil, err
+	}
 	m := f.(map[string]interface{})
 	docs := m["docs"].([]interface{})
-	var a []UserCommits
 	for i := range docs {
 		//c := &UserCommits{}
 		c := docs[i].(map[string]interface{})
@@ -159,5 +162,5 @@ func json_to_userCommits_array(js string) []UserCommits {
 			c["_rev"].(string),
 		})
 	}
-	return a
+	return a, nil
 }
