@@ -76,6 +76,12 @@ var routes = Routes{
 		"ApiUserCommitsSquad",
 		"GET",
 		"/api/commits/squad/user",
-		GetCommitsByUserOnMultiRepo,
+		GetCommitsByUserOnSquad,
+	},
+	Route{
+		"ApiCommunityCommitsSquad",
+		"GET",
+		"/api/commits/squad/community",
+		GetCommitsByCommunityOnSquad,
 	},
 }

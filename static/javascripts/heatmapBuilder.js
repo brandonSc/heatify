@@ -1,3 +1,4 @@
+var totalData; // array of data sets of squad members commits
 
 /**
  * build a general heatmap of the graphData and attach to the the domElement
@@ -18,7 +19,7 @@ function buildHeatmap(graphData, domElement) {
         tooltip: true,
         start: new Date(tdy.getFullYear(), tdy.getMonth()-11, tdy.getDay()),
         //start:  new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDay()),
-        data: graphData,
+        data: graphData
     });
 
     $("#left-pan").on("click", function(e) {  
@@ -86,7 +87,7 @@ function buildSquadMemberHeatmap(member, squad, rank, element, cellSize, termina
             subDomain: "day",
             tooltip: true,
             displayLegend: false,
-            start: new Date(tdy.getFullYear(), tdy.getMonth()-11, tdy.getDay()),
+            start: new Date(tdy.getFullYear(), tdy.getMonth()-9, tdy.getDay()),
             data: data,
         });
         
@@ -116,6 +117,10 @@ function buildSquadMemberHeatmap(member, squad, rank, element, cellSize, termina
 function buildAllMembersHeatmaps(squad, element, cellSize) { 
     var members = squad.members;
     // pre add elements for member heatmaps
+    var communityElem = document.createElement("heatmap-community");
+    communityElem.id = "heatmap-community";
+    element.appendChild(communityElem);
+    buildSquadCommunityHeatmap(squad.name, element, cellSize);
     for ( var i=0; i<members.length; i++ ) { 
         var member = memberNameToId(trimGitAuthorToMember(members[i]));
         var memberElem = document.createElement("heatmap-"+member);
@@ -123,7 +128,6 @@ function buildAllMembersHeatmaps(squad, element, cellSize) {
         memberElem.style = "margin: auto; display: inline-block;";
         element.appendChild(memberElem);
     }
-
 
 
     // do this in a separate loop so elements are not added as data is loaded
@@ -156,7 +160,7 @@ function trimGitAuthorToMember(author) {
 }
 
 function memberNameToId(member) { 
-    return member.replace(" ", "-");
+    return member.replaceAll(" ", "-").replaceAll(".", "");
 }
 
 function commitsToCalData(commits) { 
@@ -175,3 +179,73 @@ function commitsToCalData(commits) {
     }
     return graphData;
 }
+
+function buildSquadCommunityHeatmap(squad, element, cellSize) {
+    var url = "/api/commits/squad/community?squad="+squad;
+    $.get(url, function(response) {
+        var memberElem = document.getElementById("heatmap-community");
+        var data = commitsToCalData(JSON.parse(response));
+
+        var elem = document.createElement("div");
+        elem.style = "padding-top: 15px; padding-bottom:50px; padding-left: 14%;" 
+
+        leftPan = document.createElement("a");
+        leftPan.id = "left-pan-community"
+        leftPan.className = "waves-effect waves-teal btn-flat";
+        leftPan.style = "font-size: 24px; left: 0%";
+        leftPan.innerHTML = "&#62;";
+
+        rightPan = document.createElement("a");
+        rightPan.id = "right-pan-community"
+        rightPan.className = "waves-effect waves-teal btn-flat";
+        rightPan.style = "font-size: 24px; right: 0%";
+        rightPan.innerHTML = "&#60;";
+
+        var memElem = document.createElement("h5");
+        memElem.innerHTML = "Community Contributions"
+    //    var rankElem = document.createElement("h6");
+    //    rankElem.innerHTML = '#'+rank;
+
+        element.appendChild(memElem);
+        element.appendChild(rightPan);
+        element.appendChild(leftPan);
+        //element.appendChild(rankElem);
+        element.appendChild(elem);
+
+        if ( cellSize === null || cellSize === 0 ) 
+            cellSize = 15;
+
+        var tdy = new Date();
+        var cal = new CalHeatMap();
+        cal.init({
+            itemSelector: elem,
+            itemName: "commit",
+            considerMissingDataAsZero: true,
+            cellSize: cellSize,
+            legend: [0, 4, 10, 20, 30], 
+            animationDuration: 600,
+            range: 10,
+            domain: "month",
+            subDomain: "day",
+            tooltip: true,
+            displayLegend: false,
+            start: new Date(tdy.getFullYear(), tdy.getMonth()-9, tdy.getDay()),
+            data: data,
+        });
+        
+        $("#left-pan-community").on("click", function(e) {  
+            e.preventDefault();
+            cal.next();
+        });
+
+        $("#right-pan-community").on("click", function(e) {
+            e.preventDefault();
+            cal.previous();
+        });
+    });
+}
+
+String.prototype.replaceAll = function(search, replacement) {
+    var target = this;
+    return target.replace(new RegExp(search, 'g'), replacement);
+};

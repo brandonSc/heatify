@@ -127,9 +127,44 @@ func FindUserCommitsOnMultiRepo(user string, repos []string) ([]UserCommits, err
 			}
 		}
 	}`
+	fmt.Println(js)
 	res, err := cadb.Post(USERS_DB, js, "_find")
 	if err != nil {
-		fmt.Printf("error, model.UserCommits.DbRetrieveAll: %s\n", err)
+		fmt.Printf("error, model.UserCommits.FindUserCommitsOnMultiRepo: %s\n", err)
+		return nil, err
+	}
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(res.Body)
+	return json_to_userCommits_array(buf.String())
+}
+
+//
+// all commits on all provided repos (e.g. squad), excluding provided users
+// basically, this is for the community heatmap displaed on the squad page
+//
+func FindCommunityCommitsOnMultiRepo(users []string, repos []string) ([]UserCommits, error) {
+	byt1, _ := json.Marshal(users)
+	byt1 = bytes.Replace(byt1, []byte("\\u003c"), []byte("<"), -1)
+	byt1 = bytes.Replace(byt1, []byte("\\u003e"), []byte(">"), -1)
+	usersjs := string(byt1)
+	byt2, _ := json.Marshal(repos)
+	urlsjs := string(byt2)
+	js := `{
+		"selector": {
+			"_id": {
+				"$gt": 0
+			}, 
+			"user": {
+				"$nin":` + usersjs + `
+			},
+			"url": {
+				"$in": ` + urlsjs + `
+			}
+		}
+	}`
+	res, err := cadb.Post(USERS_DB, js, "_find")
+	if err != nil {
+		fmt.Printf("error, model.UserCommits.FindCommunityCommitsOnMultiRepo: %s\n", err)
 		return nil, err
 	}
 	buf := new(bytes.Buffer)
