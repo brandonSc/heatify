@@ -3,6 +3,7 @@ package model
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"time"
 
@@ -60,6 +61,10 @@ func DbRetrieveAllUserCommits(url string) ([]UserCommits, error) {
 		return nil, err
 	}
 	buf := new(bytes.Buffer)
+	fmt.Printf("RESPONSE BUF: %s", buf)
+	if buf == nil {
+		return nil, errors.New("model.DbRetrieveAllUserCommits: Response is null")
+	}
 	buf.ReadFrom(res.Body)
 	return json_to_userCommits_array(buf.String())
 }
@@ -79,10 +84,14 @@ func FindUserCommits(user string) ([]UserCommits, error) {
 	}`
 	res, err := cadb.Post(USERS_DB, js, "_find")
 	if err != nil {
-		fmt.Printf("error, model.UserCommits.DbRetrieveAll: %s\n", err)
+		fmt.Printf("error, model.UserCommits.FindUserCommits: %s\n", err)
 		return nil, err
 	}
 	buf := new(bytes.Buffer)
+	fmt.Printf("RESPONSE BUF: %s", buf)
+	if buf == nil {
+		return nil, errors.New("model.FindUserCommits: Response is null")
+	}
 	buf.ReadFrom(res.Body)
 	return json_to_userCommits_array(buf.String())
 }
@@ -102,10 +111,14 @@ func FindUserCommitsOnRepo(user string, repo string) ([]UserCommits, error) {
 	}`
 	res, err := cadb.Post(USERS_DB, js, "_find")
 	if err != nil {
-		fmt.Printf("error, model.UserCommits.DbRetrieveAll: %s\n", err)
+		fmt.Printf("error, model.UserCommits.FindUserCommitsOnRepo: %s\n", err)
 		return nil, err
 	}
 	buf := new(bytes.Buffer)
+	fmt.Printf("RESPONSE BUF: %s", buf)
+	if buf == nil {
+		return nil, errors.New("model.FindUserCommitsOnRepo: Response is null")
+	}
 	buf.ReadFrom(res.Body)
 	return json_to_userCommits_array(buf.String())
 }
@@ -130,10 +143,14 @@ func FindUserCommitsOnMultiRepo(user string, repos []string) ([]UserCommits, err
 	fmt.Println(js)
 	res, err := cadb.Post(USERS_DB, js, "_find")
 	if err != nil {
-		fmt.Printf("error, model.UserCommits.FindUserCommitsOnMultiRepo: %s\n", err)
+		fmt.Printf("error, model.FindUserCommitsOnMultiRepo: %s\n", err)
 		return nil, err
 	}
 	buf := new(bytes.Buffer)
+	fmt.Printf("RESPONSE BUF: %s", buf)
+	if buf == nil {
+		return nil, errors.New("model.FindUserCommitsOnMultiRepo: Response is null")
+	}
 	buf.ReadFrom(res.Body)
 	return json_to_userCommits_array(buf.String())
 }
@@ -168,6 +185,10 @@ func FindCommunityCommitsOnMultiRepo(users []string, repos []string) ([]UserComm
 		return nil, err
 	}
 	buf := new(bytes.Buffer)
+	fmt.Printf("RESPONSE BUF: %s", buf)
+	if buf == nil {
+		return nil, errors.New("model.FindUserCommitsOnMultiRepo: Response is null")
+	}
 	buf.ReadFrom(res.Body)
 	return json_to_userCommits_array(buf.String())
 }
