@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	INTERVAL   = 10 // update interval in minutes
+	INTERVAL   = 360 // update interval in minutes
 	CLONES_DIR = ".clones"
 )
 
