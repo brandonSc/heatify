@@ -42,6 +42,8 @@ function buildSquadMemberHeatmap(member, squad, rank, element, cellSize, termina
     $.get(url, function(response) {
         var memberElem = document.getElementById("heatmap-"+memberId);
         var data = commitsToCalData(JSON.parse(response));
+        
+        setTotalCommits(element, data);
 
         var elem = document.createElement("div");
         elem.style = "padding-top: 15px; padding-bottom:50px;";
@@ -187,7 +189,7 @@ function buildSquadCommunityHeatmap(squad, element, cellSize) {
         var data = commitsToCalData(JSON.parse(response));
 
         var elem = document.createElement("div");
-        elem.style = "padding-top: 15px; padding-bottom:50px; padding-left: 14%;" 
+        elem.style = "padding-top: 15px; padding-bottom:50px; padding-left: 14%;";
 
         leftPan = document.createElement("a");
         leftPan.id = "left-pan-community"
@@ -245,7 +247,15 @@ function buildSquadCommunityHeatmap(squad, element, cellSize) {
     });
 }
 
+function setTotalCommits(element, data) { 
+    var total = 0;
+    for ( var date in data ) {
+        total += data[date];
+    }
+    $(element.id).data("commits", total);
+}
+
 String.prototype.replaceAll = function(search, replacement) {
     var target = this;
     return target.replace(new RegExp(search, 'g'), replacement);
-};
+}
