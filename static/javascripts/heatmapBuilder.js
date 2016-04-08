@@ -103,6 +103,8 @@ function buildSquadMemberHeatmap(member, squad, rank, element, cellSize, termina
             cal.previous();
         });
 
+        sortHeatmaps($('members-heatmaps'));
+
         if ( terminate ) { 
             var target = document.getElementById('spinner')
             target.innerHTML = "";
@@ -119,17 +121,20 @@ function buildSquadMemberHeatmap(member, squad, rank, element, cellSize, termina
 function buildAllMembersHeatmaps(squad, element, cellSize) { 
     var members = squad.members;
     // pre add elements for member heatmaps
-    var communityElem = document.createElement("heatmap-community");
-    communityElem.id = "heatmap-community";
-    element.appendChild(communityElem);
-    buildSquadCommunityHeatmap(squad.name, element, cellSize);
     for ( var i=0; i<members.length; i++ ) { 
-        var member = memberNameToId(trimGitAuthorToMember(members[i]));
-        var memberElem = document.createElement("heatmap-"+member);
+        var name = trimGitAuthorToMember(members[i]);
+        var member = memberNameToId(name);
+        var memberElem = document.createElement("div");
         memberElem.id = "heatmap-"+member;
         memberElem.style = "margin: auto; display: inline-block;";
         element.appendChild(memberElem);
     }
+    
+    var communityElem = document.createElement("div");
+    communityElem.id = "heatmap-community";
+    communityElem.style = "margin: auto; display: inline-block;";
+    element.appendChild(communityElem);
+    buildSquadCommunityHeatmap(squad.name, communityElem, cellSize);
 
 
     // do this in a separate loop so elements are not added as data is loaded
@@ -162,7 +167,8 @@ function trimGitAuthorToMember(author) {
 }
 
 function memberNameToId(member) { 
-    return member.replaceAll(" ", "-").replaceAll(".", "");
+    var str = member.replaceAll(" ", "-");
+    return str.replace(/\./g, '')
 }
 
 function commitsToCalData(commits) { 
@@ -189,7 +195,7 @@ function buildSquadCommunityHeatmap(squad, element, cellSize) {
         var data = commitsToCalData(JSON.parse(response));
 
         var elem = document.createElement("div");
-        elem.style = "padding-top: 15px; padding-bottom:50px; padding-left: 14%;";
+        elem.style = "padding-top: 15px; padding-bottom:50px;";
 
         leftPan = document.createElement("a");
         leftPan.id = "left-pan-community"
@@ -234,6 +240,8 @@ function buildSquadCommunityHeatmap(squad, element, cellSize) {
             start: new Date(tdy.getFullYear(), tdy.getMonth()-9, tdy.getDay()),
             data: data,
         });
+
+        $(element.id).data("commits", 0);
         
         $("#left-pan-community").on("click", function(e) {  
             e.preventDefault();
@@ -253,6 +261,28 @@ function setTotalCommits(element, data) {
         total += data[date];
     }
     $(element.id).data("commits", total);
+}
+
+function sortHeatmaps(heatmaps) {
+    /*
+    //console.log(heatmaps);
+    var sorted = $('#members-heatmaps').sort(function(a, b) { 
+        console.log('sorting');
+        console.log($(a).data("commits"));
+        return $(a).data("commits") > $(b).data("commits");
+        //return $(a).find("h5").text() > $(b).find("h5").text();
+    });
+    console.log(sorted);
+    var x = $('#members-container');
+    //$('#members-container').html(x);
+    */
+   var sorted = $('#members-heatmaps').sort(function (a, b) {
+
+      var contentA =parseInt( $(a).data("commits"));
+      var contentB =parseInt( $(b).data("commits"));
+      return (contentA < contentB) ? -1 : (contentA > contentB) ? 1 : 0;
+   });
+   //$('#members-container').html(sorted.html());
 }
 
 String.prototype.replaceAll = function(search, replacement) {
