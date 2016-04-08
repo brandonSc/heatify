@@ -43,7 +43,7 @@ function buildSquadMemberHeatmap(member, squad, rank, element, cellSize, termina
         var memberElem = document.getElementById("heatmap-"+memberId);
         var data = commitsToCalData(JSON.parse(response));
         
-        setTotalCommits(element, data);
+        setTotalCommits(memberElem, data);
 
         var elem = document.createElement("div");
         elem.style = "padding-top: 15px; padding-bottom:50px;";
@@ -62,7 +62,7 @@ function buildSquadMemberHeatmap(member, squad, rank, element, cellSize, termina
         rightPan.innerHTML = "&#60;";
 
         var memElem = document.createElement("h5");
-        memElem.innerHTML = trimGitAuthorToMember(member) + ' &nbsp; #' + rank;
+        memElem.innerHTML = trimGitAuthorToMember(member) ;//+ ' &nbsp; #' + rank;
     //    var rankElem = document.createElement("h6");
     //    rankElem.innerHTML = '#'+rank;
 
@@ -241,7 +241,8 @@ function buildSquadCommunityHeatmap(squad, element, cellSize) {
             data: data,
         });
 
-        $(element.id).data("commits", 0);
+        $(element).data("commits", 0);
+        $(element).attr("commits", 0);
         
         $("#left-pan-community").on("click", function(e) {  
             e.preventDefault();
@@ -260,29 +261,31 @@ function setTotalCommits(element, data) {
     for ( var date in data ) {
         total += data[date];
     }
-    $(element.id).data("commits", total);
+    $(element).data("commits", total);
+    $(element).attr("data-commits", total);
 }
 
 function sortHeatmaps(heatmaps) {
-    /*
-    //console.log(heatmaps);
-    var sorted = $('#members-heatmaps').sort(function(a, b) { 
-        console.log('sorting');
-        console.log($(a).data("commits"));
-        return $(a).data("commits") > $(b).data("commits");
-        //return $(a).find("h5").text() > $(b).find("h5").text();
-    });
-    console.log(sorted);
-    var x = $('#members-container');
-    //$('#members-container').html(x);
-    */
-   var sorted = $('#members-heatmaps').sort(function (a, b) {
-
-      var contentA =parseInt( $(a).data("commits"));
-      var contentB =parseInt( $(b).data("commits"));
-      return (contentA < contentB) ? -1 : (contentA > contentB) ? 1 : 0;
+   var sorted = $('#members-heatmaps').children().sort(function(a, b) {
+      var contentA = $(a).data("commits");
+      if ( contentA === undefined ) contentA = 0;
+      var contentB = $(b).data("commits");
+      if ( contentB === undefined ) contentB = 0;
+      return (contentA > contentB) ? -1 : (contentA < contentB) ? 1 : 0;
    });
-   //$('#members-container').html(sorted.html());
+   $('#members-heatmaps').html('');
+   for ( var i=0; i<sorted.length; i++ ) {  
+       var commits = $(sorted[i]).data('commits');
+       if ( commits > 0 ) {
+           var text = $(sorted[i]).find("h5").text();
+           if ( text.indexOf("#") > -1 ) {
+              text = text.slice(0, text.indexOf("#"));
+           }
+           text += ' #'+(i+1);
+           $(sorted[i]).find("h5").text(text);
+       }
+       $('#members-heatmaps').append(sorted[i]);
+   }
 }
 
 String.prototype.replaceAll = function(search, replacement) {
