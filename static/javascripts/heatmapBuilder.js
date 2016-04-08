@@ -1,4 +1,5 @@
-var totalData; // array of data sets of squad members commits
+var numDoneLoading = 0;
+var numToLoad = 0;
 
 /**
  * build a general heatmap of the graphData and attach to the the domElement
@@ -105,7 +106,8 @@ function buildSquadMemberHeatmap(member, squad, rank, element, cellSize, termina
 
         sortHeatmaps($('members-heatmaps'));
 
-        if ( terminate ) { 
+        numDoneLoading++;
+        if ( numDoneLoading === numToLoad ) { 
             var target = document.getElementById('spinner')
             target.innerHTML = "";
         }
@@ -120,6 +122,8 @@ function buildSquadMemberHeatmap(member, squad, rank, element, cellSize, termina
  */
 function buildAllMembersHeatmaps(squad, element, cellSize) { 
     var members = squad.members;
+    numToLoad = squad.members.length+1; // squad members + 1 community
+
     // pre add elements for member heatmaps
     for ( var i=0; i<members.length; i++ ) { 
         var name = trimGitAuthorToMember(members[i]);
@@ -135,7 +139,6 @@ function buildAllMembersHeatmaps(squad, element, cellSize) {
     communityElem.style = "margin: auto; display: inline-block;";
     element.appendChild(communityElem);
     buildSquadCommunityHeatmap(squad.name, communityElem, cellSize);
-
 
     // do this in a separate loop so elements are not added as data is loaded
     for ( var j=0; j<members.length; j++ ) { 
@@ -253,6 +256,12 @@ function buildSquadCommunityHeatmap(squad, element, cellSize) {
             e.preventDefault();
             cal.previous();
         });
+        
+        numDoneLoading++;
+        if ( numDoneLoading === numToLoad ) { 
+            var target = document.getElementById('spinner')
+            target.innerHTML = "";
+        }
     });
 }
 
