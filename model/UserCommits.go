@@ -97,6 +97,33 @@ func FindUserCommits(user string) ([]UserCommits, error) {
 }
 
 //
+// all user commits from all repos
+// @param user git author
+//
+func FindMultiUserCommits(user string) ([]UserCommits, error) {
+	js := `{
+		"selector": {
+			"_id": {
+				"$gt": 0
+			}, 
+			"user": "` + user + `" 
+		}
+	}`
+	res, err := cadb.Post(USERS_DB, js, "_find")
+	if err != nil {
+		fmt.Printf("error, model.UserCommits.FindUserCommits: %s\n", err)
+		return nil, err
+	}
+	buf := new(bytes.Buffer)
+	fmt.Printf("RESPONSE BUF: %s", buf)
+	if buf == nil {
+		return nil, errors.New("model.FindUserCommits: Response is null")
+	}
+	buf.ReadFrom(res.Body)
+	return json_to_userCommits_array(buf.String())
+}
+
+//
 // all user comiits on a specific repo
 //
 func FindUserCommitsOnRepo(user string, repo string) ([]UserCommits, error) {

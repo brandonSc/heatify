@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"strings"
 
 	"hub.jazz.net/git/schurman93/Git-Monitor/model"
 )
@@ -19,7 +20,12 @@ func GetCommitsByUser(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, `{"error":"'user' parameters is required."}`)
 		return
 	}
-	commits, err := model.FindUserCommits(user)
+	if model.IsUserAlias(user) {
+		users = model.GetGitUsers(user)
+		commits, err := model.FindMultiUserCommits(users)
+	} else {
+		commits, err := model.FindUserCommits(user)
+	}
 	if err != nil {
 		fmt.Fprintf(w, `{"error":"problem downloading commits from the cloud"}`)
 		fmt.Printf("Error loading commits from cloudant for user=" + user)
