@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 )
 
-const CONFIG_DIR = "config/squads"
+const SQUADS_DIR = "config/squads"
 
 //
 // This structure holds the number of commits to a repository on particular day
@@ -24,7 +24,7 @@ type Squad struct {
 //
 func InitSquadsFromJson() []Squad {
 	var a []Squad
-	files, err := ioutil.ReadDir(CONFIG_DIR)
+	files, err := ioutil.ReadDir(SQUADS_DIR)
 	if err != nil {
 		fmt.Printf("error reading directory structure: %s\n", err)
 	}
@@ -40,7 +40,7 @@ func InitSquadsFromJson() []Squad {
 // using the JSON config file name
 //
 func InitSquadFromJson(name string) (Squad, error) {
-	js, err := ioutil.ReadFile(CONFIG_DIR + "/" + name)
+	js, err := ioutil.ReadFile(SQUADS_DIR + "/" + name)
 	if err != nil {
 		return Squad{}, err
 	}
