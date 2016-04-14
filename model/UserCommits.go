@@ -100,13 +100,17 @@ func FindUserCommits(user string) ([]UserCommits, error) {
 // all user commits from all repos
 // @param user git author
 //
-func FindMultiUserCommits(user string) ([]UserCommits, error) {
+func FindMultiUserCommits(users []string) ([]UserCommits, error) {
+	byt1, _ := json.Marshal(users)
+	usersjs := string(byt1)
 	js := `{
 		"selector": {
 			"_id": {
 				"$gt": 0
 			}, 
-			"user": "` + user + `" 
+			"user": {
+				"$in":` + usersjs + `
+			}
 		}
 	}`
 	res, err := cadb.Post(USERS_DB, js, "_find")
