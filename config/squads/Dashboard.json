@@ -10,15 +10,14 @@
         "github.ibm.com/alchemy-dashboard/executive-dashboard-build.git"
     ],
     "members": [
-        "Arsalan Rana <arsalan.rana@ca.ibm.com>", 
-        "Andrew Low <andrew_low@ca.ibm.com>",
-        "Rajeev Sikka <sikkar@us.ibm.com>",
-        "Powell Quiring <pquiring@us.ibm.com>",
-        "powellquiring <powellquiring@gmail.com>",
-        "Daihee Kim <daiheekim@daihees-mbp.ottawa.ibm.com>",
-        "Shruti Appiah <ashruti@ca.ibm.com>",
-        "Alex Hudici <dhudici@ca.ibm.com>",
-        "CHAD D. MONTGOMERY <cdmontgo@us.ibm.com>",
-        "Brandon Schurman <schurman@ca.ibm.com>"
+        "arsalan",
+        "pquiring",
+        "shruti",
+        "brandonsc",
+        "roo",
+        "chad",
+        "alex",
+        "daiheekim",
+        "rajeev"
     ]
 }

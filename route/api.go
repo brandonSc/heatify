@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
-	"strings"
 
 	"hub.jazz.net/git/schurman93/Git-Monitor/model"
 )
@@ -17,14 +16,19 @@ import (
 func GetCommitsByUser(w http.ResponseWriter, r *http.Request) {
 	user, err := url.QueryUnescape(r.URL.Query().Get("user"))
 	if err != nil {
-		fmt.Fprintf(w, `{"error":"'user' parameters is required."}`)
+		fmt.Fprintf(w, `{"error":"'user' parameter is required."}`)
 		return
 	}
-	if model.IsUserAlias(user) {
-		users = model.GetGitUsers(user)
-		commits, err := model.FindMultiUserCommits(users)
+	var commits []model.UserCommits
+	if !model.IsUserAlias(user) {
+		user_profile, err := model.InitUserFromJson(user + ".json")
+		if err != nil {
+			fmt.Fprintf(w, `{"error":"user not found"}`)
+			return
+		}
+		commits, err = model.FindMultiUserCommits(user_profile.Aliases)
 	} else {
-		commits, err := model.FindUserCommits(user)
+		commits, err = model.FindUserCommits(user)
 	}
 	if err != nil {
 		fmt.Fprintf(w, `{"error":"problem downloading commits from the cloud"}`)
@@ -92,7 +96,17 @@ func GetCommitsByUserOnSquad(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, `{"error":"Squad not found."}`)
 		return
 	}
-	commits, err := model.FindUserCommitsOnMultiRepo(user, s.Repos)
+	var commits []model.UserCommits
+	if !model.IsUserAlias(user) {
+		user_profile, err := model.InitUserFromJson(user + ".json")
+		if err != nil {
+			fmt.Fprintf(w, `{"error":"user not found"}`)
+			return
+		}
+		commits, err = model.FindMultiUserCommitsOnMultiRepo(user_profile.Aliases, s.Repos)
+	} else {
+		commits, err = model.FindUserCommitsOnMultiRepo(user, s.Repos)
+	}
 	js, err := json.Marshal(commits)
 	if err != nil {
 		fmt.Printf("GetCommitsByUser: error marshaling user commits to json: %s\n", err)

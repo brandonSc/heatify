@@ -97,8 +97,8 @@ func FindUserCommits(user string) ([]UserCommits, error) {
 }
 
 //
-// all user commits from all repos
-// @param user git author
+// all user commits from all repos, from all user aliaes
+// @param users an array of git aliases (e.g. from a heatify user profile)
 //
 func FindMultiUserCommits(users []string) ([]UserCommits, error) {
 	byt1, _ := json.Marshal(users)
@@ -110,6 +110,42 @@ func FindMultiUserCommits(users []string) ([]UserCommits, error) {
 			}, 
 			"user": {
 				"$in":` + usersjs + `
+			}
+		}
+	}`
+	res, err := cadb.Post(USERS_DB, js, "_find")
+	if err != nil {
+		fmt.Printf("error, model.UserCommits.FindUserCommits: %s\n", err)
+		return nil, err
+	}
+	buf := new(bytes.Buffer)
+	fmt.Printf("RESPONSE BUF: %s", buf)
+	if buf == nil {
+		return nil, errors.New("model.FindUserCommits: Response is null")
+	}
+	buf.ReadFrom(res.Body)
+	return json_to_userCommits_array(buf.String())
+}
+
+//
+// all user commits from all repos, from all user aliaes
+// @param users an array of git aliases (e.g. from a heatify user profile)
+//
+func FindMultiUserCommitsOnMultiRepo(users []string, repos []string) ([]UserCommits, error) {
+	byt1, _ := json.Marshal(users)
+	usersjs := string(byt1)
+	byt2, _ := json.Marshal(repos)
+	urlsjs := string(byt2)
+	js := `{
+		"selector": {
+			"_id": {
+				"$gt": 0
+			}, 
+			"user": {
+				"$in":` + usersjs + `
+			},
+			"url": {
+				"$in": ` + urlsjs + `
 			}
 		}
 	}`
