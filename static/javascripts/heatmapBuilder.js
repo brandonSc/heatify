@@ -48,6 +48,7 @@ function buildSquadMemberHeatmap(member, squad, rank, element, cellSize, termina
 
         var elem = document.createElement("div");
         elem.style = "padding-top: 15px; padding-bottom:50px;";
+        elem.id = "heatmap-"+memberId+"-cal";
         
 
         leftPan = document.createElement("a");
@@ -84,24 +85,16 @@ function buildSquadMemberHeatmap(member, squad, rank, element, cellSize, termina
             considerMissingDataAsZero: true,
             cellSize: cellSize,
             legend: [0, 4, 10, 20, 30], 
-            animationDuration: 600,
+            animationDuration: 400,
             range: 10,
             domain: "month",
             subDomain: "day",
             tooltip: true,
             displayLegend: false,
+            nextSelector: "#left-pan-"+memberId,
+            previousSelector: "#right-pan-"+memberId,
             start: new Date(tdy.getFullYear(), tdy.getMonth()-9, tdy.getDay()),
             data: data,
-        });
-        
-        $("#left-pan-"+memberId).on("click", function(e) {  
-            e.preventDefault();
-            cal.next();
-        });
-
-        $("#right-pan-"+memberId).on("click", function(e) {
-            e.preventDefault();
-            cal.previous();
         });
 
         sortHeatmaps($('members-heatmaps'));
@@ -160,6 +153,10 @@ function buildAllMembersHeatmaps(squad, element, cellSize) {
 function trimGitAuthorToMember(author) {
     var i = author.indexOf(" <");
     var j = author.indexOf(">");
+    if ( i < 0 && j < 0 ) { 
+        // not a git alias (ie is a heatify user profile)
+        return author;
+    }
     if ( i < j ) { 
         var member = author.substring(0, i);
         return member;
@@ -234,28 +231,20 @@ function buildSquadCommunityHeatmap(squad, element, cellSize) {
             considerMissingDataAsZero: true,
             cellSize: cellSize,
             legend: [0, 4, 10, 20, 30], 
-            animationDuration: 600,
+            animationDuration: 400,
             range: 10,
             domain: "month",
             subDomain: "day",
             tooltip: true,
             displayLegend: false,
+            nextSelector: "#left-pan-community",
+            previousSelector: "#right-pan-community",
             start: new Date(tdy.getFullYear(), tdy.getMonth()-9, tdy.getDay()),
             data: data,
         });
 
         $(element).data("commits", 0);
         $(element).attr("commits", 0);
-        
-        $("#left-pan-community").on("click", function(e) {  
-            e.preventDefault();
-            cal.next();
-        });
-
-        $("#right-pan-community").on("click", function(e) {
-            e.preventDefault();
-            cal.previous();
-        });
         
         numDoneLoading++;
         if ( numDoneLoading === numToLoad ) { 
