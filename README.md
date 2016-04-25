@@ -1,53 +1,101 @@
-Git-Monitoring 
-==============
+# Heatify
 
-Running Locally 
----------------
-You will need Cloudant DBaaS configured within your `VCAP_SERVICES` environment. This means you will need to either deploy the application as Cloud Foundry droplet, deploy it within a container bound to a Cloud Foundry app to access it's services, or copy-and-paste the contents of `VCAP_SERVICES` into an environment variable if testing on your local machine. 
+Heatify tracks and measures the commits made to git repositories hosted on Github, GHE, GitLab, and IBM DevOps Services. Heatmaps showing daily activity are rendered on individual projects, users, as well as grouped into Squads to conveniently analyze team performance. 
 
-youniteyouniteFirst download and install the latest Golang distribution [here](https://golang.org/doc/install#tarball).
-Note: if you are using ubuntu, do not install Go through apt-get. The version in the apt repository is out of date and will not work JazzHub URLs.
-If you are new to go, you will have to setup your workspace first. See [How to Write Go Code](https://golang.org/doc/code.html) for official documentation.
-Ensure your `$GOPATH` environment variable should be set to your desired workspace.
-Now, install the Git-Monitor project by running the following:
+## Running Instructions
+
+You will need [Go](https://golang.org/) installed as well as an [IBM Cloudant](https://cloudant.com/) account. 
+IBM Cloudant can be used for free under light usage, and can be obtained as a service on [IBM Bluemix](https://console.ng.bluemix.net). 
+See [here](https://golang.org/doc/install#tarball) for instructions on downloading and installing Go.
+First obtain a copy of the Heatify source by running `go get`:
+
 ```
-go get hub.jazz.net/git/schurman93/Git-Monitor
+$ go get hub.jazz.net/git/schurman93/Git-Monitor
 ```
-If the command fails, ensure you are using a version of Go that supports JazzHub URLs. At this time, the latest version 1.4.2 worked with Jazz.
-Navigate to the Git-Monitor source code
+
+Navigate to the source directory
+
 ```
 $ cd $GOPATH/src/hub.jazz.net/git/schurman93/Git-Monitor
 ```
-You are ready to build the project. Execute the following:
+
+Then build the executable:
+
 ```
 $ go build 
 ```
-Then run with 
-```
-$ ./Git-Monitor
-```
-(or if you have the $GOPATH/bin configured globally, you can run in any directory by invoking `$ Git-Monitor`).
 
-Navigate to http://localhost:5050 in your browser. 
+### Setting Up Git
 
-Note that it may be problematic if your git credentials are not stored or cached, as the Heatify app will have to constantly ask you for your git username and password.
-You can configure git to permanently store these, for example: 
+Heatify uses a local git account and credential to clone and update repositories. 
+Ensure that you're able to clone or update repositories from public Github, GHE, IDS, and GitLab without having to manaully enter your username and password. 
+For use with HTTPS, you can configure git to persist your credentials using the following command:
+
 ```
-git config --global credential.helper store --file ~/.git-credentials
+$ git config --global credential.helper store --file ~/.git-credentials
 ```
 
-### Deployment 
+for more info on git credentials, see [here](https://git-scm.com/docs/git-credential-store). You must ensure that the credentials for all git accounts are stored.
 
-To deploying Heatify on a Linux VM, SSH keys must be configured with each git platform. Generate an ssh-key and copy and paste the public key into each git account's ssh settings. 
+Heatify also uses SSH keys to clone and update repositories over SSH.
+Generate an ssh-key and copy and add it into each git account online. 
+For example, see Github's documentation on using SSH keys [here](https://help.github.com/articles/generating-an-ssh-key/).
+Before running the app, ensure the ssh-key is added to the ssh agent. It can be added with the following commands on Ubuntu:
 
-Add the ssh-key to the agent (this is often a required every time before running Heatify) 
 ```
 $ eval `ssh-agent -s`
 $ ssh-add ~/.ssh/id_rsa
 ```
 
-Run in background and redirect logs to a file:
+It is important that the ssh key is permanently stored when running in a production VM. Issues can arise if the ssh-agent loses access to the key.
+
+
+### Setting Up Cloudant
+
+In your Cloudant account, you should have a database for RepoCommits and a database for UserCommits.
+Heatify has a data-collector process which constantly keeps collections in sync of commits-per-day on each repository, and commits-per-day made by users. 
+By default, Heatify expects these databases to be named `gitmonitor-repos-dev` and `gitmonitor-users-dev`. 
+Create these databases on Cloudant using the 'Create Database' button on the web UI within your account. 
+The names for each database can be changed, but the change must also be reflected in the Heatify source code by editing the `COMMITS_DB` and `USERS_DB` variables within `model/RepoCommits.go` and `model/UserCommits.go`. 
+
+Before running Heatify, the Cloudant credentials must be exported to the process environment in a variable named `VCAP_SERVICES`. 
+If using Bluemix, a JSON object with the credentials can be found on the "Service Credentials" page of your Cloudant service. 
+For example, adding these credentials can be accomplished as follows:
+
+```
+$ export VCAP_SERVICES='{
+  "credentials": {
+    "username": "e469e71e-caa1-****-****-********-bluemix",
+    "password": "41ea1d3************************************5dd3c1d2be83971",
+    "host": "e469e71e-caa1-****-****-*******-bluemix.cloudant.com",
+    "port": 443,
+    "url": "https://e469e71e-caa1-****-****-********-bluemix:41ea1d3******************************5dd3c1d2be83971@e469e71e-caa1-****-****-**********-bluemix.cloudant.com"
+  }
+}'
+```
+
+### Running Locally
+
+Run the executable
+
+```
+$ ./Git-Monitor
+```
+
+and navigate to `http://localhost:5050` in your browser. 
+
+
+### Deployment in a Production Environment
+
+Heatify should be deployed in a VM, or a Container with access to a Volume or block storage device, so that the `clones`  directory can be accessed. 
+The clones directory is by default located at `.clones/` within the same directoy as the source code. You can change it's location by editing the `CLONES_DIR` variable within `gitutil/updateLoop.go`.
+
+You can now simply run the executable. For example, run in background and redirect all logs to a file with the following command:
 ```
 $ ./Git-Monitor > ~/heatify.log 2>&1 & 
 ```
 
+A better and safer approach would be to use supervisord to monitor and auto-restart the app. See [here](https://serversforhackers.com/monitoring-processes-with-supervisord) for instructions on configuring and running supervisord. 
+In summary, use `supervisorctl start` and `supervisorctl stop` to start and stop the app using supervisosrd.
+
+Note: Current versions of Heatify have been known to have stability issues. After the app has been running for hours or days, the app might crash while synchronizing git repositories with Cloudant.
