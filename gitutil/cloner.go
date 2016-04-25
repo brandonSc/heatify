@@ -40,7 +40,7 @@ func CloneRepo(repoUrl string) (string, error) {
 // we will assume it doesn't exist
 //
 func CheckExists(repoUrl string) bool {
-	var dir = ".clones/" + UrlToDir(repoUrl)
+	var dir = CLONES_DIR + "/" + UrlToDir(repoUrl)
 	_, err := ioutil.ReadDir(dir)
 	if err == nil {
 		return true
@@ -59,10 +59,10 @@ func clone_repo(repoUrl string) error {
 	var arg3 = ""
 	if strings.Contains(repoUrl, "git@github") {
 		arg2 = repoUrl
-		arg3 = ".clones/" + UrlToDir(repoUrl)
+		arg3 = CLONES_DIR + "/" + UrlToDir(repoUrl)
 	} else {
 		arg2 = "http://" + repoUrl
-		arg3 = ".clones/" + UrlToDir(repoUrl)
+		arg3 = CLONES_DIR + "/" + UrlToDir(repoUrl)
 	}
 
 	cmd := exec.Command(arg0, arg1, arg2, arg3)

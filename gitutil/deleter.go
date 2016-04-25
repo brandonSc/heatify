@@ -11,7 +11,7 @@ import (
 func delete_repo(repoUrl string) error {
 	var arg0 = "rm"
 	var arg1 = "-rf"
-	var arg2 = ".clones/" + UrlToDir(repoUrl)
+	var arg2 = CLONES_DIR + "/" + UrlToDir(repoUrl)
 
 	cmd := exec.Command(arg0, arg1, arg2)
 	err := cmd.Run()

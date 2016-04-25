@@ -9,7 +9,7 @@ import (
 // run the 'git logs' command and parse the output into JSON
 //
 func commits_to_json(repoUrl string) (string, error) {
-	var dir = ".clones/" + UrlToDir(repoUrl)
+	var dir = CLONES_DIR + "/" + UrlToDir(repoUrl)
 	var script = `git log \
 	--pretty=format:'{%n  "commit": "%H",%n  "author": "%an <%ae>",%n  "date": "%at",%n  "message": "%f"%n},' \
 	$@ | \

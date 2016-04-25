@@ -13,7 +13,7 @@ import (
 // all '.' characters are replaced with '/' characters
 //
 func AllTrackedRepos() []string {
-	dirs, err := ioutil.ReadDir(".clones")
+	dirs, err := ioutil.ReadDir(CLONES_DIR)
 	if err != nil {
 		fmt.Printf("error reading directory structure of .clones %s\n", err)
 	}
@@ -31,7 +31,7 @@ func AllTrackedRepos() []string {
 // the repo is returned in original URL format
 //
 func GetRandomRepo() string {
-	dirs, err := ioutil.ReadDir(".clones")
+	dirs, err := ioutil.ReadDir(CLONES_DIR)
 	if err != nil {
 		fmt.Printf("error reading directory structure of .clones %s\n", err)
 	}

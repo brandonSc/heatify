@@ -42,7 +42,7 @@ func UrlToDir(url string) string {
 
 func DirToUrl(path string) string {
 	if strings.Contains(path, ".clones") {
-		path = strings.Replace(path, ".clones", "", -1)
+		path = strings.Replace(path, CLONES_DIR, "", -1)
 	}
 	if strings.Contains(path, GITHUB_DIR_IDENTIFIER) {
 		// standard github URL
