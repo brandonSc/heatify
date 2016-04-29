@@ -10,13 +10,13 @@ See [here](https://golang.org/doc/install#tarball) for instructions on downloadi
 First obtain a copy of the Heatify source by running `go get`:
 
 ```
-$ go get hub.jazz.net/git/schurman93/Git-Monitor
+$ go get github.ibm.com/kdaihee/heatify
 ```
 
 Navigate to the source directory
 
 ```
-$ cd $GOPATH/src/hub.jazz.net/git/schurman93/Git-Monitor
+$ cd $GOPATH/src/github.ibm.com/kdaihee/heatify
 ```
 
 Then build the executable:
@@ -79,7 +79,7 @@ $ export VCAP_SERVICES='{
 Run the executable
 
 ```
-$ ./Git-Monitor
+$ ./heatify
 ```
 
 and navigate to `http://localhost:5050` in your browser. 
@@ -92,10 +92,35 @@ The clones directory is by default located at `.clones/` within the same directo
 
 You can now simply run the executable. For example, run in background and redirect all logs to a file with the following command:
 ```
-$ ./Git-Monitor > ~/heatify.log 2>&1 & 
+$ ./heatify > ~/heatify.log 2>&1 & 
 ```
 
 A better and safer approach would be to use supervisord to monitor and auto-restart the app. See [here](https://serversforhackers.com/monitoring-processes-with-supervisord) for instructions on configuring and running supervisord. 
 In summary, use `supervisorctl start` and `supervisorctl stop` to start and stop the app using supervisosrd.
 
-Note: Current versions of Heatify have been known to have stability issues. After the app has been running for hours or days, the app might crash while synchronizing git repositories with Cloudant.
+Notes to IBM: the supervisord config I used for Heatify for the VM located at `heatify.rtp.raleigh.ibm.com` as follows:
+```
+[program:heatify]
+command=/home/ibmadmin/gocode/src/github.ibm.com/kdaihee/heatify.git/heatify.git
+directory=/home/ibmadmin/gocode/src/github.ibm.com/kdaihee/heatify.git
+autostart=true
+autorestart=true
+startretries=3
+stderr_logfile=/var/log/heatify/heatify.err.log
+stdout_logfile=/var/log/heatify/heatify.out.log
+user=ibmadmin
+environment=VCAP_SERVICES='{ "credentials": { "username": "e469e71e-caa1-****-****-********-bluemix", "password": "41ea1d3************************************5dd3c1d2be83971", "host": "e469e71e-caa1-****-****-*******-bluemix.cloudant.com", "port": 443, "url": "https://e469e71e-caa1-****-****-********-bluemix:41ea1d3******************************5dd3c1d2be83971@e469e71e-caa1-****-****-**********-bluemix.cloudant.com" } }'
+
+```
+Note the location of the log files are in `/var/log/heatify`.
+
+## Architecture 
+
+Heatify is written in Go is broken down into several packages, the key packages are `gitutil`, `model`, `route` and `cadb`. 
+
+### The `gitutil` package
+
+## Future Improvements and Current Issues
+
+- Current versions of Heatify have been known to have stability issues. After the app has been running for hours or days, the app might crash while synchronizing git repositories with Cloudant. Heatify should be run with a process monitor such as supervisord to auto-restart the app if it crashes.
+- Issues 
